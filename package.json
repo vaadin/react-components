@@ -6,12 +6,14 @@
   "module": "dist/index.js",
   "main": "dist/index.js",
   "scripts": {
-    "build:analyze": "node --loader ts-node/esm scripts/analyze.ts",
-    "build:generate": "node --loader ts-node/esm scripts/generate.ts",
-    "build:typescript": "tsc",
+    "build:load-schema": "node --loader @esbuild-kit/esm-loader scripts/schema-loader.ts",
+    "build:generate": "node --loader @esbuild-kit/esm-loader scripts/generator.ts",
+    "build:generate-stubs": "node --loader @esbuild-kit/esm-loader scripts/stub-generator.ts",
+    "build:update-packagejson": "node --loader @esbuild-kit/esm-loader scripts/package-json-update.ts",
+    "build:typescript": "tsc -p tsconfig.build.json",
     "clean": "rimraf dist build",
-    "build": "build:analyze && build:generate && build:typescript",
-    "serve": "node --loader ts-node/esm node_modules/.bin/web-dev-server -c web-dev-server.config.ts",
+    "build": "npm run build:loadSchema && npm run build:generate && npm run build:typescript",
+    "dev": "vite dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,84 +21,306 @@
     "url": "github.com/vaadin/react-components"
   },
   "dependencies": {
-    "@vaadin/accordion": "^23.2.4",
-    "@vaadin/app-layout": "^23.2.4",
-    "@vaadin/avatar": "^23.2.4",
-    "@vaadin/avatar-group": "^23.2.4",
-    "@vaadin/board": "^23.2.4",
-    "@vaadin/button": "^23.2.4",
-    "@vaadin/charts": "^23.2.4",
-    "@vaadin/checkbox": "^23.2.4",
-    "@vaadin/checkbox-group": "^23.2.4",
-    "@vaadin/combo-box": "^23.2.4",
-    "@vaadin/component-base": "^23.2.4",
-    "@vaadin/confirm-dialog": "^23.2.4",
-    "@vaadin/context-menu": "^23.2.4",
-    "@vaadin/cookie-consent": "^23.2.4",
-    "@vaadin/crud": "^23.2.4",
-    "@vaadin/custom-field": "^23.2.4",
-    "@vaadin/date-picker": "^23.2.4",
-    "@vaadin/date-time-picker": "^23.2.4",
-    "@vaadin/details": "^23.2.4",
-    "@vaadin/dialog": "^23.2.4",
-    "@vaadin/email-field": "^23.2.4",
-    "@vaadin/field-base": "^23.2.4",
-    "@vaadin/field-highlighter": "^23.2.4",
-    "@vaadin/form-layout": "^23.2.4",
-    "@vaadin/grid": "^23.2.4",
-    "@vaadin/grid-pro": "^23.2.4",
-    "@vaadin/horizontal-layout": "^23.2.4",
-    "@vaadin/icon": "^23.2.4",
-    "@vaadin/icons": "^23.2.4",
-    "@vaadin/input-container": "^23.2.4",
-    "@vaadin/integer-field": "^23.2.4",
-    "@vaadin/item": "^23.2.4",
-    "@vaadin/list-box": "^23.2.4",
-    "@vaadin/login": "^23.2.4",
-    "@vaadin/map": "^23.2.4",
-    "@vaadin/menu-bar": "^23.2.4",
-    "@vaadin/message-input": "^23.2.4",
-    "@vaadin/message-list": "^23.2.4",
-    "@vaadin/notification": "^23.2.4",
-    "@vaadin/number-field": "^23.2.4",
-    "@vaadin/password-field": "^23.2.4",
-    "@vaadin/polymer-legacy-adapter": "^23.2.4",
-    "@vaadin/progress-bar": "^23.2.4",
-    "@vaadin/radio-group": "^23.2.4",
-    "@vaadin/rich-text-editor": "^23.2.4",
-    "@vaadin/scroller": "^23.2.4",
-    "@vaadin/select": "^23.2.4",
-    "@vaadin/split-layout": "^23.2.4",
-    "@vaadin/tabs": "^23.2.4",
-    "@vaadin/text-area": "^23.2.4",
-    "@vaadin/text-field": "^23.2.4",
-    "@vaadin/time-picker": "^23.2.4",
-    "@vaadin/upload": "^23.2.4",
-    "@vaadin/vaadin-development-mode-detector": "^2.0.0",
-    "@vaadin/vaadin-list-mixin": "^23.2.4",
-    "@vaadin/vaadin-lumo-styles": "^23.2.4",
-    "@vaadin/vaadin-themable-mixin": "^23.2.4",
-    "@vaadin/vaadin-usage-statistics": "^2.1.0",
-    "@vaadin/vertical-layout": "^23.2.4",
-    "@vaadin/virtual-list": "^23.2.4",
-    "react": "^18.0.0"
+    "@vaadin/accordion": "^23.2.5",
+    "@vaadin/app-layout": "^23.2.5",
+    "@vaadin/avatar": "^23.2.5",
+    "@vaadin/avatar-group": "^23.2.5",
+    "@vaadin/board": "^23.2.5",
+    "@vaadin/button": "^23.2.5",
+    "@vaadin/charts": "^23.2.5",
+    "@vaadin/checkbox": "^23.2.5",
+    "@vaadin/checkbox-group": "^23.2.5",
+    "@vaadin/combo-box": "^23.2.5",
+    "@vaadin/confirm-dialog": "^23.2.5",
+    "@vaadin/context-menu": "^23.2.5",
+    "@vaadin/cookie-consent": "^23.2.5",
+    "@vaadin/crud": "^23.2.5",
+    "@vaadin/custom-field": "^23.2.5",
+    "@vaadin/date-picker": "^23.2.5",
+    "@vaadin/date-time-picker": "^23.2.5",
+    "@vaadin/details": "^23.2.5",
+    "@vaadin/dialog": "^23.2.5",
+    "@vaadin/email-field": "^23.2.5",
+    "@vaadin/field-base": "^23.2.5",
+    "@vaadin/field-highlighter": "^23.2.5",
+    "@vaadin/form-layout": "^23.2.5",
+    "@vaadin/grid": "^23.2.5",
+    "@vaadin/grid-pro": "^23.2.5",
+    "@vaadin/horizontal-layout": "^23.2.5",
+    "@vaadin/icon": "^23.2.5",
+    "@vaadin/icons": "^23.2.5",
+    "@vaadin/input-container": "^23.2.5",
+    "@vaadin/integer-field": "^23.2.5",
+    "@vaadin/item": "^23.2.5",
+    "@vaadin/list-box": "^23.2.5",
+    "@vaadin/login": "^23.2.5",
+    "@vaadin/map": "^23.2.5",
+    "@vaadin/menu-bar": "^23.2.5",
+    "@vaadin/message-input": "^23.2.5",
+    "@vaadin/message-list": "^23.2.5",
+    "@vaadin/notification": "^23.2.5",
+    "@vaadin/number-field": "^23.2.5",
+    "@vaadin/password-field": "^23.2.5",
+    "@vaadin/progress-bar": "^23.2.5",
+    "@vaadin/radio-group": "^23.2.5",
+    "@vaadin/rich-text-editor": "^23.2.5",
+    "@vaadin/scroller": "^23.2.5",
+    "@vaadin/select": "^23.2.5",
+    "@vaadin/split-layout": "^23.2.5",
+    "@vaadin/tabs": "^23.2.5",
+    "@vaadin/text-area": "^23.2.5",
+    "@vaadin/text-field": "^23.2.5",
+    "@vaadin/time-picker": "^23.2.5",
+    "@vaadin/upload": "^23.2.5",
+    "@vaadin/vertical-layout": "^23.2.5",
+    "@vaadin/virtual-list": "^23.2.5",
+    "@vitejs/plugin-react": "^2.1.0",
+    "react": "^18.2.0"
   },
   "author": "Vaadin Ltd.",
   "license": "Apache-2.0",
+  "overrides": {
+    "esbuild": "$esbuild"
+  },
   "devDependencies": {
+    "@esbuild-kit/esm-loader": "^2.5.0",
     "@lit-labs/react": "^1.0.9",
-    "@rollup/plugin-commonjs": "^18.0.0",
-    "@rollup/plugin-node-resolve": "^11.0.0",
-    "@rollup/plugin-replace": "^2.0.0",
     "@types/react": "^18.0.21",
-    "@web/dev-server": "^0.1.34",
-    "@web/dev-server-esbuild": "^0.3.2",
-    "@web/dev-server-rollup": "^0.3.19",
-    "@web/test-runner": "^0.14.0",
+    "@types/react-dom": "^18.0.6",
+    "esbuild": "^0.15.11",
+    "json-schema-to-typescript": "^11.0.2",
+    "prettier": "^2.7.1",
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.8.0",
-    "web-component-analyzer": "^2.0.0-next.4"
+    "rollup-plugin-esbuild": "^4.10.1",
+    "typescript": "^4.8.4",
+    "vite": "^3.1.8"
+  },
+  "exports": {
+    "./index.js": {
+      "default": "./index.js"
+    },
+    "./AccordionPanel.js": {
+      "default": "./AccordionPanel.js"
+    },
+    "./Accordion.js": {
+      "default": "./Accordion.js"
+    },
+    "./AppLayout.js": {
+      "default": "./AppLayout.js"
+    },
+    "./DrawerToggle.js": {
+      "default": "./DrawerToggle.js"
+    },
+    "./Avatar.js": {
+      "default": "./Avatar.js"
+    },
+    "./AvatarGroup.js": {
+      "default": "./AvatarGroup.js"
+    },
+    "./BoardRow.js": {
+      "default": "./BoardRow.js"
+    },
+    "./Board.js": {
+      "default": "./Board.js"
+    },
+    "./Button.js": {
+      "default": "./Button.js"
+    },
+    "./ChartSeries.js": {
+      "default": "./ChartSeries.js"
+    },
+    "./Chart.js": {
+      "default": "./Chart.js"
+    },
+    "./Checkbox.js": {
+      "default": "./Checkbox.js"
+    },
+    "./CheckboxGroup.js": {
+      "default": "./CheckboxGroup.js"
+    },
+    "./ComboBoxLight.js": {
+      "default": "./ComboBoxLight.js"
+    },
+    "./ComboBox.js": {
+      "default": "./ComboBox.js"
+    },
+    "./ConfirmDialog.js": {
+      "default": "./ConfirmDialog.js"
+    },
+    "./ContextMenu.js": {
+      "default": "./ContextMenu.js"
+    },
+    "./CookieConsent.js": {
+      "default": "./CookieConsent.js"
+    },
+    "./CrudEdit.js": {
+      "default": "./CrudEdit.js"
+    },
+    "./CrudEditColumn.js": {
+      "default": "./CrudEditColumn.js"
+    },
+    "./Crud.js": {
+      "default": "./Crud.js"
+    },
+    "./CustomField.js": {
+      "default": "./CustomField.js"
+    },
+    "./DatePickerLight.js": {
+      "default": "./DatePickerLight.js"
+    },
+    "./DatePicker.js": {
+      "default": "./DatePicker.js"
+    },
+    "./DateTimePicker.js": {
+      "default": "./DateTimePicker.js"
+    },
+    "./Details.js": {
+      "default": "./Details.js"
+    },
+    "./Dialog.js": {
+      "default": "./Dialog.js"
+    },
+    "./EmailField.js": {
+      "default": "./EmailField.js"
+    },
+    "./FormItem.js": {
+      "default": "./FormItem.js"
+    },
+    "./FormLayout.js": {
+      "default": "./FormLayout.js"
+    },
+    "./GridColumn.js": {
+      "default": "./GridColumn.js"
+    },
+    "./GridColumnGroup.js": {
+      "default": "./GridColumnGroup.js"
+    },
+    "./GridFilter.js": {
+      "default": "./GridFilter.js"
+    },
+    "./GridFilterColumn.js": {
+      "default": "./GridFilterColumn.js"
+    },
+    "./GridSelectionColumn.js": {
+      "default": "./GridSelectionColumn.js"
+    },
+    "./GridSorter.js": {
+      "default": "./GridSorter.js"
+    },
+    "./GridSortColumn.js": {
+      "default": "./GridSortColumn.js"
+    },
+    "./GridTreeToggle.js": {
+      "default": "./GridTreeToggle.js"
+    },
+    "./GridTreeColumn.js": {
+      "default": "./GridTreeColumn.js"
+    },
+    "./Grid.js": {
+      "default": "./Grid.js"
+    },
+    "./GridProEditColumn.js": {
+      "default": "./GridProEditColumn.js"
+    },
+    "./GridPro.js": {
+      "default": "./GridPro.js"
+    },
+    "./HorizontalLayout.js": {
+      "default": "./HorizontalLayout.js"
+    },
+    "./Iconset.js": {
+      "default": "./Iconset.js"
+    },
+    "./Icon.js": {
+      "default": "./Icon.js"
+    },
+    "./IntegerField.js": {
+      "default": "./IntegerField.js"
+    },
+    "./Item.js": {
+      "default": "./Item.js"
+    },
+    "./ListBox.js": {
+      "default": "./ListBox.js"
+    },
+    "./LoginForm.js": {
+      "default": "./LoginForm.js"
+    },
+    "./LoginOverlay.js": {
+      "default": "./LoginOverlay.js"
+    },
+    "./Map.js": {
+      "default": "./Map.js"
+    },
+    "./MenuBar.js": {
+      "default": "./MenuBar.js"
+    },
+    "./MessageInput.js": {
+      "default": "./MessageInput.js"
+    },
+    "./Message.js": {
+      "default": "./Message.js"
+    },
+    "./MessageList.js": {
+      "default": "./MessageList.js"
+    },
+    "./Notification.js": {
+      "default": "./Notification.js"
+    },
+    "./NumberField.js": {
+      "default": "./NumberField.js"
+    },
+    "./PasswordField.js": {
+      "default": "./PasswordField.js"
+    },
+    "./ProgressBar.js": {
+      "default": "./ProgressBar.js"
+    },
+    "./RadioButton.js": {
+      "default": "./RadioButton.js"
+    },
+    "./RadioGroup.js": {
+      "default": "./RadioGroup.js"
+    },
+    "./RichTextEditor.js": {
+      "default": "./RichTextEditor.js"
+    },
+    "./Scroller.js": {
+      "default": "./Scroller.js"
+    },
+    "./Select.js": {
+      "default": "./Select.js"
+    },
+    "./SplitLayout.js": {
+      "default": "./SplitLayout.js"
+    },
+    "./Tab.js": {
+      "default": "./Tab.js"
+    },
+    "./Tabs.js": {
+      "default": "./Tabs.js"
+    },
+    "./TextArea.js": {
+      "default": "./TextArea.js"
+    },
+    "./TextField.js": {
+      "default": "./TextField.js"
+    },
+    "./TimePicker.js": {
+      "default": "./TimePicker.js"
+    },
+    "./UploadFile.js": {
+      "default": "./UploadFile.js"
+    },
+    "./Upload.js": {
+      "default": "./Upload.js"
+    },
+    "./VerticalLayout.js": {
+      "default": "./VerticalLayout.js"
+    },
+    "./VirtualList.js": {
+      "default": "./VirtualList.js"
+    }
   }
 }
