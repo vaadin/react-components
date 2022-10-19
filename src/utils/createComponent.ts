@@ -1,19 +1,13 @@
-import { createComponent as createComponentOriginal } from '@lit-labs/react';
-import type { EventName, ReactWebComponent } from '@lit-labs/react/create-component.js';
+import { createComponent as _createComponent, EventName, ReactWebComponent } from '@lit-labs/react';
 
-declare type EventNames = Record<string, EventName | string>;
-declare interface Constructor<T> {
-  new (): T;
-}
+type EventNames = Record<string, EventName | string>;
+type Constructor<T> = { new (): T };
 
-// For some reason, using `typeof createComponentOriginal` or any derivatives, like
-// `Parameters<typeof createComponentOriginal>` breaks the TypeScript language service,
-// so we re-declare of the function here.
 export function createComponent<I extends HTMLElement, E extends EventNames = {}>(
-  React: typeof import('react'),
+  React: typeof window.React,
   tagName: string,
   elementClass: Constructor<I>,
-  events?: E | undefined,
+  events?: E,
   displayName?: string,
 ): ReactWebComponent<I, E>;
 export function createComponent(...args: any[]): any {
@@ -29,5 +23,5 @@ export function createComponent(...args: any[]): any {
       prototype: elementClass._properties,
     };
   }
-  return (createComponentOriginal as Function)(...args);
+  return (_createComponent as Function)(...args);
 }

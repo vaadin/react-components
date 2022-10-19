@@ -2,7 +2,7 @@ import { writeFile } from 'node:fs/promises';
 import { relative, resolve, sep } from 'node:path';
 import ts, { Expression, type Identifier, type ImportDeclaration, SourceFile, Statement } from 'typescript';
 import type { HtmlElement as SchemaHTMLElement, JSONSchemaForWebTypes } from '../types/schema.js';
-import { generatedDir, nodeModulesDir, srcDir } from './config.js';
+import { generatedDir, nodeModulesDir, srcDir, utilsDir } from "./config.js";
 import { extractElementsFromDescriptions, loadDescriptions } from './descriptions.js';
 import { ComponentFileMissingError, ElementNameMissingError } from './errors.js';
 import { camelCase, createImportPath, createSourceFile, exists, search, stripPrefix } from './utils.js';
@@ -75,7 +75,7 @@ function createLitLabsReactImport(): ImportWithDeclaration<Identifier> {
 
 function createInternalCreateComponentImport(): ImportWithDeclaration<Identifier> {
   const createComponentId = ts.factory.createIdentifier('createComponent');
-  const importPath = createImportPath(relative(generatedDir, resolve(srcDir, './createComponent.js')), true);
+  const importPath = createImportPath(relative(generatedDir, resolve(utilsDir, './createComponent.js')), true);
   return [
     createComponentId,
     ts.factory.createImportDeclaration(

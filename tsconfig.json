@@ -4,7 +4,6 @@
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
-    "outDir": ".",
     "jsx": "react-jsx",
     "target": "es2021",
     "module": "esnext",
@@ -21,5 +20,5 @@
     "useUnknownInCatchVariables": true
   },
   "include": ["src", "scripts", "test"],
-  "exclude": ["node_modules", "*.d.ts"]
+  "exclude": ["node_modules", "dist"]
 }

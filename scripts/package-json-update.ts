@@ -11,7 +11,7 @@ const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));
 
 const exports: Record<string, Record<string, string>> = {
   './index.js': {
-    default: './index.js',
+    default: './dist/index.js',
   },
 };
 
@@ -21,10 +21,11 @@ for (const [packageName, element] of extractElementsFromDescriptions(description
   }
 
   const moduleName = stripPrefix(camelCase(element.name));
-  const modulePath = `./${moduleName}.js`;
+  const exportPath = `./${moduleName}.js`;
+  const filePath = `./dist/${moduleName}.js`;
 
-  exports[modulePath] = {
-    default: modulePath,
+  exports[exportPath] = {
+    default: filePath,
   };
 }
 

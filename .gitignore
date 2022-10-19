@@ -27,8 +27,3 @@ node_modules
 # Generated sources
 /generated
 src/generated/
-/*.d.ts
-/*.d.ts.map
-/*.js
-/*.js.map
-!/*.config.js
