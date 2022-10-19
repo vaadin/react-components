@@ -1,6 +1,6 @@
 import { createComponent as createComponentOriginal } from '@lit-labs/react';
 
-export function createComponent(...args: Parameters<typeof createComponentOriginal>) {
+export function createComponent(...args: Parameters<typeof createComponentOriginal>): ReturnType<typeof createComponentOriginal> {
   const elementClass = args[2];
   if ('_properties' in elementClass) {
     // TODO: improve or remove the Polymer workaround

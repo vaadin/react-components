@@ -1,11 +1,11 @@
 import { writeFile } from 'node:fs/promises';
 import { relative, resolve, sep } from 'node:path';
-import ts, { type Identifier, type ImportDeclaration, SourceFile } from 'typescript';
+import ts, { Expression, type Identifier, type ImportDeclaration, SourceFile, Statement } from 'typescript';
 import type { HtmlElement as SchemaHTMLElement, JSONSchemaForWebTypes } from '../types/schema.js';
-import { generatedDir, nodeModulesDir, srcDir } from "./config.js";
+import { generatedDir, nodeModulesDir, srcDir } from './config.js';
 import { extractElementsFromDescriptions, loadDescriptions } from './descriptions.js';
 import { ComponentFileMissingError, ElementNameMissingError } from './errors.js';
-import { camelCase, createImportPath, createSourceFile, exists, search, stripPrefix } from "./utils.js";
+import { camelCase, createImportPath, createSourceFile, exists, search, stripPrefix } from './utils.js';
 
 type ImportWithDeclaration<T> = readonly [id: T, declaration: ImportDeclaration];
 type ElementData = Readonly<{
@@ -66,9 +66,7 @@ function createLitLabsReactImport(): ImportWithDeclaration<Identifier> {
       ts.factory.createImportClause(
         true,
         undefined,
-        ts.factory.createNamedImports([
-          ts.factory.createImportSpecifier(false, undefined, eventNameTypeId),
-        ]),
+        ts.factory.createNamedImports([ts.factory.createImportSpecifier(false, undefined, eventNameTypeId)]),
       ),
       ts.factory.createStringLiteral('@lit-labs/react'),
     ),
@@ -85,9 +83,7 @@ function createInternalCreateComponentImport(): ImportWithDeclaration<Identifier
       ts.factory.createImportClause(
         false,
         undefined,
-        ts.factory.createNamedImports([
-          ts.factory.createImportSpecifier(false, undefined, createComponentId),
-        ]),
+        ts.factory.createNamedImports([ts.factory.createImportSpecifier(false, undefined, createComponentId)]),
       ),
       ts.factory.createStringLiteral(importPath),
     ),
@@ -114,6 +110,7 @@ function generateReactComponent(
     throw new ElementNameMissingError(packageName);
   }
 
+  const hasEvents = !!js?.events && js.events.length > 0;
   const importPath = createImportPath(relative(nodeModulesDir, path), false);
 
   const className = stripPrefix(camelCase(name));
@@ -124,33 +121,34 @@ function generateReactComponent(
 
   const componentId = ts.factory.createIdentifier(className);
   const elementId = ts.factory.createPropertyAccessExpression(elementModuleId, className);
-  const eventMapId = ts.factory.createQualifiedName(elementModuleId, `${className}EventMap`);
 
   const createComponentCall = ts.factory.createCallExpression(createComponentId, undefined, [
     reactId,
     ts.factory.createStringLiteral(name),
     elementId,
-    ts.factory.createObjectLiteralExpression(
-      (js?.events ?? []).map(({ name: eventName }) => {
-        if (!eventName) {
-          throw new Error(`[${packageName}/${name}]: event name is missing`);
-        }
+    ...(hasEvents
+      ? [
+          ts.factory.createObjectLiteralExpression(
+            js!.events!.map(({ name: eventName }) => {
+              if (!eventName) {
+                throw new Error(`[${packageName}/${name}]: event name is missing`);
+              }
 
-        const eventNameLiteral = ts.factory.createStringLiteral(eventName);
-
-        return ts.factory.createPropertyAssignment(
-          ts.factory.createIdentifier(`on${camelCase(eventName)}`),
-          ts.factory.createAsExpression(
-            eventNameLiteral,
-            ts.factory.createTypeReferenceNode(eventNameTypeId, [
-              ts.factory.createTypeReferenceNode(ts.factory.createIdentifier('CustomEvent'), [
-                ts.factory.createKeywordTypeNode(ts.SyntaxKind.UnknownKeyword),
-              ]),
-            ]),
+              return ts.factory.createPropertyAssignment(
+                ts.factory.createIdentifier(`on${camelCase(eventName)}`),
+                ts.factory.createAsExpression(
+                  ts.factory.createStringLiteral(eventName),
+                  ts.factory.createTypeReferenceNode(eventNameTypeId!, [
+                    ts.factory.createTypeReferenceNode(ts.factory.createIdentifier('CustomEvent'), [
+                      ts.factory.createKeywordTypeNode(ts.SyntaxKind.UnknownKeyword),
+                    ]),
+                  ]),
+                ),
+              );
+            }),
           ),
-        );
-      }),
-    ),
+        ]
+      : []),
   ]);
 
   const componentExport = ts.factory.createVariableStatement(
@@ -178,12 +176,12 @@ function generateReactComponent(
 
   const statements = [
     reactImport,
-    litReactLabsImport,
+    ...(hasEvents ? [litReactLabsImport] : []),
     checkedElementModuleImport,
     internalCreateComponentImport,
     componentExport,
     elementNamespaceExport,
-  ];
+  ].filter(Boolean) as readonly Statement[];
 
   return createSourceFile(statements, resolve(generatedDir, `${className}.ts`));
 }
@@ -194,10 +192,7 @@ function generateIndexFile(files: readonly SourceFile[]): SourceFile {
       undefined,
       false,
       undefined,
-      ts.factory.createStringLiteral(
-        createImportPath(relative(generatedDir, fileName), true),
-        true,
-      ),
+      ts.factory.createStringLiteral(createImportPath(relative(generatedDir, fileName), true), true),
     ),
   );
 
