@@ -1,6 +1,22 @@
 import { createComponent as createComponentOriginal } from '@lit-labs/react';
+import type { EventName, ReactWebComponent } from '@lit-labs/react/create-component.js';
 
-export function createComponent(...args: Parameters<typeof createComponentOriginal>): ReturnType<typeof createComponentOriginal> {
+declare type EventNames = Record<string, EventName | string>;
+declare interface Constructor<T> {
+  new (): T;
+}
+
+// For some reason, using `typeof createComponentOriginal` or any derivatives, like
+// `Parameters<typeof createComponentOriginal>` breaks the TypeScript language service,
+// so we re-declare of the function here.
+export function createComponent<I extends HTMLElement, E extends EventNames = {}>(
+  React: typeof import('react'),
+  tagName: string,
+  elementClass: Constructor<I>,
+  events?: E | undefined,
+  displayName?: string,
+): ReactWebComponent<I, E>;
+export function createComponent(...args: any[]): any {
   const elementClass = args[2];
   if ('_properties' in elementClass) {
     // TODO: improve or remove the Polymer workaround
@@ -10,8 +26,8 @@ export function createComponent(...args: Parameters<typeof createComponentOrigin
     // the prototype.
     args[2] = {
       name: elementClass.name,
-      prototype: (elementClass as any)._properties,
-    } as typeof elementClass;
+      prototype: elementClass._properties,
+    };
   }
-  return createComponentOriginal(...args);
+  return (createComponentOriginal as Function)(...args);
 }

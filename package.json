@@ -1,5 +1,5 @@
 {
-  "name": "@vaadin/react-components",
+  "name": "@hilla/react-components",
   "version": "0.0.0",
   "description": "React wrappers for Vaadin components",
   "type": "module",

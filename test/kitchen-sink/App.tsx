@@ -1,23 +1,23 @@
 import React from 'react';
-import { Button } from "../../generated/index.js";
-import { Accordion } from '../../src/Accordion';
-import { AccordionPanel } from '../../src/AccordionPanel';
-import { AppLayout } from '../../src/AppLayout';
-import { Avatar } from '../../src/Avatar';
-import { AvatarGroup } from '../../src/AvatarGroup';
-import { Board } from '../../src/Board';
-import { BoardRow } from '../../src/BoardRow';
-import { Chart } from '../../src/Chart';
-import { Checkbox } from '../../src/Checkbox';
-import { CheckboxGroup } from '../../src/CheckboxGroup';
-import { ComboBox } from '../../src/ComboBox';
-import { ConfirmDialog } from '../../src/ConfirmDialog';
-import { ContextMenu } from '../../src/ContextMenu';
-import { DrawerToggle } from '../../src/DrawerToggle';
-import { Item } from '../../src/Item';
-import { ListBox } from '../../src/ListBox';
-import { Tab } from '../../src/Tab';
-import { Tabs } from '../../src/Tabs';
+import { Accordion } from '../../src/generated/Accordion.js';
+import { AccordionPanel } from '../../src/generated/AccordionPanel.js';
+import { AppLayout } from '../../src/generated/AppLayout.js';
+import { Avatar } from '../../src/generated/Avatar.js';
+import { AvatarGroup } from '../../src/generated/AvatarGroup.js';
+import { Board } from '../../src/generated/Board.js';
+import { BoardRow } from '../../src/generated/BoardRow.js';
+import { Button } from '../../src/generated/Button.js';
+import { Chart } from '../../src/generated/Chart.js';
+import { Checkbox } from '../../src/generated/Checkbox.js';
+import { CheckboxGroup } from '../../src/generated/CheckboxGroup.js';
+import { ComboBox } from '../../src/generated/ComboBox.js';
+import { ConfirmDialog } from '../../src/generated/ConfirmDialog.js';
+import { ContextMenu } from '../../src/generated/ContextMenu.js';
+import { DrawerToggle } from '../../src/generated/DrawerToggle.js';
+import { Item } from '../../src/generated/Item.js';
+import { ListBox } from '../../src/generated/ListBox.js';
+import { Tab } from '../../src/generated/Tab.js';
+import { Tabs } from '../../src/generated/Tabs.js';
 
 type TreeGridDataItem = {
   id: number,
