@@ -1,7 +1,8 @@
 import { readdir, readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { HtmlElement as SchemaHTMLElement, JSONSchemaForWebTypes } from '../types/schema.js';
-import { nodeModulesDir } from './config.js';
+import { nodeModulesDir } from './utils/config.js';
+import { filterEmptyItems } from './utils/misc.js';
 
 export type SchemaElementWithPackage = readonly [packageName: string, element: SchemaHTMLElement];
 
@@ -13,7 +14,7 @@ export async function loadDescriptions(): Promise<ReadonlyArray<JSONSchemaForWeb
     dirs.map(async (dir) => {
       try {
         const contents = await readFile(resolve(webComponentsDir, dir, 'web-types.json'), 'utf8');
-        return JSON.parse(contents);
+        return JSON.parse(contents) as JSONSchemaForWebTypes;
       } catch (_) {
         // ignore file that doesn't exist
         return undefined;
@@ -21,7 +22,7 @@ export async function loadDescriptions(): Promise<ReadonlyArray<JSONSchemaForWeb
     }),
   );
 
-  return schemas.filter(Boolean);
+  return filterEmptyItems(schemas);
 }
 
 export function* extractElementsFromDescriptions(

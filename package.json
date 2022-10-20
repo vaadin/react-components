@@ -101,17 +101,14 @@
     "./index.js": {
       "default": "./dist/index.js"
     },
-    "./AccordionPanel.js": {
-      "default": "./dist/AccordionPanel.js"
-    },
     "./Accordion.js": {
       "default": "./dist/Accordion.js"
     },
+    "./AccordionPanel.js": {
+      "default": "./dist/AccordionPanel.js"
+    },
     "./AppLayout.js": {
       "default": "./dist/AppLayout.js"
-    },
-    "./DrawerToggle.js": {
-      "default": "./dist/DrawerToggle.js"
     },
     "./Avatar.js": {
       "default": "./dist/Avatar.js"
@@ -119,17 +116,14 @@
     "./AvatarGroup.js": {
       "default": "./dist/AvatarGroup.js"
     },
-    "./BoardRow.js": {
-      "default": "./dist/BoardRow.js"
-    },
     "./Board.js": {
       "default": "./dist/Board.js"
     },
+    "./BoardRow.js": {
+      "default": "./dist/BoardRow.js"
+    },
     "./Button.js": {
       "default": "./dist/Button.js"
-    },
-    "./ChartSeries.js": {
-      "default": "./dist/ChartSeries.js"
     },
     "./Chart.js": {
       "default": "./dist/Chart.js"
@@ -140,11 +134,11 @@
     "./CheckboxGroup.js": {
       "default": "./dist/CheckboxGroup.js"
     },
-    "./ComboBoxLight.js": {
-      "default": "./dist/ComboBoxLight.js"
-    },
     "./ComboBox.js": {
       "default": "./dist/ComboBox.js"
+    },
+    "./ComboBoxLight.js": {
+      "default": "./dist/ComboBoxLight.js"
     },
     "./ConfirmDialog.js": {
       "default": "./dist/ConfirmDialog.js"
@@ -155,23 +149,17 @@
     "./CookieConsent.js": {
       "default": "./dist/CookieConsent.js"
     },
-    "./CrudEdit.js": {
-      "default": "./dist/CrudEdit.js"
-    },
-    "./CrudEditColumn.js": {
-      "default": "./dist/CrudEditColumn.js"
-    },
     "./Crud.js": {
       "default": "./dist/Crud.js"
     },
     "./CustomField.js": {
       "default": "./dist/CustomField.js"
     },
-    "./DatePickerLight.js": {
-      "default": "./dist/DatePickerLight.js"
-    },
     "./DatePicker.js": {
       "default": "./dist/DatePicker.js"
+    },
+    "./DatePickerLight.js": {
+      "default": "./dist/DatePickerLight.js"
     },
     "./DateTimePicker.js": {
       "default": "./dist/DateTimePicker.js"
@@ -182,6 +170,9 @@
     "./Dialog.js": {
       "default": "./dist/Dialog.js"
     },
+    "./DrawerToggle.js": {
+      "default": "./dist/DrawerToggle.js"
+    },
     "./EmailField.js": {
       "default": "./dist/EmailField.js"
     },
@@ -190,6 +181,9 @@
     },
     "./FormLayout.js": {
       "default": "./dist/FormLayout.js"
+    },
+    "./Grid.js": {
+      "default": "./dist/Grid.js"
     },
     "./GridColumn.js": {
       "default": "./dist/GridColumn.js"
@@ -203,38 +197,35 @@
     "./GridFilterColumn.js": {
       "default": "./dist/GridFilterColumn.js"
     },
-    "./GridSelectionColumn.js": {
-      "default": "./dist/GridSelectionColumn.js"
-    },
-    "./GridSorter.js": {
-      "default": "./dist/GridSorter.js"
-    },
-    "./GridSortColumn.js": {
-      "default": "./dist/GridSortColumn.js"
-    },
-    "./GridTreeToggle.js": {
-      "default": "./dist/GridTreeToggle.js"
-    },
-    "./GridTreeColumn.js": {
-      "default": "./dist/GridTreeColumn.js"
-    },
-    "./Grid.js": {
-      "default": "./dist/Grid.js"
+    "./GridPro.js": {
+      "default": "./dist/GridPro.js"
     },
     "./GridProEditColumn.js": {
       "default": "./dist/GridProEditColumn.js"
     },
-    "./GridPro.js": {
-      "default": "./dist/GridPro.js"
+    "./GridSelectionColumn.js": {
+      "default": "./dist/GridSelectionColumn.js"
+    },
+    "./GridSortColumn.js": {
+      "default": "./dist/GridSortColumn.js"
+    },
+    "./GridSorter.js": {
+      "default": "./dist/GridSorter.js"
+    },
+    "./GridTreeColumn.js": {
+      "default": "./dist/GridTreeColumn.js"
+    },
+    "./GridTreeToggle.js": {
+      "default": "./dist/GridTreeToggle.js"
     },
     "./HorizontalLayout.js": {
       "default": "./dist/HorizontalLayout.js"
     },
-    "./Iconset.js": {
-      "default": "./dist/Iconset.js"
-    },
     "./Icon.js": {
       "default": "./dist/Icon.js"
+    },
+    "./Iconset.js": {
+      "default": "./dist/Iconset.js"
     },
     "./IntegerField.js": {
       "default": "./dist/IntegerField.js"
@@ -257,11 +248,11 @@
     "./MenuBar.js": {
       "default": "./dist/MenuBar.js"
     },
-    "./MessageInput.js": {
-      "default": "./dist/MessageInput.js"
-    },
     "./Message.js": {
       "default": "./dist/Message.js"
+    },
+    "./MessageInput.js": {
+      "default": "./dist/MessageInput.js"
     },
     "./MessageList.js": {
       "default": "./dist/MessageList.js"
@@ -313,9 +304,6 @@
     },
     "./Tooltip.js": {
       "default": "./dist/Tooltip.js"
-    },
-    "./UploadFile.js": {
-      "default": "./dist/UploadFile.js"
     },
     "./Upload.js": {
       "default": "./dist/Upload.js"

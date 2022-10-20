@@ -1,18 +1,21 @@
-import { writeFile } from 'node:fs/promises';
-import { relative, resolve, sep } from 'node:path';
-import ts, { Expression, type Identifier, type ImportDeclaration, SourceFile, Statement } from 'typescript';
+import { unlink, writeFile } from 'node:fs/promises';
+import { relative, resolve } from 'node:path';
+import ts, { type Identifier, type ImportDeclaration, SourceFile } from 'typescript';
 import type { HtmlElement as SchemaHTMLElement, JSONSchemaForWebTypes } from '../types/schema.js';
-import { generatedDir, nodeModulesDir, srcDir, utilsDir } from "./config.js";
 import { extractElementsFromDescriptions, loadDescriptions } from './descriptions.js';
-import { ComponentFileMissingError, ElementNameMissingError } from './errors.js';
-import { camelCase, createImportPath, createSourceFile, exists, search, stripPrefix } from './utils.js';
+import { generatedDir, nodeModulesDir, utilsDir } from './utils/config.js';
+import { ElementNameMissingError } from './utils/errors.js';
+import fromAsync from './utils/fromAsync.js';
+import { fswalk } from './utils/fswalk.js';
+import { camelCase, createImportPath, createSourceFile, filterEmptyItems, search, stripPrefix } from './utils/misc.js';
 
 type ImportWithDeclaration<T> = readonly [id: T, declaration: ImportDeclaration];
 type ElementData = Readonly<{
-  hasTypeDeclarationFile: boolean;
   packageName: string;
   path: string;
 }>;
+
+await fromAsync(fswalk(generatedDir), ([path]) => unlink(path));
 
 async function prepareElementFiles(
   descriptions: readonly JSONSchemaForWebTypes[],
@@ -27,15 +30,12 @@ async function prepareElementFiles(
 
       const path = await search(element.name, resolve(nodeModulesDir, packageName));
 
-      if (!path) {
-        throw new ComponentFileMissingError(packageName, element.name);
+      if (path) {
+        elementFilesMap.set(element, {
+          packageName,
+          path,
+        });
       }
-
-      elementFilesMap.set(element, {
-        hasTypeDeclarationFile: await exists(path.replace('.js', '.d.ts')),
-        packageName,
-        path,
-      });
     }),
   );
 
@@ -102,10 +102,7 @@ function createElementModuleImport(className: string, moduleSpecifier: string): 
   ];
 }
 
-function generateReactComponent(
-  { name, js }: SchemaHTMLElement,
-  { hasTypeDeclarationFile, packageName, path }: ElementData,
-): SourceFile {
+function generateReactComponent({ name, js }: SchemaHTMLElement, { packageName, path }: ElementData): SourceFile {
   if (!name) {
     throw new ElementNameMissingError(packageName);
   }
@@ -165,23 +162,14 @@ function generateReactComponent(
     ts.factory.createNamedExports([ts.factory.createExportSpecifier(false, undefined, elementModuleId)]),
   );
 
-  const checkedElementModuleImport = hasTypeDeclarationFile
-    ? elementModuleImport
-    : ts.addSyntheticLeadingComment(
-        elementModuleImport,
-        ts.SyntaxKind.SingleLineCommentTrivia,
-        ' @ts-expect-error: no declaration file found',
-        true,
-      );
-
-  const statements = [
+  const statements = filterEmptyItems([
     reactImport,
     ...(hasEvents ? [litReactLabsImport] : []),
-    checkedElementModuleImport,
+    elementModuleImport,
     internalCreateComponentImport,
     componentExport,
     elementNamespaceExport,
-  ].filter(Boolean) as readonly Statement[];
+  ]);
 
   return createSourceFile(statements, resolve(generatedDir, `${className}.ts`));
 }

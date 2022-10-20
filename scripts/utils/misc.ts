@@ -1,7 +1,7 @@
-import type { Dirent } from 'fs';
-import { access, constants, opendir } from 'node:fs/promises';
-import { join } from 'node:path';
+import { access, constants } from 'node:fs/promises';
 import ts, { type SourceFile, type Statement } from 'typescript';
+import type { WalkOptions } from './fswalk.js';
+import { fswalk } from './fswalk.js';
 
 export function camelCase(str: string) {
   // CamelCase join
@@ -31,26 +31,12 @@ export async function exists(file: string): Promise<boolean> {
   }
 }
 
-async function* walk(dir: string): AsyncGenerator<string, void> {
-  const dirs: Dirent[] = [];
+export type SearchOptions = WalkOptions;
 
-  for await (const d of await opendir(dir)) {
-    if (d.isDirectory()) {
-      dirs.push(d);
-    } else if (d.isFile()) {
-      yield join(dir, d.name);
-    }
-  }
-
-  for (const d of dirs) {
-    yield* walk(join(dir, d.name));
-  }
-}
-
-export async function search(name: string, dir: string): Promise<string | undefined> {
-  for await (const file of walk(dir)) {
-    if (file.endsWith(`${name}.js`)) {
-      return file;
+export async function search(name: string, dir: string, options?: SearchOptions): Promise<string | undefined> {
+  for await (const [path] of fswalk(dir, options)) {
+    if (path.endsWith(`${name}.js`)) {
+      return path;
     }
   }
 }
@@ -67,4 +53,10 @@ export function createImportPath(link: string, local: boolean) {
   }
 
   return updatedLink.replace('.ts', '.js').replaceAll('\\', '/');
+}
+
+export function filterEmptyItems<I>(arr: Array<I | undefined>): I[];
+export function filterEmptyItems<I>(arr: ReadonlyArray<I | undefined>): readonly I[];
+export function filterEmptyItems(arr: ReadonlyArray<unknown | undefined>): readonly unknown[] {
+  return arr.filter(Boolean);
 }
