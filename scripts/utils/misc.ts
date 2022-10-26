@@ -39,9 +39,9 @@ export async function exists(file: string): Promise<boolean> {
 
 export type SearchOptions = WalkOptions;
 
-export async function search(name: string, dir: string, options?: SearchOptions): Promise<string | undefined> {
+export async function search(nameVariants: string[], dir: string, options?: SearchOptions): Promise<string | undefined> {
   for await (const [path] of fswalk(dir, options)) {
-    if (path.endsWith(`${name}.js`)) {
+    if (nameVariants.some(name => path.endsWith(name))) {
       return path;
     }
   }
