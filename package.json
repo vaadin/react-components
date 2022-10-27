@@ -12,7 +12,7 @@
     "build:update-packagejson": "node --loader @esbuild-kit/esm-loader scripts/package-json-update.ts",
     "build:typescript": "tsc -p tsconfig.build.json",
     "clean": "rimraf dist build",
-    "build": "npm run build:loadSchema && npm run build:generate && npm run build:typescript",
+    "build": "npm run build:load-schema && npm run build:generate && npm run build:typescript",
     "dev": "vite dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

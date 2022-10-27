@@ -1,4 +1,5 @@
-import { access, constants } from 'node:fs/promises';
+import { access } from 'node:fs/promises';
+import { constants } from 'node:fs';
 import ts, { type SourceFile, type Statement } from 'typescript';
 import type { WalkOptions } from './fswalk.js';
 import { fswalk } from './fswalk.js';
