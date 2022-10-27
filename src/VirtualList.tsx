@@ -1,14 +1,13 @@
 import type { VirtualListDefaultItem } from '@vaadin/virtual-list/src/vaadin-virtual-list.js';
-import { type ForwardedRef, forwardRef, type ReactElement } from 'react';
+import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
 import {
   VirtualList as _VirtualList,
   VirtualListModule,
   type VirtualListProps as _VirtualListProps,
 } from './generated/VirtualList.js';
-import { createModelRenderer } from './renderers/modelRenderer.js';
-import type { ReactModelRenderer } from './renderers/modelRenderer.js';
+import { useModelRenderer, type ReactModelRendererProps } from './renderers/useModelRenderer.js';
 
-export type VirtualListReactRenderer<TItem> = ReactModelRenderer<
+export type VirtualListReactRendererProps<TItem> = ReactModelRendererProps<
   TItem,
   VirtualListModule.VirtualListItemModel<TItem>,
   VirtualListModule.VirtualList<TItem>
@@ -16,14 +15,21 @@ export type VirtualListReactRenderer<TItem> = ReactModelRenderer<
 
 export type VirtualListProps<TItem> = Omit<_VirtualListProps<TItem>, 'renderer'> &
   Readonly<{
-    renderer?: VirtualListReactRenderer<TItem>;
+    renderer?: ComponentType<VirtualListReactRendererProps<TItem>> | null;
   }>;
 
 function VirtualList<TItem = VirtualListDefaultItem>(
   props: VirtualListProps<TItem>,
   ref: ForwardedRef<VirtualListModule.VirtualList<TItem>>,
 ): ReactElement | null {
-  return <_VirtualList<TItem> {...props} ref={ref} renderer={props.renderer && createModelRenderer(props.renderer)} />;
+  const [portals, renderer] = useModelRenderer(props.renderer);
+
+  return (
+    <_VirtualList<TItem> {...props} ref={ref} renderer={renderer}>
+      {props.children}
+      {portals}
+    </_VirtualList>
+  );
 }
 
 const ForwardedVirtualList = forwardRef(VirtualList) as <TItem = VirtualListDefaultItem>(

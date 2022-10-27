@@ -1,22 +1,27 @@
-import { type ForwardedRef, forwardRef, type ReactElement } from 'react';
+import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
 import { Dialog as _Dialog, DialogModule, type DialogProps as _DialogProps } from './generated/Dialog.js';
-import { createSimpleRenderer, type ReactSimpleRenderer } from './renderers/simpleRenderer.js';
+import { type ReactSimpleRendererProps, useSimpleRenderer } from "./renderers/useSimpleRenderer.js";
 
-export type DialogReactRenderer = ReactSimpleRenderer<DialogModule.Dialog>;
+export type DialogReactRendererProps = ReactSimpleRendererProps<DialogModule.Dialog>;
 
 export type DialogProps = Omit<_DialogProps, 'renderer'> &
   Readonly<{
-    renderer?: DialogReactRenderer;
+    renderer?: ComponentType<DialogReactRendererProps>;
   }>;
 
 function Dialog(props: DialogProps, ref: ForwardedRef<DialogModule.Dialog>): ReactElement | null {
+  const [portals, renderer] = useSimpleRenderer(props.renderer);
+
   return (
     <_Dialog
       {...props}
       ref={ref}
       // TODO: remove cast after the nullability issue is fixed
-      renderer={props.renderer && (createSimpleRenderer(props.renderer) as DialogModule.DialogRenderer)}
-    />
+      renderer={renderer as DialogModule.DialogRenderer}
+    >
+      {props.children}
+      {portals}
+    </_Dialog>
   );
 }
 

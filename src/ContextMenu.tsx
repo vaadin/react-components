@@ -1,26 +1,31 @@
-import { type ForwardedRef, forwardRef, type ReactElement } from 'react';
+import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
 import {
   ContextMenu as _ContextMenu,
   ContextMenuModule,
   type ContextMenuProps as _ContextMenuProps,
 } from './generated/ContextMenu.js';
-import { createSimpleRenderer, type ReactSimpleRenderer } from './renderers/simpleRenderer.js';
+import { type ReactSimpleRendererProps, useSimpleRenderer } from './renderers/useSimpleRenderer.js';
 
-export type ContextMenuReactRenderer = ReactSimpleRenderer<ContextMenuModule.ContextMenu>;
+export type ContextMenuReactRendererProps = ReactSimpleRendererProps<ContextMenuModule.ContextMenu>;
 
 export type ContextMenuProps = Omit<_ContextMenuProps, 'renderer'> &
   Readonly<{
-    renderer?: ContextMenuReactRenderer | null;
+    renderer?: ComponentType<ContextMenuReactRendererProps> | null;
   }>;
 
 function ContextMenu(props: ContextMenuProps, ref: ForwardedRef<ContextMenuModule.ContextMenu>): ReactElement | null {
+  const [portals, renderer] = useSimpleRenderer(props.renderer);
+
   return (
     <_ContextMenu
       {...props}
       ref={ref}
       // TODO: remove cast after the nullability issue is fixed
-      renderer={props.renderer && (createSimpleRenderer(props.renderer) as ContextMenuModule.ContextMenuRenderer)}
-    />
+      renderer={renderer as ContextMenuModule.ContextMenuRenderer}
+    >
+      {props.children}
+      {portals}
+    </_ContextMenu>
   );
 }
 

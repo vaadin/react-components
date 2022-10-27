@@ -1,33 +1,42 @@
-import { type ForwardedRef, forwardRef, type ReactElement } from 'react';
+import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
 import type { GridModule } from './generated/Grid.js';
 import {
   GridColumn as _GridColumn,
   GridColumnModule,
   type GridColumnProps as _GridColumnProps,
 } from './generated/GridColumn.js';
-import type { GridBodyReactRenderer, GridEdgeReactRenderer } from './renderers/grid.js';
-import { createModelRenderer } from './renderers/modelRenderer.js';
-import { createSimpleRenderer } from './renderers/simpleRenderer.js';
+import type { GridBodyReactRendererProps, GridEdgeReactRendererProps } from './renderers/grid.js';
+import { useModelRenderer } from "./renderers/useModelRenderer.js";
+import { useSimpleRenderer } from "./renderers/useSimpleRenderer.js";
 
 export type GridColumnProps<TItem> = Omit<_GridColumnProps<TItem>, 'footerRenderer' | 'headerRenderer' | 'renderer'> &
   Readonly<{
-    footerRenderer?: GridEdgeReactRenderer<TItem> | null;
-    headerRenderer?: GridEdgeReactRenderer<TItem> | null;
-    renderer?: GridBodyReactRenderer<TItem> | null;
+    footerRenderer?: ComponentType<GridEdgeReactRendererProps<TItem>> | null;
+    headerRenderer?: ComponentType<GridEdgeReactRendererProps<TItem>> | null;
+    renderer?: ComponentType<GridBodyReactRendererProps<TItem>> | null;
   }>;
 
 function GridColumn<TItem = GridModule.GridDefaultItem>(
   props: GridColumnProps<TItem>,
   ref: ForwardedRef<GridColumnModule.GridColumn<TItem>>,
 ): ReactElement | null {
+  const [headerPortals, headerRenderer] = useSimpleRenderer(props.headerRenderer);
+  const [footerPortals, footerRenderer] = useSimpleRenderer(props.footerRenderer);
+  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer);
+
   return (
     <_GridColumn<TItem>
       {...props}
-      footerRenderer={props.footerRenderer && createSimpleRenderer(props.footerRenderer)}
-      headerRenderer={props.headerRenderer && createSimpleRenderer(props.headerRenderer)}
+      footerRenderer={footerRenderer}
+      headerRenderer={headerRenderer}
       ref={ref}
-      renderer={props.renderer && createModelRenderer(props.renderer)}
-    />
+      renderer={bodyRenderer}
+    >
+      {props.children}
+      {headerPortals}
+      {footerPortals}
+      {bodyPortals}
+    </_GridColumn>
   );
 }
 
