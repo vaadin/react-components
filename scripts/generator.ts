@@ -327,7 +327,7 @@ function generateReactComponent({ name, js }: SchemaHTMLElement, { packageName, 
     `
 import type { EventName } from "${LIT_REACT_PATH}";
 import * as ${MODULE} from "${MODULE_PATH}";
-import React from "react";
+import * as React from "react";
 import { createComponent, type WebComponentProps } from "${CREATE_COMPONENT_PATH}";
 export type ${EVENT_MAP};
 const events = ${EVENTS_DECLARATION} as ${EVENT_MAP_REF_IN_EVENTS};
