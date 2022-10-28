@@ -18,7 +18,7 @@ export type WebComponentModelRenderer<I, M extends Model<I>, O extends HTMLEleme
   model: M,
 ) => void;
 
-function convertModelRendererArgs<I, M extends Model<I>, O extends HTMLElement>([
+export function convertModelRendererArgs<I, M extends Model<I>, O extends HTMLElement>([
   original,
   model,
 ]: ParametersExceptFirst<WebComponentModelRenderer<I, M, O>>): ReactModelRendererProps<I, M, O> {

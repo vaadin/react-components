@@ -6,8 +6,8 @@ import {
   type GridColumnProps as _GridColumnProps,
 } from './generated/GridColumn.js';
 import type { GridBodyReactRendererProps, GridEdgeReactRendererProps } from './renderers/grid.js';
-import { useModelRenderer } from "./renderers/useModelRenderer.js";
-import { useSimpleRenderer } from "./renderers/useSimpleRenderer.js";
+import { useModelRenderer } from './renderers/useModelRenderer.js';
+import { useSimpleRenderer } from './renderers/useSimpleRenderer.js';
 
 export type GridColumnProps<TItem> = Omit<_GridColumnProps<TItem>, 'footerRenderer' | 'headerRenderer' | 'renderer'> &
   Readonly<{
