@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import type { ParametersExceptFirst } from './renderer.js';
+import type { Slice } from './renderer.js';
 import { useRenderer, type UseRendererResult } from './useRenderer.js';
 
 export type Model<I> = Readonly<{
@@ -18,10 +18,10 @@ export type WebComponentModelRenderer<I, M extends Model<I>, O extends HTMLEleme
   model: M,
 ) => void;
 
-export function convertModelRendererArgs<I, M extends Model<I>, O extends HTMLElement>([
-  original,
-  model,
-]: ParametersExceptFirst<WebComponentModelRenderer<I, M, O>>): ReactModelRendererProps<I, M, O> {
+export function convertModelRendererArgs<I, M extends Model<I>, O extends HTMLElement>([original, model]: Slice<
+  Parameters<WebComponentModelRenderer<I, M, O>>,
+  1
+>): ReactModelRendererProps<I, M, O> {
   return { item: model.item, model, original };
 }
 

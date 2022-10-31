@@ -5,34 +5,34 @@ import {
   type ReactElement,
   useCallback,
   useReducer,
-  useRef,
 } from 'react';
 import { createPortal } from 'react-dom';
-import type { ParametersExceptFirst, WebComponentRenderer } from './renderer.js';
+import type { Slice, WebComponentRenderer } from './renderer.js';
 
 export type UseRendererResult<W extends WebComponentRenderer> = readonly [
   portals?: ReadonlyArray<ReactElement | null>,
   renderer?: W,
 ];
 
+const initialState = new Map();
+
+function rendererReducer<W extends WebComponentRenderer>(
+  state: Map<HTMLElement, Slice<Parameters<W>, 1>>,
+  [root, ...args]: Parameters<W>,
+): Map<HTMLElement, Slice<Parameters<W>, 1>> {
+  return new Map(state.set(root, args as Slice<Parameters<W>, 1>));
+}
+
 export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   reactRenderer: ComponentType<P> | null | undefined,
-  convert: (props: ParametersExceptFirst<W>) => PropsWithChildren<P>,
+  convert: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
 ): UseRendererResult<W> {
-  const map = useRef(new Map<HTMLElement, ParametersExceptFirst<W>>());
-  const [, forceRefresh] = useReducer(() => [], []);
-
-  const renderer = useCallback(
-    ((root, ...args: ParametersExceptFirst<W>) => {
-      map.current.set(root, args);
-      forceRefresh();
-    }) as W,
-    [],
-  );
+  const [map, update] = useReducer<typeof rendererReducer<W>>(rendererReducer, initialState);
+  const renderer = useCallback(((...args: Parameters<W>) => update(args)) as W, []);
 
   return reactRenderer
     ? [
-        Array.from(map.current.entries()).map(([root, args]) =>
+        Array.from(map.entries()).map(([root, args]) =>
           createPortal(createElement<P>(reactRenderer, convert(args)), root),
         ),
         renderer,

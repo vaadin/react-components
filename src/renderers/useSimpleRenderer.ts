@@ -1,5 +1,5 @@
 import type { ComponentType, PropsWithChildren } from 'react';
-import type { ParametersExceptFirst } from './renderer.js';
+import type { Slice } from './renderer.js';
 import { useRenderer, type UseRendererResult } from './useRenderer.js';
 
 export type ReactSimpleRendererProps<O extends HTMLElement> = Readonly<{
@@ -7,8 +7,9 @@ export type ReactSimpleRendererProps<O extends HTMLElement> = Readonly<{
 }>;
 export type WebComponentSimpleRenderer<O extends HTMLElement> = (root: HTMLElement, original: O) => void;
 
-function convertSimpleRendererArgs<O extends HTMLElement>([original]: ParametersExceptFirst<
-  WebComponentSimpleRenderer<O>
+function convertSimpleRendererArgs<O extends HTMLElement>([original]: Slice<
+  Parameters<WebComponentSimpleRenderer<O>>,
+  1
 >): PropsWithChildren<ReactSimpleRendererProps<O>> {
   return { original };
 }
