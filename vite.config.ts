@@ -8,5 +8,5 @@ export default defineConfig({
     target: 'esnext',
   },
   plugins: [react()],
-  root: resolve(process.cwd(), 'test/kitchen-sink')
+  // root: resolve(process.cwd(), '')
 })
