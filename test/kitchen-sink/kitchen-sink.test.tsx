@@ -1,7 +1,7 @@
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import testUtils from 'react-dom/test-utils';
-import { expect } from '@esm-bundle/chai';
 import App from './App';
 
 const act = testUtils.act;
