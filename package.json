@@ -14,7 +14,8 @@
     "clean": "rimraf dist build",
     "build": "npm run build:loadSchema && npm run build:generate && npm run build:typescript",
     "dev": "vite dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest --watch",
+    "webstorm-integration": "vitest --watch --reporter=dot --reporter=json --outputFile=.vitest-result.json"
   },
   "repository": {
     "type": "git",
@@ -85,19 +86,19 @@
   },
   "devDependencies": {
     "@esbuild-kit/esm-loader": "^2.5.0",
-    "@esm-bundle/chai": "^4.3.4-fix.0",
     "@lit-labs/react": "^1.0.9",
-    "@types/mocha": "^10.0.0",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "esbuild": "^0.15.11",
+    "happy-dom": "^7.6.6",
     "json-schema-to-typescript": "^11.0.2",
     "prettier": "^2.7.1",
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",
     "rollup-plugin-esbuild": "^4.10.1",
     "typescript": "^4.8.4",
-    "vite": "^3.1.8"
+    "vite": "^3.1.8",
+    "vitest": "^0.24.4"
   },
   "exports": {
     "./index.js": {

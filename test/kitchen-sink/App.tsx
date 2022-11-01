@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from 'react';
 import { Accordion } from '../../src/Accordion.js';
 import { AccordionPanel } from '../../src/AccordionPanel.js';
@@ -147,7 +146,7 @@ export default function App({}) {
             </ListBox>
           </ContextMenu>
           <CookieConsent position="bottom-right"></CookieConsent>
-          {/*<Crud items={crudData}></Crud>*/}
+          <Crud items={crudData}></Crud>
         </BoardRow>
         <BoardRow>
           <CustomField label="Custom field">
