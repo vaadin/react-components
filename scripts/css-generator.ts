@@ -1,4 +1,4 @@
-import * as vm from './css/node-vm.js';
+import * as vm from 'node:vm';
 
 import path from 'node:path';
 import { createRequire } from 'node:module';

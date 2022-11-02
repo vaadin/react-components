@@ -1,7 +1,4 @@
-export * from 'node:vm';
-
 // TODO: remove once @types/node supports --experimental-vm-modules types
-
 declare module 'node:vm' {
   class Module {
     protected constructor();
