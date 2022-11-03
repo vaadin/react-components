@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { Accordion } from '../../src/Accordion.js';
 import { AccordionPanel } from '../../src/AccordionPanel.js';
@@ -63,6 +63,7 @@ import { Upload } from '../../src/Upload.js';
 import { VerticalLayout } from '../../src/VerticalLayout.js';
 import { VirtualList } from '../../src/VirtualList.js';
 import '../../dist/css/lumo/Typography.css';
+import { Notification } from "../../src/Notification.js";
 
 type TreeGridDataItem = {
   id: number;
@@ -128,6 +129,8 @@ function SelectListBox() {
 }
 
 export default function App({}) {
+  let [ notificationOpened, setNotificationOpened ] = useState(false);
+
   return (
     <AppLayout>
       <DrawerToggle slot="navbar"></DrawerToggle>
@@ -135,7 +138,12 @@ export default function App({}) {
         Kitchen Sink
       </h3>
       <Avatar slot="navbar" name="User Name" abbr="UN"></Avatar>
-      <Button slot="navbar">Hello</Button>
+      <Button slot="navbar" onClick={() => setNotificationOpened(true)}>Hello</Button>
+      <Notification
+        opened={notificationOpened}
+        renderer={() => <>Hi!</>}
+        onOpenedChanged={(e) => setNotificationOpened(e.detail.value)}
+      />
       <Tabs slot="drawer" orientation="vertical">
         <Tab>Tab 1</Tab>
         <Tab>Tab 2</Tab>
