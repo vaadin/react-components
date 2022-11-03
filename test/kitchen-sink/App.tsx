@@ -22,7 +22,7 @@ import { DrawerToggle } from '../../src/DrawerToggle.js';
 import { FormItem } from '../../src/FormItem.js';
 import { FormLayout } from '../../src/FormLayout.js';
 import { ChartSeries } from '../../src/generated/ChartSeries.js';
-import { Grid } from '../../src/Grid.js';
+import { Grid, GridModule } from '../../src/Grid.js';
 import { GridColumn } from '../../src/GridColumn.js';
 import { GridColumnGroup } from '../../src/GridColumnGroup.js';
 import { GridFilterColumn } from '../../src/GridFilterColumn.js';
@@ -88,6 +88,12 @@ const treeGridData: TreeGridDataItem[] = [
   },
 ];
 
+const TreeGridDataProvider: GridModule.GridDataProvider<TreeGridDataItem> = (params, callback) => {
+  const items = params.parentItem ? (params.parentItem.children || []) : treeGridData;
+  const offset = params.page * params.pageSize;
+  callback(items.slice(offset, offset + params.pageSize), treeGridData.length);
+};
+
 enum CrudRole {
   ADMIN = 'admin',
   USER = 'user',
@@ -108,6 +114,13 @@ const displayColor: CSSProperties = { color: 'blueviolet' };
 
 function Display({ item: { name } }: GridBodyReactRendererProps<CrudDataItem>) {
   return <div style={displayColor}>{name}</div>;
+}
+
+function SelectListBox() {
+  return <ListBox>
+    <Item value="1">One</Item>
+    <Item value="2">Two</Item>
+  </ListBox>;
 }
 
 export default function App({}) {
@@ -150,7 +163,7 @@ export default function App({}) {
             </ListBox>
           </ContextMenu>
           <CookieConsent position="bottom-right"></CookieConsent>
-          {/*<Crud items={crudData}></Crud>*/}
+          <Crud items={crudData}></Crud>
         </BoardRow>
         <BoardRow>
           <CustomField label="Custom field">
@@ -171,8 +184,8 @@ export default function App({}) {
           </FormLayout>
         </BoardRow>
         <BoardRow>
-          <Grid items={treeGridData}>
-            <GridTreeColumn path="id" itemHasChildrenPath="children"></GridTreeColumn>
+          <Grid dataProvider={TreeGridDataProvider} itemHasChildrenPath="children">
+            <GridTreeColumn path="id"></GridTreeColumn>
             <GridColumnGroup>
               <GridSortColumn path="size"></GridSortColumn>
               <GridFilterColumn path="name"></GridFilterColumn>
@@ -232,12 +245,15 @@ export default function App({}) {
             </RadioButton>
           </RadioGroup>
           <RichTextEditor></RichTextEditor>
-          <Select
+          <Select 
+            label="Select"
+            value="2"
             items={[
-              { label: 'one', value: '1' },
-              { label: 'two', value: '2' },
+              { label: 'One', value: '1' },
+              { label: 'Two', value: '2' },
             ]}
-          ></Select>
+            renderer={SelectListBox}>
+          </Select>
         </BoardRow>
         <BoardRow>
           <SplitLayout>
