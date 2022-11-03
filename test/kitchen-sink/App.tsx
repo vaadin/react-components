@@ -17,6 +17,8 @@ import { ContextMenu } from '../../src/ContextMenu.js';
 import { CookieConsent } from '../../src/CookieConsent.js';
 import { Crud } from '../../src/Crud.js';
 import { CustomField } from '../../src/CustomField.js';
+import { DatePicker } from '../../src/DatePicker.js';
+import { DateTimePicker } from '../../src/DateTimePicker.js';
 import { Details } from '../../src/Details.js';
 import { DrawerToggle } from '../../src/DrawerToggle.js';
 import { FormItem } from '../../src/FormItem.js';
@@ -55,10 +57,12 @@ import { Tab } from '../../src/Tab.js';
 import { Tabs } from '../../src/Tabs.js';
 import { TextArea } from '../../src/TextArea.js';
 import { TextField } from '../../src/TextField.js';
+import { TimePicker } from '../../src/TimePicker.js';
 import { Tooltip } from '../../src/Tooltip.js';
 import { Upload } from '../../src/Upload.js';
 import { VerticalLayout } from '../../src/VerticalLayout.js';
 import { VirtualList } from '../../src/VirtualList.js';
+import '../../dist/css/lumo/Typography.css';
 
 type TreeGridDataItem = {
   id: number;
@@ -181,6 +185,9 @@ export default function App({}) {
               <label slot="label">Form item</label>
               <output>value</output>
             </FormItem>
+            <DatePicker label="DatePicker"></DatePicker>
+            <TimePicker label="TimePicker"></TimePicker>
+            <DateTimePicker label="DateTimePicker"></DateTimePicker>
           </FormLayout>
         </BoardRow>
         <BoardRow>
