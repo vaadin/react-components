@@ -68,9 +68,9 @@ export function createImportPath(link: string, local: boolean) {
   return updatedLink.replace('.ts', '.js').replaceAll('\\', '/');
 }
 
-export function filterEmptyItems<I>(arr: Array<I | undefined>): I[];
-export function filterEmptyItems<I>(arr: ReadonlyArray<I | undefined>): readonly I[];
-export function filterEmptyItems(arr: ReadonlyArray<unknown | undefined>): readonly unknown[] {
+export function filterEmptyItems<I>(arr: Array<I | undefined | false | null>): I[];
+export function filterEmptyItems<I>(arr: ReadonlyArray<I | undefined | false | null>): readonly I[];
+export function filterEmptyItems(arr: ReadonlyArray<unknown | undefined | false | null>): readonly unknown[] {
   return arr.filter(Boolean);
 }
 
