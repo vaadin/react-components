@@ -6,17 +6,17 @@
   "module": "dist/index.js",
   "main": "dist/index.js",
   "scripts": {
-    "build:load-schema": "node --loader @esbuild-kit/esm-loader scripts/schema-loader.ts",
-    "build:generate": "node --loader @esbuild-kit/esm-loader scripts/generator.ts",
-    "build:generate-css": "node --experimental-vm-modules --loader @esbuild-kit/esm-loader scripts/css-generator.ts",
-    "build:generate-stubs": "node --loader @esbuild-kit/esm-loader scripts/stub-generator.ts",
-    "build:generate-test-stubs": "node --loader @esbuild-kit/esm-loader scripts/test-stub-generator.ts",
-    "build:update-packagejson": "node --loader @esbuild-kit/esm-loader scripts/package-json-update.ts",
+    "build:load-schema": "tsx scripts/schema-loader.ts",
+    "build:generate": "tsx scripts/generator.ts",
+    "build:generate-css": "tsx --experimental-vm-modules scripts/css-generator.ts",
+    "build:generate-stubs": "tsx scripts/stub-generator.ts",
+    "build:generate-test-stubs": "tsx scripts/test-stub-generator.ts",
+    "build:update-packagejson": "tsx scripts/package-json-update.ts",
     "build:typescript": "tsc -p tsconfig.build.json",
     "clean": "rimraf dist build",
     "build": "npm run build:load-schema && npm run build:generate && npm run build:typescript && npm run build:generate-css",
     "dev": "vite dev",
-    "test": "node --loader @esbuild-kit/esm-loader karma.config.ts"
+    "test": "tsx karma.config.ts"
   },
   "repository": {
     "type": "git",
@@ -86,7 +86,6 @@
     "esbuild": "$esbuild"
   },
   "devDependencies": {
-    "@esbuild-kit/esm-loader": "^2.5.0",
     "@esm-bundle/chai": "^4.3.4-fix.0",
     "@lit-labs/react": "^1.0.9",
     "@rollup/plugin-commonjs": "^23.0.2",
@@ -114,6 +113,7 @@
     "puppeteer": "^19.2.0",
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",
+    "tsx": "^3.11.0",
     "typescript": "^4.8.4",
     "vite": "^3.1.8"
   },
