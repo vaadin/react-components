@@ -9,6 +9,8 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "lib": ["es2021", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "strict": true,
     "sourceMap": true,
     "inlineSources": true,
