@@ -27,7 +27,7 @@ import {
   template,
   transform,
 } from './utils/misc.js';
-import { elementsWithEventIssues, GenericElementInfo, genericElements, NonGenericInterface } from './utils/settings.js';
+import { elementsWithEventIssues, genericElements, NonGenericInterface } from './utils/settings.js';
 
 // Placeholders
 const CALL_EXPRESSION = '$CALL_EXPRESSION$';
@@ -178,11 +178,7 @@ function removeAllEventRelated(node: Node, hasEvents: boolean): Node | undefined
     return node;
   }
 
-  if (
-    ts.isImportDeclaration(node) &&
-    ts.isStringLiteral(node.moduleSpecifier) &&
-    node.moduleSpecifier.text === LIT_REACT_PATH
-  ) {
+  if (ts.isImportSpecifier(node) && node.name.text === 'EventName') {
     return undefined;
   }
 
@@ -325,10 +321,10 @@ function generateReactComponent({ name, js }: SchemaHTMLElement, { packageName, 
 
   const ast = template(
     `
-import type { EventName } from "${LIT_REACT_PATH}";
+import type { EventName, WebComponentProps } from "${LIT_REACT_PATH}";
 import * as ${MODULE} from "${MODULE_PATH}";
 import * as React from "react";
-import { createComponent, type WebComponentProps } from "${CREATE_COMPONENT_PATH}";
+import { createComponent } from "${CREATE_COMPONENT_PATH}";
 export type ${EVENT_MAP};
 const events = ${EVENTS_DECLARATION} as ${EVENT_MAP_REF_IN_EVENTS};
 export type ${COMPONENT_PROPS} = WebComponentProps<${MODULE}.${COMPONENT_NAME}, ${EVENT_MAP}>;
