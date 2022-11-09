@@ -12,7 +12,7 @@
     "build:generate-stubs": "tsx scripts/stub-generator.ts",
     "build:update-packagejson": "tsx scripts/package-json-update.ts",
     "build:typescript": "tsc -p tsconfig.build.json",
-    "clean": "rimraf dist build",
+    "clean": "rimraf dist build src/generated",
     "build": "npm run build:load-schema && npm run build:generate && npm run build:typescript && npm run build:generate-css && npm run build:update-packagejson",
     "dev": "vite dev",
     "prepare": "npm run build",
