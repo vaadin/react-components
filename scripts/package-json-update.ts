@@ -1,66 +1,62 @@
 import { readFile, writeFile } from 'node:fs/promises';
-import { resolve, relative, sep } from 'node:path';
-import { extractElementsFromDescriptions, loadDescriptions } from './descriptions.js';
-import { nodeModulesDir, rootDir } from './utils/config.js';
-import { ElementNameMissingError } from './utils/errors.js';
+import { basename, extname, relative, resolve, sep } from 'node:path';
+import type { PackageJson } from 'type-fest';
+import { outDir, rootDir, srcDir } from './utils/config.js';
+import fromAsync from './utils/fromAsync.js';
 import { fswalk } from './utils/fswalk.js';
-import { camelCase, filterEmptyItems, search, stripPrefix } from './utils/misc.js';
+import { filterEmptyItems } from './utils/misc.js';
 
-const descriptions = await loadDescriptions();
 const packageJsonPath = resolve(rootDir, 'package.json');
 const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));
 
-const exports: Record<string, Record<string, string>> = {
+const exports: Record<string, PackageJson.Exports> = {
   '.': {
-    types: './dist/index.d.ts',
     default: './dist/index.js',
+    types: './dist/index.d.ts',
   },
   './index.js': {
-    types: './dist/index.d.ts',
     default: './dist/index.js',
+    types: './dist/index.d.ts',
   },
 };
 
+type ExportsRecord = readonly [exportsPath: string, exportsObject: Partial<PackageJson.ExportConditions>];
+
 const collator = new Intl.Collator('en', { sensitivity: 'base' });
+function compareExportsPaths([pathA]: ExportsRecord, [pathB]: ExportsRecord) {
+  return collator.compare(pathA, pathB);
+}
 
-type ExportsRecord = readonly [exportsPath: string, typesPath: string, filePath: string];
+Object.assign(
+  exports,
+  Object.fromEntries(
+    filterEmptyItems(
+      await fromAsync(fswalk(srcDir), async ([path]) => {
+        const moduleName = basename(path, extname(path));
 
-filterEmptyItems(
-  await Promise.all(
-    Array.from(extractElementsFromDescriptions(descriptions), async ([packageName, element]) => {
-      if (!element.name) {
-        throw new ElementNameMissingError(packageName);
-      }
-
-      if (!(await search(element.name, resolve(nodeModulesDir, packageName)))) {
-        return;
-      }
-
-      const moduleName = stripPrefix(camelCase(element.name));
-      const exportPath = `./${moduleName}.js`;
-      const filePath = `./dist/${moduleName}.js`;
-      const typesPath = `./dist/${moduleName}.d.ts`;
-
-      return [exportPath, typesPath, filePath] as ExportsRecord;
-    }),
+        return [
+          `./${moduleName}.js`,
+          { default: `./dist/${moduleName}.js`, types: `./dist/${moduleName}.d.ts` },
+        ] as ExportsRecord;
+      }),
+    ).sort(compareExportsPaths),
   ),
-)
-  .sort(([pathA], [pathB]) => collator.compare(pathA, pathB))
-  .forEach(([exportsPath, typesPath, filePath]) => {
-    exports[exportsPath] = {
-      types: typesPath,
-      default: filePath,
-    };
-  });
+);
 
 // Add css file entries
-const cssDistDir = resolve(rootDir, 'dist', 'css');
-for await (const [path, entry] of fswalk(cssDistDir, {recursive: true})) {
-  const cssPath = relative(cssDistDir, path).split(sep).join('/');
-  exports[`./css/${cssPath}`] = {
-    default: `./dist/css/${cssPath}`,
-  };
-}
+const outCssDir = resolve(outDir, 'css');
+Object.assign(
+  exports,
+  Object.fromEntries(
+    filterEmptyItems(
+      await fromAsync(fswalk(outCssDir, { recursive: true }), async ([path]) => {
+        const cssPath = relative(outCssDir, path).replaceAll(sep, '/');
+
+        return [`./css/${cssPath}`, { default: `./dist/css/${cssPath}` }] as ExportsRecord;
+      }),
+    ).sort(compareExportsPaths),
+  ),
+);
 
 packageJson['exports'] = exports;
 

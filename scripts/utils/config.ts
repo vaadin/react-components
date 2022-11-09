@@ -9,6 +9,7 @@ export const generatedDir = resolve(srcDir, 'generated');
 export const utilsDir = resolve(srcDir, 'utils');
 export const nodeModulesDir = resolve(rootDir, 'node_modules');
 export const typesDir = resolve(rootDir, 'types');
+export const outDir = resolve(rootDir, 'dist');
 
 await Promise.all([mkdir(generatedDir, { recursive: true }), mkdir(typesDir, { recursive: true })]);
 
