@@ -14,6 +14,7 @@ export type GridProEditColumnProps<TItem> = Omit<
   'editModeRenderer' | 'footerRenderer' | 'headerRenderer' | 'renderer'
 > &
   Readonly<{
+    children?: ComponentType<GridBodyReactRendererProps<TItem>> | null;
     editModeRenderer?: ComponentType<GridBodyReactRendererProps<TItem>> | null;
     footerRenderer?: ComponentType<GridEdgeReactRendererProps<TItem>> | null;
     headerRenderer?: ComponentType<GridEdgeReactRendererProps<TItem>> | null;
@@ -27,7 +28,7 @@ function GridProEditColumn<TItem = GridModule.GridDefaultItem>(
   const [editModePortals, editModeRenderer] = useModelRenderer(props.editModeRenderer);
   const [headerPortals, headerRenderer] = useSimpleRenderer(props.headerRenderer);
   const [footerPortals, footerRenderer] = useSimpleRenderer(props.footerRenderer);
-  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer);
+  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children);
 
   return (
     <_GridProEditColumn<TItem>
@@ -38,7 +39,6 @@ function GridProEditColumn<TItem = GridModule.GridDefaultItem>(
       ref={ref}
       renderer={bodyRenderer}
     >
-      {props.children}
       {editModePortals}
       {headerPortals}
       {footerPortals}

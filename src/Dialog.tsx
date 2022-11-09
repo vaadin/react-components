@@ -1,24 +1,27 @@
-import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
+import { type ForwardedRef, forwardRef, type ReactElement, ReactNode } from "react";
 import { Dialog as _Dialog, DialogModule, type DialogProps as _DialogProps } from './generated/Dialog.js';
-import { type ReactSimpleRendererProps, useSimpleRenderer } from "./renderers/useSimpleRenderer.js";
+import { useChildrenRenderer } from "./renderers/useChildrenRenderer.js";
 
-export type DialogReactRendererProps = ReactSimpleRendererProps<DialogModule.Dialog>;
-
-export type DialogProps = Omit<_DialogProps, 'renderer'> &
-  Readonly<{
-    renderer?: ComponentType<DialogReactRendererProps>;
-  }>;
+export type DialogProps = Omit<_DialogProps, 'renderer' | 'headerRenderer' | 'footerRenderer'> & Readonly<{
+  header: ReactNode;
+  footer: ReactNode;
+}>;
 
 function Dialog(props: DialogProps, ref: ForwardedRef<DialogModule.Dialog>): ReactElement | null {
-  const [portals, renderer] = useSimpleRenderer(props.renderer);
+  const [footerPortals, footerRenderer] = useChildrenRenderer(props.footer);
+  const [headerPortals, headerRenderer] = useChildrenRenderer(props.header);
+  const [portals, renderer] = useChildrenRenderer(props.children);
 
   return (
     <_Dialog
       {...props}
       ref={ref}
+      footerRenderer={footerRenderer}
+      headerRenderer={headerRenderer}
       renderer={renderer}
     >
-      {props.children}
+      {headerPortals}
+      {footerPortals}
       {portals}
     </_Dialog>
   );

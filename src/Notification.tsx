@@ -5,20 +5,16 @@ import {
   NotificationModule,
   type NotificationProps as _NotificationProps,
 } from './generated/Notification.js';
+import { useChildrenRenderer } from "./renderers/useChildrenRenderer.js";
 import { useSimpleRenderer, type ReactSimpleRendererProps} from './renderers/useSimpleRenderer.js';
 
-export type NotificationReactRendererProps = ReactSimpleRendererProps<NotificationModule.Notification>;
-
-export type NotificationProps = Omit<_NotificationProps, 'renderer'> &
-  Readonly<{
-    renderer?: ComponentType<NotificationReactRendererProps>;
-  }>;
+export type NotificationProps = Omit<_NotificationProps, 'renderer'>;
 
 function Notification(
   props: NotificationProps,
   ref: ForwardedRef<NotificationModule.Notification>,
 ): ReactElement | null {
-  const [portals, renderer] = useSimpleRenderer(props.renderer);
+  const [portals, renderer] = useChildrenRenderer(props.children);
 
   return (
     <_Notification
@@ -26,7 +22,6 @@ function Notification(
       ref={ref}
       renderer={renderer}
     >
-      {props.children}
       {portals}
     </_Notification>
   );

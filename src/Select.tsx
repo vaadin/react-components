@@ -6,11 +6,12 @@ export type SelectReactRendererProps = ReactSimpleRendererProps<SelectModule.Sel
 
 export type SelectProps = Omit<_SelectProps, 'renderer'> &
   Readonly<{
+    children?: ComponentType<SelectReactRendererProps> | null;
     renderer?: ComponentType<SelectReactRendererProps> | null;
   }>;
 
 function Select(props: SelectProps, ref: ForwardedRef<SelectModule.Select>): ReactElement | null {
-  const [portals, renderer] = useSimpleRenderer(props.renderer);
+  const [portals, renderer] = useSimpleRenderer(props.renderer ?? props.children);
 
   return (
     <_Select
@@ -19,7 +20,6 @@ function Select(props: SelectProps, ref: ForwardedRef<SelectModule.Select>): Rea
       // TODO: remove cast after the nullability issue is fixed
       renderer={renderer as SelectModule.SelectRenderer}
     >
-      {props.children}
       {portals}
     </_Select>
   );

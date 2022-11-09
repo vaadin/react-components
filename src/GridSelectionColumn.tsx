@@ -14,6 +14,7 @@ export type GridSelectionColumnProps<TItem> = Omit<
   'footerRenderer' | 'headerRenderer' | 'renderer'
 > &
   Readonly<{
+    children?: ComponentType<GridBodyReactRendererProps<TItem>> | null;
     footerRenderer?: ComponentType<GridEdgeReactRendererProps<TItem>> | null;
     headerRenderer?: ComponentType<GridEdgeReactRendererProps<TItem>> | null;
     renderer?: ComponentType<GridBodyReactRendererProps<TItem>> | null;
@@ -25,7 +26,7 @@ function GridSelectionColumn<TItem = GridModule.GridDefaultItem>(
 ): ReactElement | null {
   const [headerPortals, headerRenderer] = useSimpleRenderer(props.headerRenderer);
   const [footerPortals, footerRenderer] = useSimpleRenderer(props.footerRenderer);
-  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer);
+  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children);
 
   return (
     <_GridSelectionColumn<TItem>
@@ -35,7 +36,6 @@ function GridSelectionColumn<TItem = GridModule.GridDefaultItem>(
       ref={ref}
       renderer={bodyRenderer}
     >
-      {props.children}
       {headerPortals}
       {footerPortals}
       {bodyPortals}

@@ -15,6 +15,7 @@ export type VirtualListReactRendererProps<TItem> = ReactModelRendererProps<
 
 export type VirtualListProps<TItem> = Omit<_VirtualListProps<TItem>, 'renderer'> &
   Readonly<{
+    children?: ComponentType<VirtualListReactRendererProps<TItem>> | null;
     renderer?: ComponentType<VirtualListReactRendererProps<TItem>> | null;
   }>;
 
@@ -22,11 +23,10 @@ function VirtualList<TItem = VirtualListDefaultItem>(
   props: VirtualListProps<TItem>,
   ref: ForwardedRef<VirtualListModule.VirtualList<TItem>>,
 ): ReactElement | null {
-  const [portals, renderer] = useModelRenderer(props.renderer);
+  const [portals, renderer] = useModelRenderer(props.renderer ?? props.children);
 
   return (
     <_VirtualList<TItem> {...props} ref={ref} renderer={renderer}>
-      {props.children}
       {portals}
     </_VirtualList>
   );
