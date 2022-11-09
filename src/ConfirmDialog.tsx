@@ -7,7 +7,7 @@ import {
 
 export type ConfirmDialogProps = _ConfirmDialogProps &
   Readonly<{
-    children: _ConfirmDialogProps['message'];
+    children?: _ConfirmDialogProps['message'];
   }>;
 
 function ConfirmDialog(

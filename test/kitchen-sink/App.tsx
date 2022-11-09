@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
+import { useState } from 'react';
+import '../../dist/css/lumo/Typography.css';
 import { Accordion } from '../../src/Accordion.js';
 import { AccordionPanel } from '../../src/AccordionPanel.js';
 import { AppLayout } from '../../src/AppLayout.js';
@@ -8,7 +9,7 @@ import { AvatarGroup } from '../../src/AvatarGroup.js';
 import { Board } from '../../src/Board.js';
 import { BoardRow } from '../../src/BoardRow.js';
 import { Button } from '../../src/Button.js';
-import { Chart, ChartModule } from '../../src/Chart.js';
+import { Chart } from '../../src/Chart.js';
 import { Checkbox } from '../../src/Checkbox.js';
 import { CheckboxGroup } from '../../src/CheckboxGroup.js';
 import { ComboBox } from '../../src/ComboBox.js';
@@ -44,6 +45,7 @@ import { MenuBar } from '../../src/MenuBar.js';
 import { Message } from '../../src/Message.js';
 import { MessageInput } from '../../src/MessageInput.js';
 import { MessageList } from '../../src/MessageList.js';
+import { Notification } from '../../src/Notification.js';
 import { NumberField } from '../../src/NumberField.js';
 import { PasswordField } from '../../src/PasswordField.js';
 import { RadioButton } from '../../src/RadioButton.js';
@@ -62,8 +64,6 @@ import { Tooltip } from '../../src/Tooltip.js';
 import { Upload } from '../../src/Upload.js';
 import { VerticalLayout } from '../../src/VerticalLayout.js';
 import { VirtualList } from '../../src/VirtualList.js';
-import '../../dist/css/lumo/Typography.css';
-import { Notification } from "../../src/Notification.js";
 
 type TreeGridDataItem = {
   id: number;
@@ -92,19 +92,23 @@ const treeGridData: TreeGridDataItem[] = [
     ],
   },
   ...Array.from(new Array(1000)).map((_, index) => ({
-    id: (index + 10),
-    size: (index + 10),
+    id: index + 10,
+    size: index + 10,
     name: `Leaf ${index + 10}`,
   })),
 ];
 
 function NameRenderer({ item: { name } }: GridBodyReactRendererProps<TreeGridDataItem>) {
   const [typePart, numberPart] = name.split(' ');
-  return <><b>{typePart}</b>: {numberPart}</>;
+  return (
+    <>
+      <b>{typePart}</b>: {numberPart}
+    </>
+  );
 }
 
 const TreeGridDataProvider: GridModule.GridDataProvider<TreeGridDataItem> = (params, callback) => {
-  const items = params.parentItem ? (params.parentItem.children || []) : treeGridData;
+  const items = params.parentItem ? params.parentItem.children || [] : treeGridData;
   const offset = params.page * params.pageSize;
   callback(items.slice(offset, offset + params.pageSize), items.length);
 };
@@ -132,14 +136,16 @@ function Display({ item: { name } }: GridBodyReactRendererProps<CrudDataItem>) {
 }
 
 function SelectListBox() {
-  return <ListBox>
-    <Item value="1">One</Item>
-    <Item value="2">Two</Item>
-  </ListBox>;
+  return (
+    <ListBox>
+      <Item value="1">One</Item>
+      <Item value="2">Two</Item>
+    </ListBox>
+  );
 }
 
 export default function App({}) {
-  let [ notificationOpened, setNotificationOpened ] = useState(false);
+  let [notificationOpened, setNotificationOpened] = useState(false);
 
   return (
     <AppLayout>
@@ -148,12 +154,12 @@ export default function App({}) {
         Kitchen Sink
       </h3>
       <Avatar slot="navbar" name="User Name" abbr="UN"></Avatar>
-      <Button slot="navbar" onClick={() => setNotificationOpened(true)}>Hello</Button>
-      <Notification
-        opened={notificationOpened}
-        renderer={() => <>Hi!</>}
-        onOpenedChanged={(e) => setNotificationOpened(e.detail.value)}
-      />
+      <Button slot="navbar" onClick={() => setNotificationOpened(true)}>
+        Hello
+      </Button>
+      <Notification opened={notificationOpened} onOpenedChanged={(e) => setNotificationOpened(e.detail.value)}>
+        Hi
+      </Notification>
       <Tabs slot="drawer" orientation="vertical">
         <Tab>Tab 1</Tab>
         <Tab>Tab 2</Tab>
@@ -167,8 +173,8 @@ export default function App({}) {
             </AccordionPanel>
           </Accordion>
           <AvatarGroup prefix="Users: " items={[{ name: 'Jane Roe', abbr: 'JD' }]}></AvatarGroup>
-          <Chart title='Chart' style={{ height: '300px' }}>
-            <ChartSeries title='Items' type='bar' values={[ 10, 20, 30 ]}></ChartSeries>
+          <Chart title="Chart" style={{ height: '300px' }}>
+            <ChartSeries title="Items" type="bar" values={[10, 20, 30]}></ChartSeries>
           </Chart>
         </BoardRow>
         <BoardRow>
@@ -270,15 +276,15 @@ export default function App({}) {
             </RadioButton>
           </RadioGroup>
           <RichTextEditor></RichTextEditor>
-          <Select 
+          <Select
             label="Select"
             value="2"
             items={[
               { label: 'One', value: '1' },
               { label: 'Two', value: '2' },
             ]}
-            renderer={SelectListBox}>
-          </Select>
+            renderer={SelectListBox}
+          />
         </BoardRow>
         <BoardRow>
           <SplitLayout>

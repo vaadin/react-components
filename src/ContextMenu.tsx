@@ -1,4 +1,4 @@
-import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
+import { ComponentType, type ForwardedRef, forwardRef, PropsWithChildren, type ReactElement } from 'react';
 import {
   ContextMenu as _ContextMenu,
   ContextMenuModule,
@@ -13,15 +13,15 @@ export type ContextMenuReactRendererProps = ReactContextRendererProps<
 
 export type ContextMenuProps = Omit<_ContextMenuProps, 'renderer'> &
   Readonly<{
-    children?: ComponentType<ContextMenuReactRendererProps> | null;
     renderer?: ComponentType<ContextMenuReactRendererProps> | null;
   }>;
 
 function ContextMenu(props: ContextMenuProps, ref: ForwardedRef<ContextMenuModule.ContextMenu>): ReactElement | null {
-  const [portals, renderer] = useContextRenderer(props.renderer ?? props.children);
+  const [portals, renderer] = useContextRenderer(props.renderer);
 
   return (
     <_ContextMenu {...props} ref={ref} renderer={renderer}>
+      {props.children}
       {portals}
     </_ContextMenu>
   );
