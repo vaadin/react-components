@@ -25,7 +25,9 @@ node_modules
 .coverage
 
 # Generated sources
+/css
 /generated
+/renderers
 src/generated/
 /*.d.ts
 /*.d.ts.map

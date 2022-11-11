@@ -1,22 +1,21 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { basename, extname, relative, resolve, sep } from 'node:path';
 import type { PackageJson } from 'type-fest';
-import { outDir, rootDir, srcDir } from './utils/config.js';
+import { rootDir, srcDir } from './utils/config.js';
 import fromAsync from './utils/fromAsync.js';
 import { fswalk } from './utils/fswalk.js';
-import { filterEmptyItems } from './utils/misc.js';
 
 const packageJsonPath = resolve(rootDir, 'package.json');
 const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));
 
 const exports: Record<string, PackageJson.Exports> = {
   '.': {
-    default: './dist/index.js',
-    types: './dist/index.d.ts',
+    default: './index.js',
+    types: './index.d.ts',
   },
   './index.js': {
-    default: './dist/index.js',
-    types: './dist/index.d.ts',
+    default: './index.js',
+    types: './index.d.ts',
   },
 };
 
@@ -30,27 +29,31 @@ function compareExportsPaths([pathA]: ExportsRecord, [pathB]: ExportsRecord) {
 Object.assign(
   exports,
   Object.fromEntries(
-      (await fromAsync(fswalk(srcDir), async ([path]) => {
+    (
+      await fromAsync(fswalk(srcDir), async ([path]) => {
         const moduleName = basename(path, extname(path));
 
         return [
           `./${moduleName}.js`,
-          { default: `./dist/${moduleName}.js`, types: `./dist/${moduleName}.d.ts` },
+          { default: `./${moduleName}.js`, types: `./${moduleName}.d.ts` },
         ] as ExportsRecord;
-      })).sort(compareExportsPaths),
+      })
+    ).sort(compareExportsPaths),
   ),
 );
 
 // Add css file entries
-const outCssDir = resolve(outDir, 'css');
+const outCssDir = resolve(rootDir, 'css');
 Object.assign(
   exports,
   Object.fromEntries(
-      (await fromAsync(fswalk(outCssDir, { recursive: true }), async ([path]) => {
+    (
+      await fromAsync(fswalk(outCssDir, { recursive: true }), async ([path]) => {
         const cssPath = relative(outCssDir, path).replaceAll(sep, '/');
 
-        return [`./css/${cssPath}`, { default: `./dist/css/${cssPath}` }] as ExportsRecord;
-      })).sort(compareExportsPaths),
+        return [`./css/${cssPath}`, { default: `./css/${cssPath}` }] as ExportsRecord;
+      })
+    ).sort(compareExportsPaths),
   ),
 );
 

@@ -9,13 +9,13 @@ const themeNameRegex = /^@vaadin\/vaadin-(.+)-styles/;
 
 function getJsPath(moduleId: string): string {
   const jsSpecifier = posix.join(...relative(nodeModulesDir, moduleId).split(sep));
-  return jsSpecifier.replace(themeNameRegex, './css/$1/');
+  return jsSpecifier.replace(themeNameRegex, './$1/');
 }
 
 function toCamelCase(dashSeparated: string): string {
   return dashSeparated
     .split('-')
-    .map((item) => item.slice(0, 1).toUpperCase() + item.slice(1))
+    .map((item) => item[0].toUpperCase() + item.substring(1))
     .join('');
 }
 
@@ -326,13 +326,13 @@ for (const stylePackage of stylePackages) {
     referencedCssResults.forEach((result) => globalCssResults.add(result));
   }
 
-  emitCssFile(`./css/${toCamelCase(name)}.css`, Array.from(globalCssResults));
+  emitCssFile(`./${toCamelCase(name)}.css`, Array.from(globalCssResults));
 }
 
 // Write files
-const cssOutputDir = 'dist';
+const cssDir = resolve(rootDir, 'css');
 for (const [cssPath, contents] of output) {
-  const filePath = resolve(rootDir, cssOutputDir, cssPath);
+  const filePath = resolve(cssDir, cssPath);
   await mkdir(dirname(filePath), { recursive: true });
   await writeFile(filePath, contents, { encoding: 'utf-8' });
 }
