@@ -29,6 +29,7 @@ node_modules
 /generated
 /renderers
 src/generated/
+/utils
 /*.d.ts
 /*.d.ts.map
 /*.js
