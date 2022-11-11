@@ -10,15 +10,15 @@ import { DrawerToggle } from '../../src/DrawerToggle.js';
 import { Notification } from '../../src/Notification.js';
 import { Tab } from '../../src/Tab.js';
 import { Tabs } from '../../src/Tabs.js';
-import Row8 from './Row8.js';
-import Row5 from './Row5.js';
 import Row1 from './Row1.js';
-import Row4 from './Row4.js';
-import Row9 from './Row9.js';
 import Row2 from './Row2.js';
-import Row7 from './Row7.js';
-import Row6 from './Row6.js';
 import Row3 from './Row3.js';
+import Row4 from './Row4.js';
+import Row5 from './Row5.js';
+import Row6 from './Row6.js';
+import Row7 from './Row7.js';
+import Row8 from './Row8.js';
+import Row9 from './Row9.js';
 
 type DialogComponentProps = Readonly<{
   opened: boolean;
