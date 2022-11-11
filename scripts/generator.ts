@@ -1,7 +1,7 @@
 import { unlink, writeFile } from 'node:fs/promises';
 import { relative, resolve } from 'node:path';
 import ts, {
-  Identifier,
+  type Identifier,
   type Node,
   type SourceFile,
   type TypeAliasDeclaration,
@@ -18,7 +18,7 @@ import {
   camelCase,
   createImportPath,
   createSourceFile,
-  NamedGenericJsContribution,
+  type NamedGenericJsContribution,
   pickNamedEvents,
   search,
   stripPrefix,

@@ -30,16 +30,14 @@ function compareExportsPaths([pathA]: ExportsRecord, [pathB]: ExportsRecord) {
 Object.assign(
   exports,
   Object.fromEntries(
-    filterEmptyItems(
-      await fromAsync(fswalk(srcDir), async ([path]) => {
+      (await fromAsync(fswalk(srcDir), async ([path]) => {
         const moduleName = basename(path, extname(path));
 
         return [
           `./${moduleName}.js`,
           { default: `./dist/${moduleName}.js`, types: `./dist/${moduleName}.d.ts` },
         ] as ExportsRecord;
-      }),
-    ).sort(compareExportsPaths),
+      })).sort(compareExportsPaths),
   ),
 );
 
@@ -48,13 +46,11 @@ const outCssDir = resolve(outDir, 'css');
 Object.assign(
   exports,
   Object.fromEntries(
-    filterEmptyItems(
-      await fromAsync(fswalk(outCssDir, { recursive: true }), async ([path]) => {
+      (await fromAsync(fswalk(outCssDir, { recursive: true }), async ([path]) => {
         const cssPath = relative(outCssDir, path).replaceAll(sep, '/');
 
         return [`./css/${cssPath}`, { default: `./dist/css/${cssPath}` }] as ExportsRecord;
-      }),
-    ).sort(compareExportsPaths),
+      })).sort(compareExportsPaths),
   ),
 );
 
