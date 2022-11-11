@@ -1,33 +1,21 @@
-import type { NotificationRenderer } from '@vaadin/notification';
-import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
+import { type ForwardedRef, forwardRef, type ReactElement } from 'react';
 import {
   Notification as _Notification,
   NotificationModule,
   type NotificationProps as _NotificationProps,
 } from './generated/Notification.js';
-import { useSimpleRenderer, type ReactSimpleRendererProps} from './renderers/useSimpleRenderer.js';
+import { useChildrenRenderer } from './renderers/useChildrenRenderer.js';
 
-export type NotificationReactRendererProps = ReactSimpleRendererProps<NotificationModule.Notification>;
-
-export type NotificationProps = Omit<_NotificationProps, 'renderer'> &
-  Readonly<{
-    renderer?: ComponentType<NotificationReactRendererProps>;
-  }>;
+export type NotificationProps = Omit<_NotificationProps, 'renderer'>;
 
 function Notification(
   props: NotificationProps,
   ref: ForwardedRef<NotificationModule.Notification>,
 ): ReactElement | null {
-  const [portals, renderer] = useSimpleRenderer(props.renderer);
+  const [portals, renderer] = useChildrenRenderer(props.children);
 
   return (
-    <_Notification
-      {...props}
-      ref={ref}
-      // TODO: remove cast after the nullability issue is fixed
-      renderer={renderer as NotificationRenderer}
-    >
-      {props.children}
+    <_Notification {...props} ref={ref} renderer={renderer}>
       {portals}
     </_Notification>
   );

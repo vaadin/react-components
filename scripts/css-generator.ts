@@ -1,23 +1,21 @@
-import { fileURLToPath } from "node:url";
-import * as vm from 'node:vm';
-
-import { dirname, posix, relative, resolve, sep } from "node:path";
-import { createRequire } from 'node:module';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { stylePackages, nodeModulesDir } from './utils/config.js';
 import * as themableMixinModule from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
+import { dirname, posix, relative, resolve, sep } from 'node:path';
+import { createContext, type Module as VmModule, SourceTextModule, SyntheticModule } from 'node:vm';
+import { nodeModulesDir, rootDir, stylePackages } from './utils/config.js';
 
 const themeNameRegex = /^@vaadin\/vaadin-(.+)-styles/;
 
 function getJsPath(moduleId: string): string {
   const jsSpecifier = posix.join(...relative(nodeModulesDir, moduleId).split(sep));
-  return jsSpecifier.replace(themeNameRegex, './css/$1/');
+  return jsSpecifier.replace(themeNameRegex, './$1/');
 }
 
 function toCamelCase(dashSeparated: string): string {
   return dashSeparated
     .split('-')
-    .map((item) => item.slice(0, 1).toUpperCase() + item.slice(1))
+    .map((item) => item[0].toUpperCase() + item.substring(1))
     .join('');
 }
 
@@ -77,13 +75,13 @@ const vmGlobal = {
   },
 };
 
-const context = vm.createContext(vmGlobal);
+const context = createContext(vmGlobal);
 
-const shimModules: Map<string, vm.Module> = new Map();
+const shimModules: Map<string, VmModule> = new Map();
 
 function shimModule(specifier: string, moduleNamespaceObject: object) {
   const moduleId = resolveSpecifier(specifier, import.meta.url);
-  const module = new vm.SyntheticModule(
+  const module = new SyntheticModule(
     Object.keys(moduleNamespaceObject),
     function () {
       for (const [exportName, exportContent] of Object.entries(moduleNamespaceObject)) {
@@ -104,16 +102,19 @@ function unsafeCSS() {
 }
 
 const cssLiterals: Map<string, readonly CSSResult[]> = new Map();
+
 class CSSResult {
   public readonly index: number = 0;
+  public readonly moduleId: string;
+  public readonly strings: readonly string[];
+  public readonly values: ReadonlyArray<CSSResult | number>;
   public name?: string;
   public hasGlobalReference: boolean = false;
 
-  constructor(
-    public readonly moduleId: string,
-    public readonly strings: readonly string[],
-    public readonly values: ReadonlyArray<CSSResult | number>,
-  ) {
+  constructor(moduleId: string, strings: readonly string[], values: ReadonlyArray<CSSResult | number>) {
+    this.moduleId = moduleId;
+    this.strings = strings;
+    this.values = values;
     this.index = storeItem(cssLiterals, this.moduleId, this);
   }
 
@@ -154,14 +155,14 @@ function escape(str: string) {
   return str.replaceAll(escapePattern, '\\\\');
 }
 
-async function loadModule(moduleId: string): Promise<vm.Module> {
+async function loadModule(moduleId: string): Promise<VmModule> {
   if (shimModules.has(moduleId)) {
     return shimModules.get(moduleId)!;
   }
 
   const source = await readFile(moduleId, { encoding: 'utf-8' });
 
-  return new vm.SourceTextModule(`window.__moduleId = '${escape(moduleId)}';\n${escape(source)}`, {
+  return new SourceTextModule(`window.__moduleId = '${escape(moduleId)}';\n${escape(source)}`, {
     identifier: moduleId,
     context,
     initializeImportMeta(meta) {
@@ -170,10 +171,10 @@ async function loadModule(moduleId: string): Promise<vm.Module> {
   });
 }
 
-const moduleMap: Map<string, Promise<vm.Module>> = new Map();
+const moduleMap: Map<string, Promise<VmModule>> = new Map();
 const moduleDependencies: Map<string, readonly string[]> = new Map();
 
-async function linker(specifier: string, referencingModule: vm.Module): Promise<vm.Module> {
+async function linker(specifier: string, referencingModule: VmModule): Promise<VmModule> {
   const moduleId = resolveSpecifier(specifier, referencingModule.identifier);
   if (moduleId === registerStylesId) {
     return shimRegisterStyles(referencingModule.identifier);
@@ -264,7 +265,7 @@ function emitCssFile(cssPath: string, css: CSSResultGroup) {
 }
 
 // Assign export names to CSSResult
-for (const [moduleId, modulePromise] of moduleMap) {
+for (const [, modulePromise] of moduleMap) {
   const module = await modulePromise;
   for (const [name, value] of Object.entries(module.namespace)) {
     if (value instanceof CSSResult) {
@@ -325,14 +326,13 @@ for (const stylePackage of stylePackages) {
     referencedCssResults.forEach((result) => globalCssResults.add(result));
   }
 
-  emitCssFile(`./css/${toCamelCase(name)}.css`, Array.from(globalCssResults));
+  emitCssFile(`./${toCamelCase(name)}.css`, Array.from(globalCssResults));
 }
 
 // Write files
-const cssOutputDir = '../dist';
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const cssDir = resolve(rootDir, 'css');
 for (const [cssPath, contents] of output) {
-  const filePath = resolve(__dirname, cssOutputDir, cssPath);
+  const filePath = resolve(cssDir, cssPath);
   await mkdir(dirname(filePath), { recursive: true });
   await writeFile(filePath, contents, { encoding: 'utf-8' });
 }
