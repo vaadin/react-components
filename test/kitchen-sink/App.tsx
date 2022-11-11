@@ -1,15 +1,14 @@
-import type { PropsWithChildren } from 'react';
 import { useState } from 'react';
 import '../../dist/css/lumo/Typography.css';
 import { AppLayout } from '../../src/AppLayout.js';
 import { Avatar } from '../../src/Avatar.js';
 import { Board } from '../../src/Board.js';
 import { Button } from '../../src/Button.js';
-import { Dialog } from '../../src/Dialog.js';
 import { DrawerToggle } from '../../src/DrawerToggle.js';
 import { Notification } from '../../src/Notification.js';
 import { Tab } from '../../src/Tab.js';
 import { Tabs } from '../../src/Tabs.js';
+import { DialogComponent } from './DialogComponent.js';
 import Row1 from './Row1.js';
 import Row2 from './Row2.js';
 import Row3 from './Row3.js';
@@ -19,30 +18,6 @@ import Row6 from './Row6.js';
 import Row7 from './Row7.js';
 import Row8 from './Row8.js';
 import Row9 from './Row9.js';
-
-type DialogComponentProps = Readonly<{
-  opened: boolean;
-  close: () => void;
-}>;
-
-function DialogComponent({ opened, close }: PropsWithChildren<DialogComponentProps>) {
-  const [count, setCount] = useState(0);
-
-  return (
-    <Dialog
-      opened={opened}
-      header={<div>HEADER</div>}
-      footer={
-        <>
-          <Button onClick={() => setCount(count + 1)}>Increase count</Button>
-          <Button onClick={close}>Close</Button>
-        </>
-      }
-    >
-      <div>BODY count: {count}</div>
-    </Dialog>
-  );
-}
 
 export default function App({}) {
   const [notificationOpened, setNotificationOpened] = useState(false);
