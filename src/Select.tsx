@@ -4,7 +4,7 @@ import { useSimpleRenderer, type ReactSimpleRendererProps} from './renderers/use
 
 export type SelectReactRendererProps = ReactSimpleRendererProps<SelectModule.Select>;
 
-export type SelectProps = Omit<_SelectProps, 'renderer'> &
+export type SelectProps = Omit<_SelectProps, 'children' | 'renderer'> &
   Readonly<{
     children?: ComponentType<SelectReactRendererProps> | null;
     renderer?: ComponentType<SelectReactRendererProps> | null;

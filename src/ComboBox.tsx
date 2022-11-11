@@ -4,7 +4,7 @@ import { ComboBox as _ComboBox, ComboBoxModule, type ComboBoxProps as _ComboBoxP
 import type { ComboBoxReactRendererProps } from './renderers/combobox.js';
 import { useModelRenderer } from "./renderers/useModelRenderer.js";
 
-export type ComboBoxProps<TItem> = Omit<_ComboBoxProps<TItem>, 'renderer'> &
+export type ComboBoxProps<TItem> = Omit<_ComboBoxProps<TItem>, 'children' | 'renderer'> &
   Readonly<{
     children?: ComponentType<ComboBoxReactRendererProps<TItem>> | null;
     renderer?: ComponentType<ComboBoxReactRendererProps<TItem>> | null;

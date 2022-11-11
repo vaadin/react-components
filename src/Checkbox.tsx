@@ -1,11 +1,7 @@
 import { type ForwardedRef, forwardRef, type ReactElement } from 'react';
-import {
-  Checkbox as _Checkbox,
-  CheckboxModule,
-  type CheckboxProps as _CheckboxProps,
-} from './generated/Checkbox.js';
+import { Checkbox as _Checkbox, CheckboxModule, type CheckboxProps as _CheckboxProps } from './generated/Checkbox.js';
 
-export type CheckboxProps = _CheckboxProps &
+export type CheckboxProps = Omit<_CheckboxProps, 'children'> &
   Readonly<{
     children?: _CheckboxProps['label'];
   }>;

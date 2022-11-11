@@ -11,7 +11,7 @@ import { useSimpleRenderer } from "./renderers/useSimpleRenderer.js";
 
 export type GridSelectionColumnProps<TItem> = Omit<
   _GridSelectionColumnProps<TItem>,
-  'footerRenderer' | 'headerRenderer' | 'renderer'
+  'children' | 'footerRenderer' | 'headerRenderer' | 'renderer'
 > &
   Readonly<{
     children?: ComponentType<GridBodyReactRendererProps<TItem>> | null;

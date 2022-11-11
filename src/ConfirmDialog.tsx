@@ -5,7 +5,7 @@ import {
   type ConfirmDialogProps as _ConfirmDialogProps,
 } from './generated/ConfirmDialog.js';
 
-export type ConfirmDialogProps = _ConfirmDialogProps &
+export type ConfirmDialogProps = Omit<_ConfirmDialogProps, 'children'> &
   Readonly<{
     children?: _ConfirmDialogProps['message'];
   }>;

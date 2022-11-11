@@ -11,7 +11,7 @@ import { useSimpleRenderer } from "./renderers/useSimpleRenderer.js";
 
 export type GridSortColumnProps<TItem> = Omit<
   _GridSortColumnProps<TItem>,
-  'footerRenderer' | 'headerRenderer' | 'renderer'
+  'children' | 'footerRenderer' | 'headerRenderer' | 'renderer'
 > &
   Readonly<{
     children?: ComponentType<GridBodyReactRendererProps<TItem>> | null;

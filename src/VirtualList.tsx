@@ -13,7 +13,7 @@ export type VirtualListReactRendererProps<TItem> = ReactModelRendererProps<
   VirtualListModule.VirtualList<TItem>
 >;
 
-export type VirtualListProps<TItem> = Omit<_VirtualListProps<TItem>, 'renderer'> &
+export type VirtualListProps<TItem> = Omit<_VirtualListProps<TItem>, 'children' | 'renderer'> &
   Readonly<{
     children?: ComponentType<VirtualListReactRendererProps<TItem>> | null;
     renderer?: ComponentType<VirtualListReactRendererProps<TItem>> | null;

@@ -9,7 +9,10 @@ import type { GridBodyReactRendererProps, GridEdgeReactRendererProps } from './r
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 import { useSimpleRenderer } from './renderers/useSimpleRenderer.js';
 
-export type GridColumnProps<TItem> = Omit<_GridColumnProps<TItem>, 'footerRenderer' | 'headerRenderer' | 'renderer'> &
+export type GridColumnProps<TItem> = Omit<
+  _GridColumnProps<TItem>,
+  'children' | 'footerRenderer' | 'headerRenderer' | 'renderer'
+> &
   Readonly<{
     children?: ComponentType<GridBodyReactRendererProps<TItem>> | null;
     footerRenderer?: ComponentType<GridEdgeReactRendererProps<TItem>> | null;
