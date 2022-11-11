@@ -1,13 +1,13 @@
-import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from "react";
-import type { GridModule } from "./generated/Grid.js";
+import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
+import type { GridModule } from './generated/Grid.js';
 import {
   GridSortColumn as _GridSortColumn,
   GridSortColumnModule,
-  type GridSortColumnProps as _GridSortColumnProps
-} from "./generated/GridSortColumn.js";
-import type { GridBodyReactRendererProps, GridEdgeReactRendererProps } from "./renderers/grid.js";
-import { useModelRenderer } from "./renderers/useModelRenderer.js";
-import { useSimpleRenderer } from "./renderers/useSimpleRenderer.js";
+  type GridSortColumnProps as _GridSortColumnProps,
+} from './generated/GridSortColumn.js';
+import type { GridBodyReactRendererProps, GridEdgeReactRendererProps } from './renderers/grid.js';
+import { useModelRenderer } from './renderers/useModelRenderer.js';
+import { useSimpleRenderer } from './renderers/useSimpleRenderer.js';
 
 export type GridSortColumnProps<TItem> = Omit<
   _GridSortColumnProps<TItem>,
