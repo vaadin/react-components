@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import '../../dist/css/lumo/Typography.css';
+import '../../css/lumo/Typography.css';
 import { AppLayout } from '../../src/AppLayout.js';
 import { Avatar } from '../../src/Avatar.js';
 import { Board } from '../../src/Board.js';

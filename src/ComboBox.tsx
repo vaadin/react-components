@@ -4,9 +4,8 @@ import { ComboBox as _ComboBox, ComboBoxModule, type ComboBoxProps as _ComboBoxP
 import type { ComboBoxReactRendererProps } from './renderers/combobox.js';
 import { useModelRenderer } from "./renderers/useModelRenderer.js";
 
-export type ComboBoxProps<TItem> = Omit<_ComboBoxProps<TItem>, 'children' | 'renderer'> &
+export type ComboBoxProps<TItem> = Omit<_ComboBoxProps<TItem>, 'renderer'> &
   Readonly<{
-    children?: ComponentType<ComboBoxReactRendererProps<TItem>> | null;
     renderer?: ComponentType<ComboBoxReactRendererProps<TItem>> | null;
   }>;
 
@@ -14,10 +13,11 @@ function ComboBox<TItem = ComboBoxDefaultItem>(
   props: ComboBoxProps<TItem>,
   ref: ForwardedRef<ComboBoxModule.ComboBox<TItem>>,
 ): ReactElement | null {
-  const [portals, renderer] = useModelRenderer(props.renderer ?? props.children);
+  const [portals, renderer] = useModelRenderer(props.renderer);
 
   return (
     <_ComboBox<TItem> {...props} ref={ref} renderer={renderer}>
+      {props.children}
       {portals}
     </_ComboBox>
   );
