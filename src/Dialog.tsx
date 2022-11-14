@@ -1,20 +1,26 @@
-import { type ForwardedRef, forwardRef, type ReactElement, ReactNode } from 'react';
+import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement, type ReactNode } from 'react';
 import { Dialog as _Dialog, DialogModule, type DialogProps as _DialogProps } from './generated/Dialog.js';
-import { useChildrenRenderer } from './renderers/useChildrenRenderer.js';
+import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
+import type { ReactSimpleRendererProps } from './renderers/useSimpleRenderer.js';
 
-export type DialogProps = Omit<_DialogProps, 'renderer' | 'headerRenderer' | 'footerRenderer'> &
+export type DialogReactRendererProps = ReactSimpleRendererProps<DialogModule.Dialog>;
+
+export type DialogProps = Omit<_DialogProps, 'footerRenderer' | 'headerRenderer' | 'renderer'> &
   Readonly<{
-    header: ReactNode;
-    footer: ReactNode;
+    footer?: ReactNode;
+    footerRenderer?: ComponentType<DialogReactRendererProps> | null;
+    header?: ReactNode;
+    headerRenderer?: ComponentType<DialogReactRendererProps> | null;
+    renderer?: ComponentType<DialogReactRendererProps> | null;
   }>;
 
 function Dialog(
-  { footer, header, ...props }: DialogProps,
+  { children, footer, header, ...props }: DialogProps,
   ref: ForwardedRef<DialogModule.Dialog>,
 ): ReactElement | null {
-  const [footerPortals, footerRenderer] = useChildrenRenderer(footer);
-  const [headerPortals, headerRenderer] = useChildrenRenderer(header);
-  const [portals, renderer] = useChildrenRenderer(props.children);
+  const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
+  const [headerPortals, headerRenderer] = useSimpleOrChildrenRenderer(props.headerRenderer, header);
+  const [portals, renderer] = useSimpleOrChildrenRenderer(props.renderer, children);
 
   return (
     <_Dialog {...props} ref={ref} footerRenderer={footerRenderer} headerRenderer={headerRenderer} renderer={renderer}>
