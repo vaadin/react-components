@@ -17,7 +17,8 @@
     "build": "npm run build:load-schema && npm run build:generate && npm run build:typescript && npm run build:generate-css && npm run build:update-packagejson",
     "dev": "vite dev",
     "prepare": "npm run build",
-    "test": "node --loader @esbuild-kit/esm-loader karma.config.ts",
+    "test": "karma start karma.config.cjs",
+    "test:watch": "karma start karma.config.cjs -- --watch",
     "typecheck": "tsc --noEmit"
   },
   "repository": {
@@ -107,7 +108,7 @@
     "karma-vite": "^1.0.3",
     "mocha": "^10.1.0",
     "prettier": "^2.7.1",
-    "puppeteer": "^19.2.0",
+    "puppeteer": "^19.2.2",
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",
     "tsx": "^3.11.0",
