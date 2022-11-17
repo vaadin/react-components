@@ -3,14 +3,12 @@ const observerOptions = {
   subtree: true,
 };
 
-export default function catchRender(tag: string, root: Element) {
+export type CatchRenderCondition = (node: Node) => boolean;
+
+export default function catchRender(root: Element, condition: CatchRenderCondition) {
   return new Promise<void>((resolve) => {
-    console.log(tag, root);
-
     const observer = new MutationObserver((mutations) => {
-      console.log(mutations);
-
-      if (mutations.flatMap(({ addedNodes }) => Array.from(addedNodes)).some((node) => node.nodeName === tag)) {
+      if (mutations.flatMap(({ addedNodes }) => Array.from(addedNodes)).some(condition)) {
         resolve();
       }
     });

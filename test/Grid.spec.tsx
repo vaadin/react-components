@@ -1,7 +1,16 @@
 import { expect } from '@esm-bundle/chai';
 import { render } from '@testing-library/react';
 import { Grid } from '../src/Grid.js';
-import { GridColumn } from '../src/index.js';
+import { GridColumn } from '../src/GridColumn.js';
+import catchRender from './utils/catchRender.js';
+
+function isGridCellContentNodeRendered(node: Node) {
+  return (
+    node instanceof Text &&
+    node.parentNode instanceof HTMLElement &&
+    node.parentNode.localName === 'vaadin-grid-cell-content'
+  );
+}
 
 describe('Grid', () => {
   it('should render correctly', async () => {
@@ -13,7 +22,7 @@ describe('Grid', () => {
     ];
 
     render(
-      <Grid<Item>>
+      <Grid<Item> items={items}>
         <GridColumn<Item> headerRenderer={() => <>Name</>} footerRenderer={() => <>Name Footer</>}>
           {({ item }) => <>{item.name}</>}
         </GridColumn>
@@ -26,37 +35,41 @@ describe('Grid', () => {
       </Grid>,
     );
 
-    await new Promise<void>(resolve => setTimeout(resolve, 1000));
-
     const grid = document.querySelector('vaadin-grid');
     expect(grid).not.to.be.undefined;
 
-    grid!.items = items;
+    await catchRender(grid!, isGridCellContentNodeRendered);
+
     const columns = document.querySelectorAll('vaadin-grid-column');
-    const cells = Array.from(document.querySelectorAll('vaadin-gird-cell-content'));
+    // Filter cells that don't have any textContent. Grid creates empty cells for some calculations,
+    // but we don't need them.
+    const cells = Array.from(
+      grid!.querySelectorAll('vaadin-grid-cell-content'),
+      ({ textContent }) => textContent,
+    ).filter(Boolean);
 
     expect(columns.length).to.equal(3);
     expect(cells.length).to.equal(12);
 
-    const [nameHeaderCell, surnameHeaderCell, roleHeaderCell] = cells.slice(0, 3);
-    const [nameFooterCell, surnameFooterCell, roleFooterCell] = cells.slice(3, 6);
-    const [nameBodyCell1, surnameBodyCell1, roleBodyCell1] = cells.slice(6, 9);
-    const [nameBodyCell2, surnameBodyCell2, roleBodyCell2] = cells.slice(9, 12);
+    const [nameHeaderCellContent, surnameHeaderCellContent, roleHeaderCellContent] = cells.slice(0, 3);
+    const [nameFooterCellContent, surnameFooterCellContent, roleFooterCellContent] = cells.slice(3, 6);
+    const [nameBodyCellContent1, surnameBodyCellContent1, roleBodyCellContent1] = cells.slice(6, 9);
+    const [nameBodyCellContent2, surnameBodyCellContent2, roleBodyCellContent2] = cells.slice(9, 12);
 
-    expect(nameHeaderCell.textContent).to.equal('Name');
-    expect(surnameHeaderCell.textContent).to.equal('Surname');
-    expect(roleHeaderCell.textContent).to.equal('Role');
+    expect(nameHeaderCellContent).to.equal('Name');
+    expect(surnameHeaderCellContent).to.equal('Surname');
+    expect(roleHeaderCellContent).to.equal('Role');
 
-    expect(nameFooterCell.textContent).to.equal('Name Footer');
-    expect(surnameFooterCell.textContent).to.equal('Surname Footer');
-    expect(roleFooterCell.textContent).to.equal('Role Footer');
+    expect(nameFooterCellContent).to.equal('Name Footer');
+    expect(surnameFooterCellContent).to.equal('Surname Footer');
+    expect(roleFooterCellContent).to.equal('Role Footer');
 
-    expect(nameBodyCell1.textContent).to.equal('John');
-    expect(surnameBodyCell1.textContent).to.equal('Lennon');
-    expect(roleBodyCell1.textContent).to.equal('singer');
+    expect(nameBodyCellContent1).to.equal('John');
+    expect(surnameBodyCellContent1).to.equal('Lennon');
+    expect(roleBodyCellContent1).to.equal('singer');
 
-    expect(nameBodyCell2.textContent).to.equal('Ringo');
-    expect(surnameBodyCell2.textContent).to.equal('Starr');
-    expect(roleBodyCell2.textContent).to.equal('drums');
+    expect(nameBodyCellContent2).to.equal('Ringo');
+    expect(surnameBodyCellContent2).to.equal('Starr');
+    expect(roleBodyCellContent2).to.equal('drums');
   });
 });
