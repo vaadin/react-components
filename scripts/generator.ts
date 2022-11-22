@@ -360,4 +360,4 @@ async function printAndWrite(file: SourceFile) {
   await writeFile(file.fileName, contents, 'utf8');
 }
 
-await Promise.all([...sourceFiles.map(printAndWrite)]);
+await Promise.all(sourceFiles.map(printAndWrite));
