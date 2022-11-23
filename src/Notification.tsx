@@ -1,4 +1,13 @@
-import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
+import {
+  ComponentType,
+  type ForwardedRef,
+  forwardRef,
+  ForwardRefExoticComponent,
+  PropsWithoutRef,
+  type ReactElement,
+  ReactNode,
+  RefAttributes,
+} from 'react';
 import {
   Notification as _Notification,
   WebComponentModule,
@@ -9,8 +18,9 @@ import type { ReactSimpleRendererProps } from './renderers/useSimpleRenderer.js'
 
 export type NotificationReactRendererProps = ReactSimpleRendererProps<WebComponentModule.Notification>;
 
-export type NotificationProps = Omit<_NotificationProps, 'renderer'> &
+export type NotificationProps = Omit<_NotificationProps, 'children' | 'renderer'> &
   Readonly<{
+    children?: ReactNode | ComponentType<NotificationReactRendererProps>;
     renderer?: ComponentType<NotificationReactRendererProps>;
   }>;
 

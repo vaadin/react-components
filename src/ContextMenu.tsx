@@ -1,8 +1,8 @@
-import { ComponentType, type ForwardedRef, forwardRef, PropsWithChildren, type ReactElement } from 'react';
+import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
 import {
   ContextMenu as _ContextMenu,
-  WebComponentModule,
   type ContextMenuProps as _ContextMenuProps,
+  WebComponentModule,
 } from './generated/ContextMenu.js';
 import { type ReactContextRendererProps, useContextRenderer } from './renderers/useContextRenderer.js';
 
@@ -11,7 +11,7 @@ export type ContextMenuReactRendererProps = ReactContextRendererProps<
   WebComponentModule.ContextMenu
 >;
 
-export type ContextMenuProps = Omit<_ContextMenuProps, 'renderer'> &
+export type ContextMenuProps = Omit<_ContextMenuProps, 'opened' | 'renderer'> &
   Readonly<{
     renderer?: ComponentType<ContextMenuReactRendererProps> | null;
   }>;

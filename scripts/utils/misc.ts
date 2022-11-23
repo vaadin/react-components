@@ -1,17 +1,17 @@
-import { access } from 'node:fs/promises';
-import { constants } from 'node:fs';
-import { join } from 'node:path';
-import type { SetRequired } from 'type-fest';
+import { constants } from "node:fs";
+import { access } from "node:fs/promises";
+import { join } from "node:path";
+import type { SetRequired } from "type-fest";
 import ts, {
   type Node,
   type SourceFile,
   type Statement,
   type TransformationContext,
-  type TransformerFactory,
-} from 'typescript';
-import type { GenericJsContribution } from '../../types/schema.js';
-import { fswalk, type WalkOptions } from './fswalk.js';
-import { elementsWithMissingEntrypoint } from './settings.js';
+  type TransformerFactory
+} from "typescript";
+import type { GenericJsContribution } from "../../types/schema.js";
+import { fswalk, type WalkOptions } from "./fswalk.js";
+import { elementsWithMissingEntrypoint } from "./settings.js";
 
 export function camelCase(str: string) {
   // CamelCase join
@@ -68,12 +68,6 @@ export function createImportPath(link: string, local: boolean) {
   }
 
   return updatedLink.replace('.ts', '.js').replaceAll('\\', '/');
-}
-
-export function filterEmptyItems<I>(arr: Array<I | undefined | false | null>): I[];
-export function filterEmptyItems<I>(arr: ReadonlyArray<I | undefined | false | null>): readonly I[];
-export function filterEmptyItems(arr: ReadonlyArray<unknown | undefined | false | null>): readonly unknown[] {
-  return arr.filter(Boolean);
 }
 
 export function template<T>(

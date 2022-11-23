@@ -43,7 +43,7 @@ module.exports = (config) => {
         served: false,
       },
       {
-        pattern: 'test/**/Grid.spec.tsx',
+        pattern: 'test/**/*.spec.tsx',
         type: 'module',
         watched: false,
         served: false,
