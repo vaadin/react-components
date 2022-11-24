@@ -15,11 +15,7 @@ function Select(props: SelectProps, ref: ForwardedRef<WebComponentModule.Select>
   const [portals, renderer] = useSimpleOrChildrenRenderer(props.renderer, props.children);
 
   return (
-    <_Select
-      {...props}
-      ref={ref}
-      renderer={renderer}
-    >
+    <_Select {...props} ref={ref} renderer={renderer}>
       {portals}
     </_Select>
   );

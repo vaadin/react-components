@@ -1,6 +1,6 @@
-import { Component, PureComponent } from "react";
+import { Component, PureComponent } from 'react';
 import type { ComponentType, ReactNode } from 'react';
-import { useRenderer } from "./useRenderer.js";
+import { useRenderer } from './useRenderer.js';
 import type { UseRendererResult } from './useRenderer.js';
 import {
   type ReactSimpleRendererProps,

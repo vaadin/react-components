@@ -1,4 +1,4 @@
-import { expect } from "@esm-bundle/chai";
+import { expect } from '@esm-bundle/chai';
 import { render } from '@testing-library/react';
 import { ComboBox } from '../src/ComboBox.js';
 

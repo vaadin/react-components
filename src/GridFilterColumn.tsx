@@ -31,12 +31,7 @@ function GridFilterColumn<TItem = GridModule.GridDefaultItem>(
   const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children);
 
   return (
-    <_GridFilterColumn<TItem>
-      {...props}
-      footerRenderer={footerRenderer}
-      ref={ref}
-      renderer={bodyRenderer}
-    >
+    <_GridFilterColumn<TItem> {...props} footerRenderer={footerRenderer} ref={ref} renderer={bodyRenderer}>
       {footerPortals}
       {bodyPortals}
     </_GridFilterColumn>

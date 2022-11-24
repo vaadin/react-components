@@ -6,7 +6,7 @@ import { Item } from '../../src/Item.js';
 import { ListBox } from '../../src/ListBox.js';
 import { crudData } from './data.js';
 
-const menuItems = [{text: 'Edit'}, {text: 'Delete'}];
+const menuItems = [{ text: 'Edit' }, { text: 'Delete' }];
 
 export default function Row3() {
   return (

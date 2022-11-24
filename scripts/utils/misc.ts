@@ -1,17 +1,17 @@
-import { constants } from "node:fs";
-import { access } from "node:fs/promises";
-import { join } from "node:path";
-import type { SetRequired } from "type-fest";
+import { constants } from 'node:fs';
+import { access } from 'node:fs/promises';
+import { join } from 'node:path';
+import type { SetRequired } from 'type-fest';
 import ts, {
   type Node,
   type SourceFile,
   type Statement,
   type TransformationContext,
-  type TransformerFactory
-} from "typescript";
-import type { GenericJsContribution } from "../../types/schema.js";
-import { fswalk, type WalkOptions } from "./fswalk.js";
-import { elementsWithMissingEntrypoint } from "./settings.js";
+  type TransformerFactory,
+} from 'typescript';
+import type { GenericJsContribution } from '../../types/schema.js';
+import { fswalk, type WalkOptions } from './fswalk.js';
+import { elementsWithMissingEntrypoint } from './settings.js';
 
 export function camelCase(str: string) {
   // CamelCase join

@@ -8,12 +8,8 @@ export const srcDir = resolve(rootDir, 'src');
 export const generatedDir = resolve(srcDir, 'generated');
 export const utilsDir = resolve(srcDir, 'utils');
 export const nodeModulesDir = resolve(rootDir, 'node_modules');
-export const testDir = resolve(rootDir, 'test');
 export const typesDir = resolve(rootDir, 'types');
 
 await Promise.all([mkdir(generatedDir, { recursive: true }), mkdir(typesDir, { recursive: true })]);
 
-export const stylePackages = [
-  '@vaadin/vaadin-lumo-styles',
-  '@vaadin/vaadin-material-styles',
-];
+export const stylePackages = ['@vaadin/vaadin-lumo-styles', '@vaadin/vaadin-material-styles'];

@@ -6,8 +6,8 @@ import { GridColumn } from '../src/GridColumn.js';
 import { GridFilterColumn } from '../src/GridFilterColumn.js';
 import { GridProEditColumn } from '../src/GridProEditColumn.js';
 import { GridSelectionColumn } from '../src/GridSelectionColumn.js';
-import { GridSortColumn } from "../src/GridSortColumn.js";
-import type { GridBodyReactRendererProps } from "../src/renderers/grid.js";
+import { GridSortColumn } from '../src/GridSortColumn.js';
+import type { GridBodyReactRendererProps } from '../src/renderers/grid.js';
 import catchRender from './utils/catchRender.js';
 
 describe('Grid', () => {
@@ -103,9 +103,7 @@ describe('Grid', () => {
     it('should render correctly', async () => {
       render(
         <Grid<Item> items={items}>
-          <GridFilterColumn<Item> footerRenderer={DefaultFooterRenderer}>
-            {DefaultBodyRenderer}
-          </GridFilterColumn>
+          <GridFilterColumn<Item> footerRenderer={DefaultFooterRenderer}>{DefaultBodyRenderer}</GridFilterColumn>
         </Grid>,
       );
 

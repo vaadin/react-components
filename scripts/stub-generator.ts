@@ -4,7 +4,7 @@ import ts from 'typescript';
 import { extractElementsFromDescriptions, loadDescriptions } from './descriptions.js';
 import { generatedDir, nodeModulesDir, srcDir } from './utils/config.js';
 import { ElementNameMissingError, warnAboutExistingFile } from './utils/errors.js';
-import filterEmptyItems from "./utils/filterEmptyItems.js";
+import filterEmptyItems from './utils/filterEmptyItems.js';
 import fromAsync from './utils/fromAsync.js';
 import { fswalk } from './utils/fswalk.js';
 import {

@@ -1,6 +1,6 @@
 import { expect } from '@esm-bundle/chai';
 import { render } from '@testing-library/react';
-import type { ReactElement } from "react";
+import type { ReactElement } from 'react';
 import { ListBox } from '../src/ListBox.js';
 import { Item } from '../src/Item.js';
 import { Select } from '../src/Select.js';
@@ -48,22 +48,12 @@ describe('Select', () => {
   });
 
   it('should use renderer prop if it is set', async () => {
-    const { container } = render(
-      <Select
-        items={items}
-        renderer={Renderer}
-        value="bar"
-      />,
-    );
+    const { container } = render(<Select items={items} renderer={Renderer} value="bar" />);
     await assert(container);
   });
 
   it('should use children render function as a renderer prop', async () => {
-    const { container } = render(
-      <Select value="bar">
-        {Renderer}
-      </Select>,
-    );
+    const { container } = render(<Select value="bar">{Renderer}</Select>);
 
     await assert(container);
   });
