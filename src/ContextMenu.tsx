@@ -11,6 +11,9 @@ export type ContextMenuReactRendererProps = ReactContextRendererProps<
   WebComponentModule.ContextMenu
 >;
 
+// The 'opened' property is omitted because it is readonly in the web component.
+// So you cannot set it up manually, only read from the component.
+// For changing the property, use specific methods of the component.
 export type ContextMenuProps = Omit<_ContextMenuProps, 'opened' | 'renderer'> &
   Readonly<{
     renderer?: ComponentType<ContextMenuReactRendererProps> | null;
