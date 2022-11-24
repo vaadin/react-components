@@ -3,10 +3,17 @@ import { render } from '@testing-library/react';
 import type { ReactElement } from 'react';
 import { ListBox } from '../src/ListBox.js';
 import { Item } from '../src/Item.js';
-import { Select } from '../src/Select.js';
+import { Select, type WebComponentModule } from '../src/Select.js';
 import catchRender from './utils/catchRender.js';
+import createOverlayCloseCatcher from './utils/createOverlayCloseCatcher.js';
 
 describe('Select', () => {
+  const overlayTag = 'vaadin-select-overlay';
+
+  const [ref, catcher] = createOverlayCloseCatcher<WebComponentModule.Select>(overlayTag, (ref) => {
+    ref.opened = false;
+  });
+
   const items = [
     { label: 'Foo', value: 'foo' },
     { label: 'Bar', value: 'bar' },
@@ -42,18 +49,24 @@ describe('Select', () => {
     expect(overlay!.textContent).to.equal('FooBar');
   }
 
+  afterEach(catcher);
+
   it('should use children if no renderer property set', async () => {
-    const { container } = render(<Select items={items} value="bar" />);
+    const { container } = render(<Select ref={ref} items={items} value="bar" />);
     await assert(container);
   });
 
   it('should use renderer prop if it is set', async () => {
-    const { container } = render(<Select items={items} renderer={Renderer} value="bar" />);
+    const { container } = render(<Select ref={ref} items={items} renderer={Renderer} value="bar" />);
     await assert(container);
   });
 
   it('should use children render function as a renderer prop', async () => {
-    const { container } = render(<Select value="bar">{Renderer}</Select>);
+    const { container } = render(
+      <Select ref={ref} value="bar">
+        {Renderer}
+      </Select>,
+    );
 
     await assert(container);
   });

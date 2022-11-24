@@ -1,17 +1,8 @@
-import {
-  ComponentType,
-  type ForwardedRef,
-  forwardRef,
-  ForwardRefExoticComponent,
-  PropsWithoutRef,
-  type ReactElement,
-  ReactNode,
-  RefAttributes,
-} from 'react';
+import { ComponentType, type ForwardedRef, forwardRef, type ReactElement, ReactNode } from 'react';
 import {
   Notification as _Notification,
-  WebComponentModule,
   type NotificationProps as _NotificationProps,
+  type WebComponentModule,
 } from './generated/Notification.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
 import type { ReactSimpleRendererProps } from './renderers/useSimpleRenderer.js';

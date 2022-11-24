@@ -2,7 +2,7 @@ import type { VirtualListDefaultItem } from '@vaadin/virtual-list/src/vaadin-vir
 import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
 import {
   VirtualList as _VirtualList,
-  WebComponentModule,
+  type WebComponentModule,
   type VirtualListProps as _VirtualListProps,
 } from './generated/VirtualList.js';
 import { useModelRenderer, type ReactModelRendererProps } from './renderers/useModelRenderer.js';

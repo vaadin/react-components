@@ -2,7 +2,7 @@ import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 
 import {
   ContextMenu as _ContextMenu,
   type ContextMenuProps as _ContextMenuProps,
-  WebComponentModule,
+  type WebComponentModule,
 } from './generated/ContextMenu.js';
 import { type ReactContextRendererProps, useContextRenderer } from './renderers/useContextRenderer.js';
 

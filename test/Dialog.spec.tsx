@@ -1,10 +1,17 @@
 import { expect } from '@esm-bundle/chai';
 import { render } from '@testing-library/react';
-import { Dialog } from '../src/Dialog.js';
+import { Dialog, type WebComponentModule } from '../src/Dialog.js';
+import createOverlayCloseCatcher from './utils/createOverlayCloseCatcher.js';
 
 describe('Dialog', () => {
+  const overlayTag = 'vaadin-dialog-overlay';
+
+  const [ref, catcher] = createOverlayCloseCatcher<WebComponentModule.Dialog>(overlayTag, (ref) => {
+    ref.opened = false;
+  });
+
   function assert() {
-    const dialog = document.querySelector('vaadin-dialog-overlay');
+    const dialog = document.querySelector(overlayTag);
     expect(dialog).not.to.be.undefined;
 
     const [header, footer, body] = Array.from(dialog!.childNodes);
@@ -19,15 +26,11 @@ describe('Dialog', () => {
     expect(body!.textContent).to.equal('FooBar');
   }
 
-  afterEach(() => {
-    for (const overlay of Array.from(document.querySelectorAll('vaadin-dialog-overlay'))) {
-      overlay.remove();
-    }
-  });
+  afterEach(catcher);
 
   it('should use children if no renderer property set', async () => {
     render(
-      <Dialog opened header={<>Title</>} footer={<>Footer</>}>
+      <Dialog ref={ref} opened header={<>Title</>} footer={<>Footer</>}>
         FooBar
       </Dialog>,
     );
@@ -37,6 +40,7 @@ describe('Dialog', () => {
   it('should use renderer prop if it is set', async () => {
     render(
       <Dialog
+        ref={ref}
         opened
         headerRenderer={() => <>Title</>}
         footerRenderer={() => <>Footer</>}
@@ -48,7 +52,7 @@ describe('Dialog', () => {
 
   it('should use children as renderer prop', async () => {
     render(
-      <Dialog opened headerRenderer={() => <>Title</>} footerRenderer={() => <>Footer</>}>
+      <Dialog ref={ref} opened headerRenderer={() => <>Title</>} footerRenderer={() => <>Footer</>}>
         {() => <>FooBar</>}
       </Dialog>,
     );

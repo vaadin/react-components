@@ -1,8 +1,15 @@
 import { expect } from '@esm-bundle/chai';
 import { render } from '@testing-library/react';
-import { ComboBoxLight } from '../src/ComboBoxLight.js';
+import { ComboBoxLight, type WebComponentModule } from '../src/ComboBoxLight.js';
+import createOverlayCloseCatcher from './utils/createOverlayCloseCatcher.js';
 
 describe('ComboBoxLight', () => {
+  const overlayTag = 'vaadin-combo-box-overlay';
+
+  const [ref, catcher] = createOverlayCloseCatcher<WebComponentModule.ComboBoxLight>(overlayTag, (ref) => ref.close());
+
+  afterEach(catcher);
+
   it('should render correctly', (done) => {
     type Item = Readonly<{ value: string; index: number }>;
 
@@ -13,6 +20,7 @@ describe('ComboBoxLight', () => {
 
     const { container } = render(
       <ComboBoxLight<Item>
+        ref={ref}
         items={items}
         opened
         renderer={({ item }) => <>{item.value}</>}
@@ -27,7 +35,7 @@ describe('ComboBoxLight', () => {
     const comboBox = container.querySelector('vaadin-combo-box-light');
     expect(comboBox).not.to.be.undefined;
 
-    const comboBoxOverlay = document.body.querySelector('vaadin-combo-box-overlay');
+    const comboBoxOverlay = document.body.querySelector(overlayTag);
     expect(comboBoxOverlay).not.to.be.undefined;
 
     const bar = comboBoxOverlay!.querySelector('vaadin-combo-box-item:nth-child(2)');

@@ -2,7 +2,7 @@ import type { ComboBoxDefaultItem } from '@vaadin/combo-box';
 import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
 import {
   ComboBoxLight as _ComboBoxLight,
-  WebComponentModule,
+  type WebComponentModule,
   type ComboBoxLightProps as _ComboBoxLightProps,
 } from './generated/ComboBoxLight.js';
 import type { ComboBoxReactRendererProps } from './renderers/combobox.js';

@@ -1,6 +1,10 @@
 import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
 import type { WebComponentModule as GridModule } from './generated/Grid.js';
-import { GridPro as _GridPro, WebComponentModule, type GridProProps as _GridProProps } from './generated/GridPro.js';
+import {
+  GridPro as _GridPro,
+  type WebComponentModule,
+  type GridProProps as _GridProProps,
+} from './generated/GridPro.js';
 import type { GridRowDetailsReactRendererProps } from './renderers/grid.js';
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 

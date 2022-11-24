@@ -1,16 +1,17 @@
 import { expect } from '@esm-bundle/chai';
 import { render } from '@testing-library/react';
-import {
-  ContextMenu,
-  ContextMenuReactRendererProps,
-  type WebComponentModule as ContextMenuModule,
-} from '../src/ContextMenu.js';
+import { ContextMenu, type ContextMenuReactRendererProps, type WebComponentModule } from '../src/ContextMenu.js';
 import { Item } from '../src/Item.js';
 import { ListBox } from '../src/ListBox.js';
 import catchRender from './utils/catchRender.js';
+import createOverlayCloseCatcher from './utils/createOverlayCloseCatcher.js';
 
 describe('ContextMenu', () => {
-  const items: ContextMenuModule.ContextMenuItem[] = [{ text: 'Bar' }];
+  const overlayTag = 'vaadin-context-menu-overlay';
+
+  const [ref, catcher] = createOverlayCloseCatcher<WebComponentModule.ContextMenu>(overlayTag, (ref) => ref.close());
+
+  const items: WebComponentModule.ContextMenuItem[] = [{ text: 'Bar' }];
 
   function Renderer({ context }: ContextMenuReactRendererProps) {
     return (
@@ -28,7 +29,7 @@ describe('ContextMenu', () => {
     // Emulate right mouse click
     container.dispatchEvent(new PointerEvent('contextmenu', { bubbles: true }));
 
-    const menu = document.querySelector('vaadin-context-menu-overlay');
+    const menu = document.querySelector(overlayTag);
     expect(menu).not.to.be.undefined;
 
     await catchRender(menu!, isListBoxRendered);
@@ -36,15 +37,11 @@ describe('ContextMenu', () => {
     expect(menu!.textContent).to.equal('Bar');
   }
 
-  afterEach(() => {
-    for (const overlay of Array.from(document.querySelectorAll('vaadin-context-menu-overlay'))) {
-      overlay.remove();
-    }
-  });
+  afterEach(catcher);
 
   it('should use children if no renderer property set', async () => {
     const { container } = render(
-      <ContextMenu items={items}>
+      <ContextMenu ref={ref} items={items}>
         <div id="actor">Foo</div>
       </ContextMenu>,
     );
@@ -54,7 +51,7 @@ describe('ContextMenu', () => {
 
   it('should use renderer property if set', async () => {
     const { container } = render(
-      <ContextMenu renderer={Renderer}>
+      <ContextMenu ref={ref} renderer={Renderer}>
         <div id="actor">Bar</div>
       </ContextMenu>,
     );
