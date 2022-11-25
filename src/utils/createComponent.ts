@@ -12,7 +12,7 @@ type Options<I extends HTMLElement, E extends EventNames = {}> = Readonly<{
   tagName: string;
 }>;
 
-export function createComponent<I extends HTMLElement, E extends EventNames = {}>(options: Options<I, E>): any {
+export function createComponent<I extends HTMLElement, E extends EventNames = {}>(options: Options<I, E>) {
   const { elementClass } = options;
 
   return _createComponent('_properties' in elementClass ? {
