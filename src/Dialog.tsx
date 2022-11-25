@@ -1,5 +1,5 @@
 import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement, type ReactNode } from 'react';
-import { Dialog as _Dialog, type WebComponentModule, type DialogProps as _DialogProps } from './generated/Dialog.js';
+import { Dialog as _Dialog, WebComponentModule, type DialogProps as _DialogProps } from './generated/Dialog.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
 import type { ReactSimpleRendererProps } from './renderers/useSimpleRenderer.js';
 

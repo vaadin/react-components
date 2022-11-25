@@ -2,7 +2,7 @@ import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 
 import type { WebComponentModule as GridModule } from './generated/Grid.js';
 import {
   GridFilterColumn as _GridFilterColumn,
-  type WebComponentModule,
+  WebComponentModule,
   type GridFilterColumnProps as _GridFilterColumnProps,
 } from './generated/GridFilterColumn.js';
 import type { GridBodyReactRendererProps, GridEdgeReactRendererProps } from './renderers/grid.js';
