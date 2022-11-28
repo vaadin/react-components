@@ -14,7 +14,7 @@ on:
 
 jobs:
   test:
-    name: Build & Validation & Test
+    name: Validation
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
