@@ -1,16 +1,23 @@
 import {
   createComponent as _createComponent,
   EventName,
-  ReactWebComponent,
   WebComponentProps as _WebComponentProps,
+  ReactWebComponent,
 } from '@lit-labs/react';
 import type { ThemePropertyMixinClass } from '@vaadin/vaadin-themable-mixin/vaadin-theme-property-mixin.js';
 import type { ForwardRefExoticComponent, PropsWithoutRef, RefAttributes } from 'react';
 
 // TODO: Remove when types from @lit-labs/react are exported
 export type EventNames = Record<string, EventName | string>;
-
-type Constructor<T> = { new (): T };
+type Constructor<T> = { new (): T; name: string };
+type PolymerConstructor<T> = Constructor<T> & { _properties: Record<string, unknown> };
+type Options<I extends HTMLElement, E extends EventNames = {}> = Readonly<{
+  displayName?: string;
+  elementClass: Constructor<I> | PolymerConstructor<I>;
+  events?: E;
+  react: typeof window.React;
+  tagName: string;
+}>;
 
 export type ThemedWebComponentProps<I extends ThemePropertyMixinClass & HTMLElement, E extends EventNames = {}> = Omit<
   _WebComponentProps<I, E>,
@@ -36,26 +43,29 @@ export type ThemedReactWebComponent<
   E extends EventNames = {},
 > = ForwardRefExoticComponent<PropsWithoutRef<ThemedWebComponentProps<I, E>> & RefAttributes<I>>;
 
+// We need a separate declaration here; otherwise, the TypeScript fails into the
+// endless loop trying to resolve the typings.
 export function createComponent<I extends HTMLElement, E extends EventNames = {}>(
-  React: typeof window.React,
-  tagName: string,
-  elementClass: Constructor<I>,
-  events?: E,
-  displayName?: string,
+  options: Options<I, E>,
 ): I extends ThemePropertyMixinClass ? ThemedReactWebComponent<I, E> : ReactWebComponent<I, E>;
-export function createComponent(...args: any[]): any {
-  const elementClass = args[2];
-  if ('_properties' in elementClass) {
-    // TODO: improve or remove the Polymer workaround
-    // 'createComponent' relies on key presence on the custom element class,
-    // but Polymer defines properties on the prototype when the first element
-    // is created. Workaround: pass a mock object with properties in
-    // the prototype.
-    args[2] = {
-      name: elementClass.name,
-      prototype: elementClass._properties,
-    };
-  }
+export function createComponent<I extends HTMLElement, E extends EventNames = {}>(options: Options<I, E>): any {
+  const { elementClass } = options;
 
-  return (_createComponent as Function)(...args);
+  return _createComponent(
+    '_properties' in elementClass
+      ? {
+          ...options,
+          // TODO: improve or remove the Polymer workaround
+          // 'createComponent' relies on key presence on the custom element class,
+          // but Polymer defines properties on the prototype when the first element
+          // is created. Workaround: pass a mock object with properties in
+          // the prototype.
+          elementClass: {
+            // @ts-expect-error: it is a specific workaround for Polymer classes.
+            name: elementClass.name,
+            prototype: elementClass._properties,
+          },
+        }
+      : options,
+  );
 }
