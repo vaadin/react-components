@@ -4,5 +4,5 @@ export default (files) => {
   let matched = micromatch(files, ['**/*.tsx?']);
   matched = micromatch.not(matched, ['node_modules/**/*']);
 
-  return [`prettier --write ${matched.join(' ')}`];
+  return matched.length > 0 ? [`prettier --write ${matched.join(' ')}`] : [];
 };

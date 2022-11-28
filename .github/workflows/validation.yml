@@ -6,7 +6,8 @@ on:
     paths-ignore:
       - 'README.md'
       - '.github/ISSUE_TEMPLATE/*'
-  pull_request_target:
+  pull_request:
+    branches: main
     paths-ignore:
       - 'README.md'
       - '.github/ISSUE_TEMPLATE/*'
