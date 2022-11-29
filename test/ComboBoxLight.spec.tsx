@@ -43,6 +43,7 @@ describe('ComboBoxLight', () => {
 
     const bar = comboBoxOverlay!.querySelector('vaadin-combo-box-item:nth-child(2)');
     expect(bar).to.exist;
+    expect(bar).to.have.text('bar');
 
     bar!.dispatchEvent(new PointerEvent('click', { bubbles: true }));
   });
