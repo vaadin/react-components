@@ -48,5 +48,5 @@ describe('Notification', () => {
       ref.current = Notification.show('FooBar');
       assert();
     });
-  })
+  });
 });
