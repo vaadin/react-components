@@ -6,7 +6,7 @@ import {
   type PropsWithoutRef,
   type ReactElement,
   type ReactNode,
-  RefAttributes,
+  type RefAttributes,
 } from 'react';
 import {
   Notification as _Notification,
