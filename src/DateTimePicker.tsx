@@ -9,8 +9,5 @@ import createComponentWithOrderedProps from './utils/createComponentWIthOrderedP
 export * from './generated/DateTimePicker.js';
 
 export const DateTimePicker = forwardRef(
-  createComponentWithOrderedProps<DateTimePickerProps, WebComponentModule.DateTimePicker>(
-    _DateTimePicker,
-    'value',
-  ),
+  createComponentWithOrderedProps<DateTimePickerProps, WebComponentModule.DateTimePicker>(_DateTimePicker, 'value'),
 );
