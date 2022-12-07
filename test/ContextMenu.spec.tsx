@@ -6,7 +6,6 @@ import { Item } from '../src/Item.js';
 import { ListBox } from '../src/ListBox.js';
 import catchRender from './utils/catchRender.js';
 import createOverlayCloseCatcher from './utils/createOverlayCloseCatcher.js';
-import disableAnimation from './utils/disableAnimation.js';
 
 useChaiPlugin(chaiDom);
 
@@ -41,7 +40,6 @@ describe('ContextMenu', () => {
     expect(menu).to.have.text('Bar');
   }
 
-  before(disableAnimation);
   afterEach(cleanup);
   afterEach(catcher);
 

@@ -7,7 +7,6 @@ import { Item } from '../src/Item.js';
 import { Select, type WebComponentModule } from '../src/Select.js';
 import catchRender from './utils/catchRender.js';
 import createOverlayCloseCatcher from './utils/createOverlayCloseCatcher.js';
-import disableAnimation from './utils/disableAnimation.js';
 
 useChaiPlugin(chaiDom);
 
@@ -53,7 +52,6 @@ describe('Select', () => {
     expect(overlay).to.have.text('FooBar');
   }
 
-  before(disableAnimation);
   afterEach(cleanup);
   afterEach(catcher);
 
