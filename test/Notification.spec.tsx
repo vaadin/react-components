@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import chaiDom from 'chai-dom';
 import { Notification, type WebComponentModule } from '../src/Notification.js';
 import createOverlayCloseCatcher from './utils/createOverlayCloseCatcher.js';
+import disableAnimation from './utils/disableAnimation.js';
 
 useChaiPlugin(chaiDom);
 
@@ -21,6 +22,7 @@ describe('Notification', () => {
     expect(card).to.have.text('FooBar');
   }
 
+  before(disableAnimation);
   afterEach(catcher);
 
   it('should use children if no renderer property set', () => {

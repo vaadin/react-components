@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import chaiDom from 'chai-dom';
 import { Dialog, type WebComponentModule } from '../src/Dialog.js';
 import createOverlayCloseCatcher from './utils/createOverlayCloseCatcher.js';
+import disableAnimation from './utils/disableAnimation.js';
 
 useChaiPlugin(chaiDom);
 
@@ -29,6 +30,7 @@ describe('Dialog', () => {
     expect(body).to.have.text('FooBar');
   }
 
+  before(disableAnimation);
   afterEach(catcher);
 
   it('should use children if no renderer property set', async () => {
