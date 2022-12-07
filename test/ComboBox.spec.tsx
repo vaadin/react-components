@@ -1,5 +1,5 @@
 import { expect, use as useChaiPlugin } from '@esm-bundle/chai';
-import { render } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react/pure.js';
 import chaiDom from 'chai-dom';
 import { ComboBox, type WebComponentModule } from '../src/ComboBox.js';
 import createOverlayCloseCatcher from './utils/createOverlayCloseCatcher.js';
@@ -13,6 +13,7 @@ describe('ComboBox', () => {
   const [ref, catcher] = createOverlayCloseCatcher<WebComponentModule.ComboBox>(overlayTag, (ref) => ref.close());
 
   before(disableAnimation);
+  afterEach(cleanup);
   afterEach(catcher);
 
   it('should render correctly', (done) => {

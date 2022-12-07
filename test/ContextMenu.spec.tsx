@@ -1,5 +1,5 @@
 import { expect, use as useChaiPlugin } from '@esm-bundle/chai';
-import { render } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react/pure.js';
 import chaiDom from 'chai-dom';
 import { ContextMenu, type ContextMenuReactRendererProps, type WebComponentModule } from '../src/ContextMenu.js';
 import { Item } from '../src/Item.js';
@@ -42,6 +42,7 @@ describe('ContextMenu', () => {
   }
 
   before(disableAnimation);
+  afterEach(cleanup);
   afterEach(catcher);
 
   it('should use children if no renderer property set', async () => {
