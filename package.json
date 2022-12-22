@@ -148,6 +148,15 @@
     "*.js.map"
   ],
   "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "default": "./index.js",
+      "types": "./index.d.ts"
+    },
+    "./index.js": {
+      "default": "./index.js",
+      "types": "./index.d.ts"
+    },
     "./Accordion.js": {
       "default": "./Accordion.js",
       "types": "./Accordion.d.ts"
@@ -219,6 +228,14 @@
     "./Crud.js": {
       "default": "./Crud.js",
       "types": "./Crud.d.ts"
+    },
+    "./CrudEdit.js": {
+      "default": "./CrudEdit.js",
+      "types": "./CrudEdit.d.ts"
+    },
+    "./CrudEditColumn.js": {
+      "default": "./CrudEditColumn.js",
+      "types": "./CrudEditColumn.d.ts"
     },
     "./CustomField.js": {
       "default": "./CustomField.js",
