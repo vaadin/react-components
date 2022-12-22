@@ -1,5 +1,5 @@
 import { unlink, writeFile } from 'node:fs/promises';
-import { relative, resolve, basename} from 'node:path';
+import { relative, resolve, basename } from 'node:path';
 import ts, {
   type Identifier,
   type Node,
@@ -367,11 +367,16 @@ const sourceFiles = Array.from(elementFilesMap.entries(), ([element, data]) => g
 function generateIndexDtsFile(elementNames: readonly string[]): SourceFile {
   const sourceLines = [
     `// Workaround for VSCode, enables TypeScript auto-imports form package.json`,
-    ...elementNames.map(elementName => `import './${elementName}.js';`),
+    ...elementNames.map((elementName) => `import './${elementName}.js';`),
   ];
 
-  return ts.createSourceFile(resolve(rootDir, 'index.d.ts'), sourceLines.join('\n'),
-  ts.ScriptTarget.ES2019, undefined, ts.ScriptKind.TS);
+  return ts.createSourceFile(
+    resolve(rootDir, 'index.d.ts'),
+    sourceLines.join('\n'),
+    ts.ScriptTarget.ES2019,
+    undefined,
+    ts.ScriptKind.TS,
+  );
 }
 
 const indexDtsFile = generateIndexDtsFile(sourceFiles.map(({ fileName }) => basename(fileName, '.ts')));
@@ -389,8 +394,4 @@ async function printAndWrite(file: SourceFile) {
   await writeFile(file.fileName, contents, 'utf8');
 }
 
-await Promise.all([
-  ...sourceFiles.map(printAndWrite),
-  printAndWrite(indexDtsFile),
-  printAndWrite(indexJsFile),
-]);
+await Promise.all([...sourceFiles.map(printAndWrite), printAndWrite(indexDtsFile), printAndWrite(indexJsFile)]);

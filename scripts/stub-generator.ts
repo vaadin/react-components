@@ -45,9 +45,9 @@ const stubPaths: readonly string[] = filterEmptyItems(
 
       const existingModulePath = (await exists(moduleTsxPath))
         ? moduleTsxPath
-        : (await exists(modulePath)) 
-         ? modulePath
-         : undefined;
+        : (await exists(modulePath))
+        ? modulePath
+        : undefined;
 
       if (!existingModulePath || shouldOverride) {
         const exportExpression = ts.factory.createExportDeclaration(

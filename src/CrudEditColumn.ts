@@ -1,1 +1,1 @@
-export * from "./generated/CrudEditColumn.js";
+export * from './generated/CrudEditColumn.js';

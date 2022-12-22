@@ -1,1 +1,1 @@
-export * from "./generated/CrudEdit.js";
+export * from './generated/CrudEdit.js';
