@@ -2,7 +2,7 @@ import {
   createComponent as _createComponent,
   EventName,
   WebComponentProps as _WebComponentProps,
-  ReactWebComponent,
+  ReactWebComponent as _ReactWebComponent,
 } from '@lit-labs/react';
 import type { ThemePropertyMixinClass } from '@vaadin/vaadin-themable-mixin/vaadin-theme-property-mixin.js';
 import type { ForwardRefExoticComponent, PropsWithoutRef, RefAttributes } from 'react';
@@ -19,10 +19,10 @@ type Options<I extends HTMLElement, E extends EventNames = {}> = Readonly<{
   tagName: string;
 }>;
 
-export type ThemedWebComponentProps<I extends ThemePropertyMixinClass & HTMLElement, E extends EventNames = {}> = Omit<
-  _WebComponentProps<I, E>,
-  'theme'
-> & {
+export type ThemedWebComponentProps<
+  I extends ThemePropertyMixinClass & HTMLElement,
+  E extends EventNames = {},
+> = Partial<Omit<_WebComponentProps<I, E>, 'theme'>> & {
   /**
    * Remove the deprecation warning for React components. In our case, the
    * property is deprecated in favor of an attribute. However, for React, it
@@ -47,7 +47,8 @@ export type ThemedReactWebComponent<
 // endless loop trying to resolve the typings.
 export function createComponent<I extends HTMLElement, E extends EventNames = {}>(
   options: Options<I, E>,
-): I extends ThemePropertyMixinClass ? ThemedReactWebComponent<I, E> : ReactWebComponent<I, E>;
+): I extends ThemePropertyMixinClass ? ThemedReactWebComponent<I, E> : _ReactWebComponent<I, E>;
+// ForwardRefExoticComponent<PropsWithoutRef<WebComponentProps<I, E>> & RefAttributes<I>>;
 export function createComponent<I extends HTMLElement, E extends EventNames = {}>(options: Options<I, E>): any {
   const { elementClass } = options;
 

@@ -10,17 +10,18 @@ import {
 } from 'react';
 import {
   Notification as _Notification,
+  NotificationElement,
   type NotificationProps as _NotificationProps,
-  WebComponentModule,
+  type ShowOptions,
 } from './generated/Notification.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
 import type { ReactSimpleRendererProps } from './renderers/useSimpleRenderer.js';
 
 export * from './generated/Notification.js';
 
-export type NotificationReactRendererProps = ReactSimpleRendererProps<WebComponentModule.Notification>;
+export type NotificationReactRendererProps = ReactSimpleRendererProps<NotificationElement>;
 
-export type NotificationProps = Omit<_NotificationProps, 'children' | 'renderer'> &
+export type NotificationProps = Partial<Omit<_NotificationProps, 'children' | 'renderer'>> &
   Readonly<{
     children?: ReactNode | ComponentType<NotificationReactRendererProps>;
     renderer?: ComponentType<NotificationReactRendererProps>;
@@ -28,7 +29,7 @@ export type NotificationProps = Omit<_NotificationProps, 'children' | 'renderer'
 
 function Notification(
   { children, ...props }: NotificationProps,
-  ref: ForwardedRef<WebComponentModule.Notification>,
+  ref: ForwardedRef<NotificationElement>,
 ): ReactElement | null {
   const [portals, renderer] = useSimpleOrChildrenRenderer(props.renderer, children);
 
@@ -40,12 +41,12 @@ function Notification(
 }
 
 export type NotificationFunction = ForwardRefExoticComponent<
-  PropsWithoutRef<NotificationProps> & RefAttributes<WebComponentModule.Notification>
+  PropsWithoutRef<NotificationProps> & RefAttributes<NotificationElement>
 > & {
-  show(contents: string, options?: WebComponentModule.ShowOptions): WebComponentModule.Notification;
+  show(contents: string, options?: ShowOptions): NotificationElement;
 };
 
 const ForwardedNotification = forwardRef(Notification) as NotificationFunction;
-ForwardedNotification.show = WebComponentModule.Notification.show;
+ForwardedNotification.show = NotificationElement.show;
 
-export { ForwardedNotification as Notification, WebComponentModule };
+export { ForwardedNotification as Notification };
