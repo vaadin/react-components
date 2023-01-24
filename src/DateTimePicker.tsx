@@ -4,7 +4,7 @@ import {
   type DateTimePickerElement,
   type DateTimePickerProps,
 } from './generated/DateTimePicker.js';
-import createComponentWithOrderedProps from './utils/createComponentWIthOrderedProps.js';
+import createComponentWithOrderedProps from './utils/createComponentWithOrderedProps.js';
 
 export * from './generated/DateTimePicker.js';
 

@@ -1,12 +1,5 @@
 import type { ComboBoxDefaultItem } from '@vaadin/combo-box';
-import {
-  type ComponentType,
-  forwardRef,
-  type ReactElement,
-  type PropsWithoutRef,
-  type RefAttributes,
-  type ForwardedRef,
-} from 'react';
+import { type ComponentType, forwardRef, type ReactElement, type RefAttributes, type ForwardedRef } from 'react';
 import {
   ComboBoxLight as _ComboBoxLight,
   type ComboBoxLightElement,

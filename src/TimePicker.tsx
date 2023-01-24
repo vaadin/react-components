@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 import { TimePicker as _TimePicker, type TimePickerElement, type TimePickerProps } from './generated/TimePicker.js';
-import createComponentWithOrderedProps from './utils/createComponentWIthOrderedProps.js';
+import createComponentWithOrderedProps from './utils/createComponentWithOrderedProps.js';
 
 export * from './generated/TimePicker.js';
 

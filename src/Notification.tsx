@@ -3,7 +3,6 @@ import {
   type ForwardedRef,
   forwardRef,
   type ForwardRefExoticComponent,
-  type PropsWithoutRef,
   type ReactElement,
   type ReactNode,
   type RefAttributes,
@@ -40,9 +39,7 @@ function Notification(
   );
 }
 
-export type NotificationFunction = ForwardRefExoticComponent<
-  PropsWithoutRef<NotificationProps> & RefAttributes<NotificationElement>
-> & {
+export type NotificationFunction = ForwardRefExoticComponent<NotificationProps & RefAttributes<NotificationElement>> & {
   show(contents: string, options?: ShowOptions): NotificationElement;
 };
 
