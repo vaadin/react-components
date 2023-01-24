@@ -32,7 +32,6 @@ const CALL_EXPRESSION = '$CALL_EXPRESSION$';
 const COMPONENT_NAME = '$COMPONENT_NAME$';
 const COMPONENT_TAG = '$COMPONENT_TAG$';
 const CREATE_COMPONENT_PATH = '$CREATE_COMPONENT_PATH$';
-const ELEMENT_CLASS_NAME = '$ELEMENT_CLASS_NAME$';
 const EVENT_MAP = '$EVENT_MAP$';
 const EVENT_MAP_REF_IN_EVENTS = '$EVENT_MAP_REF_IN_EVENTS$';
 const EVENTS_DECLARATION = '$EVENTS_DECLARATION$';
@@ -235,7 +234,9 @@ function addGenerics(node: Node, elementName: string) {
       // export type GridProps<T1> = WebComponentProps<GridElement<T1>, GridEventMap<T1>>;
       //                                                           ^ adding this type argument
       transform<Node>((node) =>
-        ts.isTypeReferenceNode(node) && ts.isIdentifier(node.typeName) && node.typeName.text === ELEMENT_CLASS_NAME
+        ts.isTypeReferenceNode(node) &&
+        ts.isIdentifier(node.typeName) &&
+        node.typeName.text === `${COMPONENT_NAME}Element`
           ? ts.factory.createTypeReferenceNode(node.typeName, typeArguments)
           : node,
       ),
@@ -259,7 +260,7 @@ function addGenerics(node: Node, elementName: string) {
     const asExpression = template(
       `
 ${CALL_EXPRESSION} as (
-  props: React.PropsWithoutRef<${COMPONENT_NAME}Props> & React.RefAttributes<${ELEMENT_CLASS_NAME}>,
+  props: React.PropsWithoutRef<${COMPONENT_NAME}Props> & React.RefAttributes<${COMPONENT_NAME}Element>,
 ) => React.ReactElement | null
   `,
       (statements) => (statements[0] as ExpressionStatement).expression,
@@ -267,7 +268,7 @@ ${CALL_EXPRESSION} as (
         transform((node) =>
           ts.isTypeReferenceNode(node) &&
           ts.isIdentifier(node.typeName) &&
-          (node.typeName.text === `${COMPONENT_NAME}Props` || node.typeName.text === ELEMENT_CLASS_NAME)
+          (node.typeName.text === `${COMPONENT_NAME}Props` || node.typeName.text === `${COMPONENT_NAME}Element`)
             ? ts.factory.createTypeReferenceNode(node.typeName, typeArguments)
             : node,
         ),
@@ -307,7 +308,7 @@ function generateReactComponent({ name, js }: SchemaHTMLElement, { packageName, 
     `
 import type { EventName } from "${LIT_REACT_PATH}";
 import * as WebComponentModule from "${MODULE_PATH}";
-import { ${COMPONENT_NAME} as ${ELEMENT_CLASS_NAME} } from "${MODULE_PATH}";
+import { ${COMPONENT_NAME} as ${COMPONENT_NAME}Element } from "${MODULE_PATH}";
 import * as React from "react";
 import { createComponent, WebComponentProps } from "${CREATE_COMPONENT_PATH}";
 
@@ -315,12 +316,12 @@ export * from "${MODULE_PATH}";
 
 export {
   /** @deprecated */WebComponentModule,
-  ${ELEMENT_CLASS_NAME},
+  ${COMPONENT_NAME}Element,
 };
 
 export type ${EVENT_MAP};
 const events = ${EVENTS_DECLARATION} as ${EVENT_MAP_REF_IN_EVENTS};
-export type ${COMPONENT_NAME}Props = WebComponentProps<${ELEMENT_CLASS_NAME}, ${EVENT_MAP}>;
+export type ${COMPONENT_NAME}Props = WebComponentProps<${COMPONENT_NAME}Element, ${EVENT_MAP}>;
 export const ${COMPONENT_NAME} = createComponent({
   elementClass: ${COMPONENT_NAME}Element,
   events,
@@ -361,7 +362,9 @@ export const ${COMPONENT_NAME} = createComponent({
       transform((node) =>
         isEventMapReferenceInEventsDeclaration(node) ? ts.factory.createIdentifier(EVENT_MAP) : node,
       ),
-      transform((node) => (ts.isIdentifier(node) && node.text === ELEMENT_CLASS_NAME ? elementClassNameId : node)),
+      transform((node) =>
+        ts.isIdentifier(node) && node.text === `${COMPONENT_NAME}Element` ? elementClassNameId : node,
+      ),
       transform((node) => (ts.isIdentifier(node) && node.text === COMPONENT_TAG ? componentTagLiteral : node)),
       transform((node) => (ts.isIdentifier(node) && node.text === EVENT_MAP ? eventMapId : node)),
       transform((node) =>

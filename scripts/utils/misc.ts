@@ -30,7 +30,6 @@ export function stripPrefix(str: string) {
 export function createSourceFile(statements: readonly Statement[], fileName: string): SourceFile {
   const sourceFile = ts.createSourceFile(fileName, '', ts.ScriptTarget.ES2019, undefined, ts.ScriptKind.TS);
   return ts.factory.updateSourceFile(sourceFile, statements);
-  // return ts.factory.createSourceFile(statements, ts.factory.createToken(ts.SyntaxKind.EndOfFileToken), ts.NodeFlags.None);
 }
 
 export async function exists(file: string): Promise<boolean> {

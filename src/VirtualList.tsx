@@ -1,4 +1,4 @@
-import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
+import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement, type RefAttributes } from 'react';
 import {
   VirtualList as _VirtualList,
   type VirtualListDefaultItem,
@@ -36,7 +36,7 @@ function VirtualList<TItem = VirtualListDefaultItem>(
 }
 
 const ForwardedVirtualList = forwardRef(VirtualList) as <TItem = VirtualListDefaultItem>(
-  props: VirtualListProps<TItem> & { ref?: ForwardedRef<VirtualListElement<TItem>> },
+  props: VirtualListProps<TItem> & RefAttributes<VirtualListElement<TItem>>,
 ) => ReactElement | null;
 
 export { ForwardedVirtualList as VirtualList };

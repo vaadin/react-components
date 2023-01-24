@@ -1,4 +1,4 @@
-import { ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
+import { ComponentType, type ForwardedRef, forwardRef, type ReactElement, type RefAttributes } from 'react';
 import type { GridDefaultItem } from './generated/Grid.js';
 import {
   GridFilterColumn as _GridFilterColumn,
@@ -40,7 +40,7 @@ function GridFilterColumn<TItem = GridDefaultItem>(
 }
 
 const ForwardedGridFilterColumn = forwardRef(GridFilterColumn) as <TItem = GridDefaultItem>(
-  props: GridFilterColumnProps<TItem> & { ref?: ForwardedRef<GridFilterColumnElement<TItem>> },
+  props: GridFilterColumnProps<TItem> & RefAttributes<GridFilterColumnElement<TItem>>,
 ) => ReactElement | null;
 
 export { ForwardedGridFilterColumn as GridFilterColumn };

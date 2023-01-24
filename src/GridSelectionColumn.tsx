@@ -1,4 +1,4 @@
-import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
+import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement, type RefAttributes } from 'react';
 import type { GridDefaultItem } from './generated/Grid.js';
 import {
   GridSelectionColumn as _GridSelectionColumn,
@@ -45,7 +45,7 @@ function GridSelectionColumn<TItem = GridDefaultItem>(
 }
 
 const ForwardedGridSelectionColumn = forwardRef(GridSelectionColumn) as <TItem = GridDefaultItem>(
-  props: GridSelectionColumnProps<TItem> & { ref?: ForwardedRef<GridSelectionColumnElement<TItem>> },
+  props: GridSelectionColumnProps<TItem> & RefAttributes<GridSelectionColumnElement<TItem>>,
 ) => ReactElement | null;
 
 export { ForwardedGridSelectionColumn as GridSelectionColumn };
