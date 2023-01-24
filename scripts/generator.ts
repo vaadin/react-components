@@ -315,7 +315,6 @@ import { createComponent, WebComponentProps } from "${CREATE_COMPONENT_PATH}";
 export * from "${MODULE_PATH}";
 
 export {
-  /** @deprecated */WebComponentModule,
   ${COMPONENT_NAME}Element,
 };
 
