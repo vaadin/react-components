@@ -36,5 +36,3 @@ jobs:
         with:
           files: .coverage/lcov.info
           flags: unittests
-          verbose: true
-
