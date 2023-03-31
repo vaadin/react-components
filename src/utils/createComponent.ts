@@ -12,8 +12,8 @@ const $wnd = window as any;
 $wnd.Vaadin = $wnd.Vaadin || {};
 $wnd.Vaadin.registrations = $wnd.Vaadin.registrations || [];
 $wnd.Vaadin.registrations.push({
-    is: '@hilla/react-components',
-    version: /* updated-by-script */ '2.1.0-alpha6',
+  is: '@hilla/react-components',
+  version: /* updated-by-script */ '2.1.0-alpha6',
 });
 
 // TODO: Remove when types from @lit-labs/react are exported

@@ -28,8 +28,8 @@ console.log(`Updating version metadata in "${versionSourceFile}"...`);
 const versionSourcePath = resolve(rootDir, versionSourceFile);
 const versionSource = await readFile(versionSourcePath, 'utf8');
 const newVersionSource = versionSource.replace(
-    /version:.+,/g,
-    `version: /* updated-by-script */ '${packageJson.version}',`
+  /version:.+,/g,
+  `version: /* updated-by-script */ '${packageJson.version}',`,
 );
 
 await writeFile(versionSourcePath, newVersionSource, 'utf8');
