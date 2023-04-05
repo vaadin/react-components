@@ -28,12 +28,15 @@ const moduleNames = await fromAsync(fswalk(srcDir), async ([path]) => {
 Object.assign(
   exports,
   Object.fromEntries(
-    moduleNames.map(
-      moduleName => [
-        `./${moduleName}.js`,
-        { types: `./${moduleName}.d.ts`, default: `./${moduleName}.js` },
-      ] as ConditionalExportsEntry
-    ).sort(compareExportsPaths),
+    moduleNames
+      .map(
+        (moduleName) =>
+          [
+            `./${moduleName}.js`,
+            { types: `./${moduleName}.d.ts`, default: `./${moduleName}.js` },
+          ] as ConditionalExportsEntry,
+      )
+      .sort(compareExportsPaths),
   ),
 );
 
@@ -43,11 +46,9 @@ Object.assign(
 Object.assign(
   exports,
   Object.fromEntries(
-    moduleNames.map(moduleName => [
-      `./${moduleName}`,
-      `./${moduleName}.js`,
-    ] as PlainExportsEntry
-    ).sort(compareExportsPaths),
+    moduleNames
+      .map((moduleName) => [`./${moduleName}`, `./${moduleName}.js`] as PlainExportsEntry)
+      .sort(compareExportsPaths),
   ),
 );
 
