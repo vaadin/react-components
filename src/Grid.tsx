@@ -26,25 +26,25 @@ export {
   GridSorterDefinition,
   GridSorterDirection,
 
-  type GridDefaultItem,
+  GridDefaultItem,
 
-  type GridItemModel,
+  GridItemModel,
 
-  type GridActiveItemChangedEvent,
-  type GridCellActivateEvent,
-  type GridCellFocusEvent,
-  type GridColumnReorderEvent,
-  type GridColumnResizeEvent,
-  type GridDataProviderChangedEvent,
-  type GridExpandedItemsChangedEvent,
-  type GridDragStartEvent,
-  type GridDropEvent,
-  type GridLoadingChangedEvent,
-  type GridSelectedItemsChangedEvent,
-  type GridSizeChangedEvent,
+  GridActiveItemChangedEvent,
+  GridCellActivateEvent,
+  GridCellFocusEvent,
+  GridColumnReorderEvent,
+  GridColumnResizeEvent,
+  GridDataProviderChangedEvent,
+  GridExpandedItemsChangedEvent,
+  GridDragStartEvent,
+  GridDropEvent,
+  GridLoadingChangedEvent,
+  GridSelectedItemsChangedEvent,
+  GridSizeChangedEvent,
 
-  type GridCustomEventMap,
-  type GridEventMap,
+  GridCustomEventMap,
+  GridEventMap,
 } from './generated/Grid.js';
 
 export type GridProps<TItem> = Partial<Omit<_GridProps<TItem>, 'rowDetailsRenderer'>> &
