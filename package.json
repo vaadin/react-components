@@ -70,6 +70,7 @@
     "@vaadin/menu-bar": "23.3.10",
     "@vaadin/message-input": "23.3.10",
     "@vaadin/message-list": "23.3.10",
+    "@vaadin/multi-select-combo-box": "23.3.10",
     "@vaadin/notification": "23.3.10",
     "@vaadin/number-field": "23.3.10",
     "@vaadin/password-field": "23.3.10",
@@ -373,6 +374,10 @@
       "types": "./MessageList.d.ts",
       "default": "./MessageList.js"
     },
+    "./MultiSelectComboBox.js": {
+      "types": "./MultiSelectComboBox.d.ts",
+      "default": "./MultiSelectComboBox.js"
+    },
     "./Notification.js": {
       "types": "./Notification.d.ts",
       "default": "./Notification.js"
@@ -504,6 +509,7 @@
     "./Message": "./Message.js",
     "./MessageInput": "./MessageInput.js",
     "./MessageList": "./MessageList.js",
+    "./MultiSelectComboBox": "./MultiSelectComboBox.js",
     "./Notification": "./Notification.js",
     "./NumberField": "./NumberField.js",
     "./PasswordField": "./PasswordField.js",
