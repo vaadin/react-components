@@ -8,7 +8,44 @@ import {
 import type { GridRowDetailsReactRendererProps } from './renderers/grid.js';
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 
-export * from './generated/Grid.js';
+// Listing names explicitly to omit re-exports from GridColumn.js
+export {
+  GridBodyRenderer,
+  GridCellClassNameGenerator,
+  GridCellPartNameGenerator,
+  GridDataProvider,
+  GridDataProviderCallback,
+  GridDataProviderParams,
+  GridDragAndDropFilter,
+  GridDropLocation,
+  GridDropMode,
+  GridEventContext,
+  GridFilterDefinition,
+  GridHeaderFooterRenderer,
+  GridRowDetailsRenderer,
+  GridSorterDefinition,
+  GridSorterDirection,
+
+  type GridDefaultItem,
+
+  type GridItemModel,
+
+  type GridActiveItemChangedEvent,
+  type GridCellActivateEvent,
+  type GridCellFocusEvent,
+  type GridColumnReorderEvent,
+  type GridColumnResizeEvent,
+  type GridDataProviderChangedEvent,
+  type GridExpandedItemsChangedEvent,
+  type GridDragStartEvent,
+  type GridDropEvent,
+  type GridLoadingChangedEvent,
+  type GridSelectedItemsChangedEvent,
+  type GridSizeChangedEvent,
+
+  type GridCustomEventMap,
+  type GridEventMap,
+} from './generated/Grid.js';
 
 export type GridProps<TItem> = Partial<Omit<_GridProps<TItem>, 'rowDetailsRenderer'>> &
   Readonly<{
