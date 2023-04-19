@@ -9,7 +9,10 @@ useChaiPlugin(chaiDom);
 describe('MultiSelectComboBox', () => {
   const overlayTag = 'vaadin-multi-select-combo-box-overlay';
 
-  const [ref, catcher] = createOverlayCloseCatcher<MultiSelectComboBoxElement>(overlayTag, (ref) => ref.opened = false);
+  const [ref, catcher] = createOverlayCloseCatcher<MultiSelectComboBoxElement>(
+    overlayTag,
+    (ref) => (ref.opened = false),
+  );
 
   afterEach(cleanup);
   afterEach(catcher);
