@@ -62,3 +62,5 @@ export const eventSettings = new Map<string, EventSettings>([
 ]);
 
 export const elementsWithMissingEntrypoint = new Set<string>([]);
+
+export const elementToClassNamingConventionViolations = new Map<string, string>([['vaadin-tabsheet', 'TabSheet']]);
