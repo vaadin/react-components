@@ -81,6 +81,7 @@
     "@vaadin/select": "23.3.11",
     "@vaadin/split-layout": "23.3.11",
     "@vaadin/tabs": "23.3.11",
+    "@vaadin/tabsheet": "23.3.11",
     "@vaadin/text-area": "23.3.11",
     "@vaadin/text-field": "23.3.11",
     "@vaadin/time-picker": "23.3.11",
@@ -426,6 +427,10 @@
       "types": "./Tabs.d.ts",
       "default": "./Tabs.js"
     },
+    "./TabSheet.js": {
+      "types": "./TabSheet.d.ts",
+      "default": "./TabSheet.js"
+    },
     "./TextArea.js": {
       "types": "./TextArea.d.ts",
       "default": "./TextArea.js"
@@ -522,6 +527,7 @@
     "./SplitLayout": "./SplitLayout.js",
     "./Tab": "./Tab.js",
     "./Tabs": "./Tabs.js",
+    "./TabSheet": "./TabSheet.js",
     "./TextArea": "./TextArea.js",
     "./TextField": "./TextField.js",
     "./TimePicker": "./TimePicker.js",

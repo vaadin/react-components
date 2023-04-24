@@ -24,6 +24,7 @@ import {
   stripPrefix,
   template,
   transform,
+  convertElementNameToClassName,
 } from './utils/misc.js';
 import { eventSettings, genericElements, NonGenericInterface } from './utils/settings.js';
 
@@ -295,7 +296,7 @@ function generateReactComponent({ name, js }: SchemaHTMLElement, { packageName, 
   const hasEvents = !!js?.events && js.events.length > 0;
   const events = js?.events;
 
-  const elementName = stripPrefix(camelCase(name));
+  const elementName = convertElementNameToClassName(name);
   const elementModulePath = createImportPath(relative(nodeModulesDir, path), false);
   const eventMapId = ts.factory.createIdentifier(`${elementName}EventMap`);
   const elementClassNameId = ts.factory.createIdentifier(`${elementName}Element`);
