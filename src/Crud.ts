@@ -9,7 +9,7 @@ export * from './generated/Crud.js';
  * ```tsx
  * <Crud>
  *   <FormLayout slot="form">
- *     <TextField label="Name" {...crudFieldPath('name')} />
+ *     <TextField label="Name" {...crudPath('name')} />
  *   </FormLayout>
  * </Crud>
  * ```
@@ -19,6 +19,6 @@ export * from './generated/Crud.js';
  * 
  * @returns object with HTML attribute values recognized on a CRUD form field.
  */
-export function crudFieldPath(path: string): Record<string, string> {
+export function crudPath(path: string): Record<string, string> {
   return {path} as Record<string, string>;
 }

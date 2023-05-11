@@ -3,7 +3,7 @@ import { Checkbox } from '../../src/Checkbox.js';
 import { ComboBox } from '../../src/ComboBox.js';
 import { ContextMenu } from '../../src/ContextMenu.js';
 import { CookieConsent } from '../../src/CookieConsent.js';
-import { Crud, crudFieldPath } from '../../src/Crud.js';
+import { Crud, crudPath } from '../../src/Crud.js';
 import { FormLayout } from '../../src/FormLayout.js';
 import { Item } from '../../src/Item.js';
 import { ListBox } from '../../src/ListBox.js';
@@ -23,9 +23,9 @@ export default function Row3() {
       <CookieConsent position="bottom-right"></CookieConsent>
       <Crud items={crudData}>
         <FormLayout slot="form">
-          <TextField label="Name" {...crudFieldPath('name')} />
-          <ComboBox label="Role" items={Object.values(CrudRole)} {...crudFieldPath('role')} />
-          <Checkbox label="Active" {...crudFieldPath('active')} />
+          <TextField label="Name" {...crudPath('name')} />
+          <ComboBox label="Role" items={Object.values(CrudRole)} {...crudPath('role')} />
+          <Checkbox label="Active" {...crudPath('active')} />
         </FormLayout>
       </Crud>
     </BoardRow>
