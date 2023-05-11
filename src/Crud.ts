@@ -1,33 +1,24 @@
 export * from './generated/Crud.js';
 
 /**
- * HTML attributes that the `<Crud />` component recognizes on the fields
- * of a custom form.
- */
-export type CrudFieldProps = Readonly<{
-  /**
-   * A key or path for the value of the particular field in the CRUD item
-   * objects.
-   */
-  path: string;
-}>;
-
-/**
- * A helper function that allows declaring HTML attributes on the fields of
- * a custom form in the `<Crud />` component.
- *
+ * A helper function that allows declaring the value path (or key) on
+ * the fields in a custom form of a `<Crud />` component.
+ * 
  * ### Usage
- *
+ * 
  * ```tsx
  * <Crud>
  *   <FormLayout slot="form">
- *     <TextField label="Name" {...{crudFieldProps({path: 'name'})}}></TextField>
+ *     <TextField label="Name" {...crudFieldPath('name')} />
  *   </FormLayout>
  * </Crud>
  * ```
- *
- * @param props HTML attributes of the field
+ * 
+ * @param path The path of the particular field's value in the CRUD
+ * item objects.
+ * 
+ * @returns object with HTML attribute values recognized on a CRUD form field.
  */
-export function crudFieldProps(props: CrudFieldProps) {
-  return props as {};
+export function crudFieldPath(path: string): Record<string, string> {
+  return {path} as Record<string, string>;
 }
