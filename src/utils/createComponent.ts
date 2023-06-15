@@ -1,12 +1,11 @@
 import {
   createComponent as _createComponent,
-  EventName,
-  WebComponentProps as _WebComponentProps,
-  ReactWebComponent as _ReactWebComponent,
+  type EventName,
+  type WebComponentProps as _WebComponentProps,
 } from '@lit-labs/react';
 import type { ThemePropertyMixinClass } from '@vaadin/vaadin-themable-mixin/vaadin-theme-property-mixin.js';
 import type React from 'react';
-import type { ForwardRefExoticComponent, RefAttributes } from 'react';
+import type { RefAttributes } from 'react';
 
 const $wnd = window as any;
 $wnd.Vaadin = $wnd.Vaadin || {};
