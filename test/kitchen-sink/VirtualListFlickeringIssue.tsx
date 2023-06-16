@@ -28,9 +28,7 @@ export default function VirtualListFlickeringIssue() {
       <div className={`${css.flex} ${css['gap-m']}`}>
         <div>
           &lt;VirtualList&gt;
-          <VirtualList items={items}>
-            {({ item }) => <span>Item {item.name}</span>}
-          </VirtualList>
+          <VirtualList items={items}>{({ item }) => <span>Item {item.name}</span>}</VirtualList>
         </div>
 
         <div>

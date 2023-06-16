@@ -20,11 +20,10 @@ export type WebComponentModelRenderer<I, M extends Model<I>, O extends HTMLEleme
   model: M,
 ) => void;
 
-export function useModelRenderer<I, M extends Model<I>, O extends HTMLElement>
-/**
- * A React component to render an item of the list or grid.
- */(
-  reactRenderer?: ComponentType<ReactModelRendererProps<I, M, O>> | null,
+export function useModelRenderer<I, M extends Model<I>, O extends HTMLElement>(
+  /**
+   * A React component to render an item of the list or grid.
+   */ reactRenderer?: ComponentType<ReactModelRendererProps<I, M, O>> | null,
   /**
    * Could be used to apply tweaks for the root element of the renderer of the specific component to fix issues.
    *
