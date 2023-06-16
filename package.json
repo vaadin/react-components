@@ -12,9 +12,9 @@
     "build:generate-css": "tsx --experimental-vm-modules scripts/css-generator.ts",
     "build:generate-stubs": "tsx scripts/stub-generator.ts",
     "build:update-packagejson": "tsx scripts/package-json-update.ts",
-    "build:typescript": "concurrently npm:build:esbuild npm:build:dts",
-    "build:esbuild": "tsx scripts/build.ts",
-    "build:dts": "tsc -p tsconfig.build.json",
+    "build:typescript": "concurrently npm:build:typescript:*",
+    "build:typescript:esbuild": "tsx scripts/build.ts",
+    "build:typescript:dts": "tsc -p tsconfig.build.json",
     "clean": "git clean -dXf -e !.vscode -e !.vscode/** -e !.idea -e !.idea/** -e !node_modules -e !node_modules/**",
     "clean:dev": "git clean -dXf -e .vscode -e .vscode/** -e !.idea -e !.idea/** -e !node_modules -e !node_modules/** -e !src/generated -e !css",
     "build": "npm run build:dev && npm run build:typescript && npm run build:update-packagejson",
@@ -82,7 +82,6 @@
     "@vaadin/rich-text-editor": "24.1.0",
     "@vaadin/scroller": "24.1.0",
     "@vaadin/select": "24.1.0",
-    "@vaadin/side-nav": "^24.1.0",
     "@vaadin/split-layout": "24.1.0",
     "@vaadin/tabs": "24.1.0",
     "@vaadin/tabsheet": "24.1.0",
@@ -416,14 +415,6 @@
     "./Select.js": {
       "types": "./Select.d.ts",
       "default": "./Select.js"
-    },
-    "./SideNav.js": {
-      "types": "./SideNav.d.ts",
-      "default": "./SideNav.js"
-    },
-    "./SideNavItem.js": {
-      "types": "./SideNavItem.d.ts",
-      "default": "./SideNavItem.js"
     },
     "./SplitLayout.js": {
       "types": "./SplitLayout.d.ts",
