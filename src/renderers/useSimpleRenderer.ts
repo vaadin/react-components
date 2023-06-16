@@ -1,5 +1,6 @@
-import type { ComponentType, PropsWithChildren } from 'react';
-import type { Slice } from './renderer.js';
+import type { ComponentType } from 'react';
+import { createElement } from 'react';
+import { createPortal } from 'react-dom';
 import { useRenderer, type UseRendererResult } from './useRenderer.js';
 
 export type ReactSimpleRendererProps<O extends HTMLElement> = Readonly<{
@@ -7,15 +8,10 @@ export type ReactSimpleRendererProps<O extends HTMLElement> = Readonly<{
 }>;
 export type WebComponentSimpleRenderer<O extends HTMLElement> = (root: HTMLElement, original: O) => void;
 
-function convertSimpleRendererArgs<O extends HTMLElement>([original]: Slice<
-  Parameters<WebComponentSimpleRenderer<O>>,
-  1
->): PropsWithChildren<ReactSimpleRendererProps<O>> {
-  return { original };
-}
-
 export function useSimpleRenderer<O extends HTMLElement>(
   reactRenderer?: ComponentType<ReactSimpleRendererProps<O>> | null,
 ): UseRendererResult<WebComponentSimpleRenderer<O>> {
-  return useRenderer(reactRenderer, convertSimpleRendererArgs);
+  return useRenderer(
+    reactRenderer && ((root, [original]) => createPortal(createElement(reactRenderer, { original }), root)),
+  );
 }

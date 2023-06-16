@@ -20,6 +20,7 @@ import Row7 from './Row7.js';
 import Row8 from './Row8.js';
 import Row9 from './Row9.js';
 import Row10 from './Row10.js';
+import VirtualListFlickeringIssue from './VirtualListFlickeringIssue.js';
 
 export default function App({}) {
   const [notificationOpened, setNotificationOpened] = useState(false);
@@ -45,6 +46,7 @@ export default function App({}) {
         <Tab>Tab 2</Tab>
       </Tabs>
       <Board>
+        <VirtualListFlickeringIssue />
         <Row1 />
         <Row2 />
         <Row3 />
