@@ -80,7 +80,6 @@
     "@vaadin/rich-text-editor": "24.1.0",
     "@vaadin/scroller": "24.1.0",
     "@vaadin/select": "24.1.0",
-    "@vaadin/side-nav": "^24.1.0",
     "@vaadin/split-layout": "24.1.0",
     "@vaadin/tabs": "24.1.0",
     "@vaadin/tabsheet": "24.1.0",
@@ -418,14 +417,6 @@
       "types": "./Select.d.ts",
       "default": "./Select.js"
     },
-    "./SideNav.js": {
-      "types": "./SideNav.d.ts",
-      "default": "./SideNav.js"
-    },
-    "./SideNavItem.js": {
-      "types": "./SideNavItem.d.ts",
-      "default": "./SideNavItem.js"
-    },
     "./SplitLayout.js": {
       "types": "./SplitLayout.d.ts",
       "default": "./SplitLayout.js"
@@ -535,8 +526,6 @@
     "./RichTextEditor": "./RichTextEditor.js",
     "./Scroller": "./Scroller.js",
     "./Select": "./Select.js",
-    "./SideNav": "./SideNav.js",
-    "./SideNavItem": "./SideNavItem.js",
     "./SplitLayout": "./SplitLayout.js",
     "./Tab": "./Tab.js",
     "./Tabs": "./Tabs.js",
