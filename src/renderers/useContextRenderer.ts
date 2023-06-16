@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
-import type { Slice } from './renderer.js';
+import { createElement } from 'react';
+import { createPortal } from 'react-dom';
 import { useRenderer, type UseRendererResult } from './useRenderer.js';
 
 export type ReactContextRendererProps<C, O extends HTMLElement> = Readonly<{
@@ -13,15 +14,11 @@ export type WebComponentContextRenderer<C, O extends HTMLElement> = (
   context: C,
 ) => void;
 
-export function convertContextRendererArgs<C, O extends HTMLElement>([original, context]: Slice<
-  Parameters<WebComponentContextRenderer<C, O>>,
-  1
->): ReactContextRendererProps<C, O> {
-  return { context, original };
-}
-
 export function useContextRenderer<C, O extends HTMLElement>(
   reactRenderer?: ComponentType<ReactContextRendererProps<C, O>> | null,
 ): UseRendererResult<WebComponentContextRenderer<C, O>> {
-  return useRenderer(reactRenderer, convertContextRendererArgs);
+  return useRenderer(
+    reactRenderer &&
+      ((root, [original, context]) => createPortal(createElement(reactRenderer, { context, original }), root)),
+  );
 }
