@@ -25,7 +25,6 @@
     "test": "karma start karma.config.cjs",
     "test:watch": "karma start karma.config.cjs -- --watch",
     "test:coverage": "npm run test -- --coverage",
-    "typecheck": "tsc -p tsconfig.json",
     "validate": "concurrently npm:validate:*",
     "validate:types": "tsc --noEmit",
     "validate:prettier": "prettier -c scripts src test types karma.config.cjs vite.config.ts",
