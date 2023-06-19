@@ -3,10 +3,13 @@ import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { build, type Plugin } from 'esbuild';
 import { glob } from 'glob';
+import type{ PackageJson } from 'type-fest';
 
 const root = new URL('../', import.meta.url);
 const src = new URL('src/', root);
 const generated = new URL('generated/', src);
+
+const packageJson: PackageJson = await readFile(new URL('package.json', root), 'utf8').then(JSON.parse);
 
 const fixImports: Plugin = {
   name: 'add-imports',
@@ -56,6 +59,9 @@ async function detectEntryPoints(patterns: string[], ignore: string[] = []) {
 }
 
 const commonOptions = {
+  define: {
+    __VERSION__: `'${packageJson.version ?? '0.0.0'}'`,
+  },
   format: 'esm',
   minify: true,
   outdir: fileURLToPath(root),
