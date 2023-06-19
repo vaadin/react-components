@@ -27,7 +27,7 @@ function VirtualList<TItem = VirtualListDefaultItem>(
   ref: ForwardedRef<VirtualListElement<TItem>>,
 ): ReactElement | null {
   const [portals, renderer] = useModelRenderer(props.renderer ?? props.children, (root) => {
-    if (root.style.paddingTop) {
+    if (root.style.paddingTop && Number(getComputedStyle(root).height) > 0) {
       root.style.paddingTop = '';
     }
   });

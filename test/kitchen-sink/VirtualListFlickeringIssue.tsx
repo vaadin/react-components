@@ -17,7 +17,6 @@ export default function VirtualListFlickeringIssue() {
   useEffect(() => {
     if (list.current) {
       list.current.renderer ||= (root, _list, model) => {
-        console.log('WebComponent#renderer', [_list, model]);
         root.innerHTML = `<span>Item: ${model.item.name}</span>`;
       };
     }
