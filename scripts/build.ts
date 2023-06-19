@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { build, type Plugin } from 'esbuild';
 import { glob } from 'glob';
-import type{ PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
 
 const root = new URL('../', import.meta.url);
 const src = new URL('src/', root);
