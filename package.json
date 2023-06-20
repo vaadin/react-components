@@ -81,6 +81,7 @@
     "@vaadin/rich-text-editor": "24.1.0",
     "@vaadin/scroller": "24.1.0",
     "@vaadin/select": "24.1.0",
+    "@vaadin/side-nav": "^24.1.1",
     "@vaadin/split-layout": "24.1.0",
     "@vaadin/tabs": "24.1.0",
     "@vaadin/tabsheet": "24.1.0",
