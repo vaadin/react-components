@@ -97,7 +97,7 @@ describe('Grid', () => {
         0,
         5,
       );
-      const [nameFooterCell, groupFooterCell, surnameFooterCell, roleFooterCell] = cells.slice(5, 9);
+      const [nameFooterCell, surnameFooterCell, roleFooterCell, groupFooterCell] = cells.slice(5, 9);
       const [nameBodyCell1, surnameBodyCell1, roleBodyCell1] = cells.slice(9, 12);
       const [nameBodyCell2, surnameBodyCell2, roleBodyCell2] = cells.slice(12, 15);
 
