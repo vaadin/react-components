@@ -19,12 +19,11 @@ function GridColumnGroup(props: GridColumnGroupProps, ref: ForwardedRef<GridColu
   const [footerPortals, footerRenderer] = useSimpleRenderer(props.footerRenderer);
 
   return (
-    <_GridColumnGroup
-      {...props}
-      footerRenderer={footerRenderer}
-      headerRenderer={headerRenderer}
-      ref={ref}
-    ></_GridColumnGroup>
+    <_GridColumnGroup {...props} footerRenderer={footerRenderer} headerRenderer={headerRenderer} ref={ref}>
+      {headerPortals}
+      {footerPortals}
+      {props.children}
+    </_GridColumnGroup>
   );
 }
 
