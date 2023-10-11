@@ -2,7 +2,7 @@ import {
   createComponent as _createComponent,
   type EventName,
   type WebComponentProps as _WebComponentProps,
-} from '@lit-labs/react';
+} from '@lit/react';
 import type { ThemePropertyMixinClass } from '@vaadin/vaadin-themable-mixin/vaadin-theme-property-mixin.js';
 import type React from 'react';
 import type { RefAttributes } from 'react';
@@ -47,7 +47,7 @@ type Options<I extends HTMLElement, E extends EventNames = {}> = Readonly<{
 export type ThemedWebComponentProps<
   I extends ThemePropertyMixinClass & HTMLElement,
   E extends EventNames = {},
-> = Partial<Omit<_WebComponentProps<I, E>, 'theme'>> & {
+> = Partial<Omit<_WebComponentProps<I>, 'theme'>> & {
   /**
    * Remove the deprecation warning for React components. In our case, the
    * property is deprecated in favor of an attribute. However, for React, it
@@ -61,7 +61,7 @@ export type ThemedWebComponentProps<
 
 export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I extends ThemePropertyMixinClass
   ? ThemedWebComponentProps<I, E>
-  : _WebComponentProps<I, E>;
+  : _WebComponentProps<I>;
 
 // We need a separate declaration here; otherwise, the TypeScript fails into the
 // endless loop trying to resolve the typings.

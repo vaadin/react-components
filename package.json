@@ -36,6 +36,7 @@
     "url": "github.com/vaadin/react-components"
   },
   "dependencies": {
+    "@lit/react": "^1.0.0",
     "@vaadin/accordion": "24.2.0-beta3",
     "@vaadin/app-layout": "24.2.0-beta3",
     "@vaadin/avatar": "24.2.0-beta3",
@@ -100,7 +101,6 @@
     "esbuild": "$esbuild"
   },
   "peerDependencies": {
-    "@lit-labs/react": "^1.1.0",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
     "react": "^18.2.0",
