@@ -30,10 +30,6 @@ export default function Row8() {
       <Select
         label="Select"
         value="2"
-        items={[
-          { label: 'One', value: '1' },
-          { label: 'Two', value: '2' },
-        ]}
         renderer={SelectListBox}
       />
     </BoardRow>

@@ -117,6 +117,7 @@
   "devDependencies": {
     "@esm-bundle/chai": "^4.3.4-fix.0",
     "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.5.1",
     "@types/chai-dom": "^1.11.0",
     "@types/karma": "^6.3.4",
     "@types/karma-chrome-launcher": "^3.1.1",
@@ -534,6 +535,8 @@
     "./RichTextEditor": "./RichTextEditor.js",
     "./Scroller": "./Scroller.js",
     "./Select": "./Select.js",
+    "./SideNav": "./SideNav.js",
+    "./SideNavItem": "./SideNavItem.js",
     "./SplitLayout": "./SplitLayout.js",
     "./Tab": "./Tab.js",
     "./Tabs": "./Tabs.js",
