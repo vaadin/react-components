@@ -5,7 +5,7 @@ import {
   type ReactElement,
   type ReactNode,
   useEffect,
-  useRef
+  useRef,
 } from 'react';
 import { Select as _Select, type SelectElement, type SelectProps as _SelectProps } from './generated/Select.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';

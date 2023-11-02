@@ -27,11 +27,7 @@ export default function Row8() {
         </RadioButton>
       </RadioGroup>
       <RichTextEditor></RichTextEditor>
-      <Select
-        label="Select"
-        value="2"
-        renderer={SelectListBox}
-      />
+      <Select label="Select" value="2" renderer={SelectListBox} />
     </BoardRow>
   );
 }
