@@ -28,8 +28,10 @@ function Select(props: SelectProps, ref: ForwardedRef<SelectElement>): ReactElem
   const finalRef = useMergedRefs(innerRef, ref);
 
   useEffect(() => {
-    innerRef.current?.requestContentUpdate();
-  }, [innerRef.current]);
+    if (props.renderer) {
+      innerRef.current?.requestContentUpdate();
+    }
+  }, [innerRef.current, props.renderer]);
 
   return (
     <_Select {...props} ref={finalRef} renderer={renderer}>
