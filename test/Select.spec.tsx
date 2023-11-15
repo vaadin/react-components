@@ -45,25 +45,20 @@ describe('Select', () => {
     user = userEvent.setup();
   });
 
-  it('should use children if no renderer property set', async () => {
+  it('should use items if no renderer property set', async () => {
     render(<Select items={items} value="bar" />);
     await assert(user);
   });
 
-  it('should use renderer prop if it is set', async () => {
-    render(<Select renderer={Renderer} value="bar" />);
-    await assert(user);
+  it('should correctly render the value if default value changed', async () => {
+    const { rerender } = render(<Select renderer={Renderer} value="bar" />);
+    await expect(findByQuerySelector('vaadin-select-value-button')).to.eventually.have.text('Bar');
+
+    rerender(<Select renderer={Renderer} value="foo" />);
+    await expect(findByQuerySelector('vaadin-select-value-button')).to.eventually.have.text('Foo');
   });
 
-  it('should use children render function as a renderer prop', async () => {
-    render(<Select value="bar">{Renderer}</Select>);
-    await assert(user);
-  });
-
-  it('should correctly render the value if renderer prop is changed', async () => {
-    render(<Select renderer={Renderer} value="bar" />);
-    await findByQuerySelector('vaadin-select-value-button');
-
+  describe('renderer', () => {
     function NewRenderer() {
       return (
         <ListBox>
@@ -73,16 +68,32 @@ describe('Select', () => {
         </ListBox>
       );
     }
-    render(<Select renderer={NewRenderer} value="bar" />);
 
-    await expect(findByQuerySelector('vaadin-select-value-button')).to.eventually.have.text('Bar');
-  });
+    it('should use renderer prop if it is set', async () => {
+      render(<Select renderer={Renderer} value="bar" />);
+      await assert(user);
+    });
 
-  it('should correctly render the value if default value changed', async () => {
-    const { rerender } = render(<Select renderer={Renderer} value="bar" />);
-    await expect(findByQuerySelector('vaadin-select-value-button')).to.eventually.have.text('Bar');
+    it('should use children render function as a renderer prop', async () => {
+      render(<Select value="bar">{Renderer}</Select>);
+      await assert(user);
+    });
 
-    rerender(<Select renderer={Renderer} value="foo" />);
-    await expect(findByQuerySelector('vaadin-select-value-button')).to.eventually.have.text('Foo');
+    it('should correctly render the value if renderer prop is changed', async () => {
+      render(<Select renderer={Renderer} value="bar" />);
+      await findByQuerySelector('vaadin-select-value-button');
+
+      render(<Select renderer={NewRenderer} value="bar" />);
+
+      await expect(findByQuerySelector('vaadin-select-value-button')).to.eventually.have.text('Bar');
+    });
+
+    it('should correctly render the value if renderer prop is changed', async () => {
+      render(<Select value="bar">{Renderer}</Select>);
+      await findByQuerySelector('vaadin-select-value-button');
+      render(<Select value="bar">{NewRenderer}</Select>);
+
+      await expect(findByQuerySelector('vaadin-select-value-button')).to.eventually.have.text('Bar');
+    });
   });
 });
