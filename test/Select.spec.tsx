@@ -88,7 +88,7 @@ describe('Select', () => {
       await expect(findByQuerySelector('vaadin-select-value-button')).to.eventually.have.text('Bar');
     });
 
-    it('should correctly render the value if renderer prop is changed', async () => {
+    it('should correctly render the value if children prop is changed', async () => {
       render(<Select value="bar">{Renderer}</Select>);
       await findByQuerySelector('vaadin-select-value-button');
       render(<Select value="bar">{NewRenderer}</Select>);
