@@ -59,9 +59,31 @@ export type ThemedWebComponentProps<
   theme?: string;
 };
 
-export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I extends ThemePropertyMixinClass
+type AllWebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I extends ThemePropertyMixinClass
   ? ThemedWebComponentProps<I, E>
   : _WebComponentProps<I, E>;
+
+// Omit properties that are defined on the HTMLElement.
+// TODO: If this type is used with WebComponentProps, for some reason the generated files under /generated would
+// get bloated with derived properties. Investiage.
+type NarrowedWebComponentProps<I extends HTMLElement, E extends EventNames = {}> = Omit<
+  AllWebComponentProps<I, E>,
+  keyof HTMLElement
+>;
+
+// Pick properties that should be supported by all components.
+// TODO: We probably don't want to expose all these properties on every component. For example, `style` is not
+// supported by Grid column element and `ariaLabel` doesn't necessarily work as expected for all components.
+type SharedWebComponentProps<I extends HTMLElement> = Pick<
+  AllWebComponentProps<I>,
+  'children' | 'id' | 'slot' | 'title' | 'style' | 'className' | 'hidden' | 'ariaLabel'
+>;
+
+export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = Omit<
+  AllWebComponentProps<I, E>,
+  keyof HTMLElement
+> &
+  SharedWebComponentProps<I>;
 
 // We need a separate declaration here; otherwise, the TypeScript fails into the
 // endless loop trying to resolve the typings.
