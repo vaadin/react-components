@@ -1,5 +1,6 @@
 import React, { type AriaAttributes, type CSSProperties } from 'react';
 import { TextField } from '../src/TextField.js';
+import type { LitElement } from 'lit';
 
 const assertType = <TExpected>(value: TExpected) => value;
 
@@ -17,8 +18,14 @@ assertType<React.ReactNode>(textFieldProps.children);
 assertType<ARIAMixin['ariaLabel'] | undefined>(textFieldProps.ariaLabel);
 assertType<AriaAttributes['aria-label'] | undefined>(textFieldProps['aria-label']);
 
-
 // Assert that certain HTMLElement properties are NOT present
-type OmittedProps = Omit<HTMLElement, keyof typeof textFieldProps>
+type OmittedProps = Omit<HTMLElement, keyof typeof textFieldProps>;
 assertType<keyof Partial<OmittedProps>>('append');
 assertType<keyof Partial<OmittedProps>>('prepend');
+
+// Assert that certain LitElement properties are NOT present
+type OmittedLitProps = Omit<LitElement, keyof typeof textFieldProps>;
+assertType<keyof Partial<OmittedLitProps>>('renderRoot');
+assertType<keyof Partial<OmittedLitProps>>('requestUpdate');
+assertType<keyof Partial<OmittedLitProps>>('addController');
+assertType<keyof Partial<OmittedLitProps>>('removeController');

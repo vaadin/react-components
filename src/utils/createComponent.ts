@@ -6,6 +6,7 @@ import {
 import type { ThemePropertyMixinClass } from '@vaadin/vaadin-themable-mixin/vaadin-theme-property-mixin.js';
 import type React from 'react';
 import type { RefAttributes } from 'react';
+import type { ControllerMixinClass } from '@vaadin/component-base/src/controller-mixin.js';
 
 declare const __VERSION__: string;
 
@@ -72,8 +73,7 @@ type NarrowedWebComponentProps<I extends HTMLElement, E extends EventNames = {}>
 >;
 
 // Pick properties that should be supported by all components.
-// TODO: We probably don't want to expose all these properties on every component. For example, `style` is not
-// supported by Grid column element and `ariaLabel` doesn't necessarily work as expected for all components.
+// TODO: `ariaLabel` doesn't necessarily work as expected for all components.
 type SharedWebComponentProps<I extends HTMLElement> = Pick<
   AllWebComponentProps<I>,
   'ariaLabel'
@@ -81,7 +81,7 @@ type SharedWebComponentProps<I extends HTMLElement> = Pick<
 
 export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = Omit<
   AllWebComponentProps<I, E>,
-  keyof HTMLElement
+  keyof HTMLElement | keyof ControllerMixinClass
 > & React.HTMLAttributes<I> &
   SharedWebComponentProps<I>
 
