@@ -1,6 +1,7 @@
 import React, { type AriaAttributes, type CSSProperties } from 'react';
 import { TextField } from '../src/TextField.js';
 import type { LitElement } from 'lit';
+import { GridColumn } from '../src/GridColumn.js';
 
 const assertType = <TExpected>(value: TExpected) => value;
 
@@ -19,13 +20,15 @@ assertType<ARIAMixin['ariaLabel'] | undefined>(textFieldProps.ariaLabel);
 assertType<AriaAttributes['aria-label'] | undefined>(textFieldProps['aria-label']);
 
 // Assert that certain HTMLElement properties are NOT present
-type OmittedProps = Omit<HTMLElement, keyof typeof textFieldProps>;
-assertType<keyof Partial<OmittedProps>>('append');
-assertType<keyof Partial<OmittedProps>>('prepend');
+assertType<keyof Omit<HTMLElement, keyof typeof textFieldProps>>('append');
+assertType<keyof Omit<HTMLElement, keyof typeof textFieldProps>>('prepend');
 
 // Assert that certain LitElement properties are NOT present
-type OmittedLitProps = Omit<LitElement, keyof typeof textFieldProps>;
-assertType<keyof Partial<OmittedLitProps>>('renderRoot');
-assertType<keyof Partial<OmittedLitProps>>('requestUpdate');
-assertType<keyof Partial<OmittedLitProps>>('addController');
-assertType<keyof Partial<OmittedLitProps>>('removeController');
+assertType<keyof Omit<LitElement, keyof typeof textFieldProps>>('renderRoot');
+assertType<keyof Omit<LitElement, keyof typeof textFieldProps>>('requestUpdate');
+assertType<keyof Omit<LitElement, keyof typeof textFieldProps>>('addController');
+assertType<keyof Omit<LitElement, keyof typeof textFieldProps>>('removeController');
+
+const gridColumnProps = React.createElement(GridColumn, {}).props;
+// TODO: This should come from the GridColumn API, not from HTMLAttributes
+assertType<boolean | undefined>(gridColumnProps.hidden);
