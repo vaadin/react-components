@@ -76,14 +76,14 @@ type NarrowedWebComponentProps<I extends HTMLElement, E extends EventNames = {}>
 // supported by Grid column element and `ariaLabel` doesn't necessarily work as expected for all components.
 type SharedWebComponentProps<I extends HTMLElement> = Pick<
   AllWebComponentProps<I>,
-  'children' | 'id' | 'slot' | 'title' | 'style' | 'className' | 'hidden' | 'ariaLabel'
+  'ariaLabel'
 >;
 
 export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = Omit<
   AllWebComponentProps<I, E>,
   keyof HTMLElement
-> &
-  SharedWebComponentProps<I>;
+> & React.HTMLAttributes<I> &
+  SharedWebComponentProps<I>
 
 // We need a separate declaration here; otherwise, the TypeScript fails into the
 // endless loop trying to resolve the typings.
