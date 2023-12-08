@@ -1,4 +1,11 @@
-import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement, type ReactNode } from 'react';
+import {
+  type ComponentType,
+  type ForwardedRef,
+  forwardRef,
+  type ReactElement,
+  type ReactNode,
+  type RefAttributes,
+} from 'react';
 import { Dialog as _Dialog, type DialogElement, type DialogProps as _DialogProps } from './generated/Dialog.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
 import type { ReactSimpleRendererProps } from './renderers/useSimpleRenderer.js';
@@ -34,6 +41,8 @@ function Dialog(
   );
 }
 
-const ForwardedDialog = forwardRef(Dialog);
+const ForwardedDialog = forwardRef(Dialog) as (
+  props: DialogProps & RefAttributes<DialogElement>,
+) => ReactElement | null;
 
 export { ForwardedDialog as Dialog };

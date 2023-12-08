@@ -4,6 +4,7 @@ import {
   forwardRef,
   type ReactElement,
   type ReactNode,
+  type RefAttributes,
   useEffect,
   useRef,
 } from 'react';
@@ -16,7 +17,11 @@ export * from './generated/Select.js';
 
 export type SelectReactRendererProps = ReactSimpleRendererProps<SelectElement>;
 
-export type SelectProps = Partial<Omit<_SelectProps, 'children' | 'renderer'>> &
+type KeysStartingWith<Set, Needle extends string> = Set extends `${Needle}${infer _X}` ? Set : never;
+
+export type SelectProps = Partial<
+  Omit<_SelectProps, 'children' | 'renderer' | KeysStartingWith<keyof _SelectProps, '_'>>
+> &
   Readonly<{
     children?: ReactNode | ComponentType<SelectReactRendererProps>;
     renderer?: ComponentType<SelectReactRendererProps> | null;
@@ -40,6 +45,8 @@ function Select(props: SelectProps, ref: ForwardedRef<SelectElement>): ReactElem
   );
 }
 
-const ForwardedSelect = forwardRef(Select);
+const ForwardedSelect = forwardRef(Select) as (
+  props: SelectProps & RefAttributes<SelectElement>,
+) => ReactElement | null;
 
 export { ForwardedSelect as Select };

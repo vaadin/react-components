@@ -1,4 +1,4 @@
-import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
+import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement, type RefAttributes } from 'react';
 import {
   ContextMenu as _ContextMenu,
   type ContextMenuRendererContext,
@@ -30,6 +30,8 @@ function ContextMenu(props: ContextMenuProps, ref: ForwardedRef<ContextMenuEleme
   );
 }
 
-const ForwardedContextMenu = forwardRef(ContextMenu);
+const ForwardedContextMenu = forwardRef(ContextMenu) as (
+  props: ContextMenuProps & RefAttributes<ContextMenuElement>,
+) => ReactElement | null;
 
 export { ForwardedContextMenu as ContextMenu };
