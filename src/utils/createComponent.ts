@@ -64,13 +64,11 @@ type AllWebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I 
   ? ThemedWebComponentProps<I, E>
   : _WebComponentProps<I, E>;
 
-// Omit HTMLElement props that are not in React.HTMLAttributes
-type OmittedHTMLElementProps<I extends HTMLElement> = Omit<HTMLElement, keyof React.HTMLAttributes<I>>;
-
 export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = Omit<
   AllWebComponentProps<I, E>,
-  keyof OmittedHTMLElementProps<I> | keyof ControllerMixinClass
->;
+  keyof HTMLElement | keyof ControllerMixinClass
+> &
+  React.HTMLAttributes<I>;
 
 // We need a separate declaration here; otherwise, the TypeScript fails into the
 // endless loop trying to resolve the typings.
