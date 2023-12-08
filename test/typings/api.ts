@@ -1,8 +1,8 @@
-import React, { type HTMLAttributes } from 'react';
-import { TextField, TextFieldElement } from '../src/TextField.js';
+import React, { type HTMLAttributes, type RefAttributes } from 'react';
+import { TextField, TextFieldElement } from '../../TextField.js';
 import type { LitElement } from 'lit';
-import { GridColumn, GridColumnElement } from '../src/GridColumn.js';
-import { Dialog, DialogElement } from '../src/Dialog.js';
+import { GridColumn, GridColumnElement } from '../../GridColumn.js';
+import { Dialog, DialogElement } from '../../Dialog.js';
 
 const assertType = <TExpected>(value: TExpected) => value;
 const assertOmitted = <C, T>(prop: keyof Omit<C, keyof T>) => prop;
@@ -29,6 +29,8 @@ assertType<HTMLAttributes<TextFieldElement>['className']>(textFieldProps.classNa
 assertType<HTMLAttributes<TextFieldElement>['style']>(textFieldProps.style);
 assertType<HTMLAttributes<TextFieldElement>['children']>(textFieldProps.children);
 assertType<HTMLAttributes<TextFieldElement>['aria-label']>(textFieldProps['aria-label']);
+
+assertType<RefAttributes<TextFieldElement>['ref']>(textFieldProps.ref);
 
 // Assert that certain HTMLElement properties are NOT present
 assertOmitted<HTMLElement, TextFieldProps>('append');
