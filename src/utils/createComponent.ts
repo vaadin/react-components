@@ -64,32 +64,18 @@ type AllWebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I 
   ? ThemedWebComponentProps<I, E>
   : _WebComponentProps<I, E>;
 
-// Omit properties that are defined on the HTMLElement.
-// TODO: If this type is used with WebComponentProps, for some reason the generated files under /generated would
-// get bloated with derived properties. Investiage.
-type NarrowedWebComponentProps<I extends HTMLElement, E extends EventNames = {}> = Omit<
-  AllWebComponentProps<I, E>,
-  keyof HTMLElement
->;
-
-// Pick properties that should be supported by all components.
-// TODO: `ariaLabel` doesn't necessarily work as expected for all components.
-type SharedWebComponentProps<I extends HTMLElement> = Pick<
-  AllWebComponentProps<I>,
-  'ariaLabel'
->;
-
 export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = Omit<
   AllWebComponentProps<I, E>,
   keyof HTMLElement | keyof ControllerMixinClass
-> & React.HTMLAttributes<I> &
-  SharedWebComponentProps<I>
+> &
+  React.HTMLAttributes<I>;
 
 // We need a separate declaration here; otherwise, the TypeScript fails into the
 // endless loop trying to resolve the typings.
 export function createComponent<I extends HTMLElement, E extends EventNames = {}>(
   options: Options<I, E>,
 ): (props: WebComponentProps<I, E> & RefAttributes<I>) => React.ReactElement | null;
+
 export function createComponent<I extends HTMLElement, E extends EventNames = {}>(options: Options<I, E>): any {
   const { elementClass } = options;
 
