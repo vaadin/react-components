@@ -64,7 +64,8 @@ type AllWebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I 
   ? ThemedWebComponentProps<I, E>
   : _WebComponentProps<I, E>;
 
-type OmittedWebComponentProps = Omit<HTMLElement, keyof React.HTMLAttributes<any>> & ControllerMixinClass;
+// TODO: LoginOverlay has "autofocus" property so we can't omit it
+type OmittedWebComponentProps = Omit<HTMLElement, keyof React.HTMLAttributes<any> | 'autofocus'> & ControllerMixinClass;
 
 export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = Omit<
   AllWebComponentProps<I, E>,

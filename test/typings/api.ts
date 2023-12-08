@@ -4,6 +4,7 @@ import type { LitElement } from 'lit';
 import { GridColumn, GridColumnElement } from '../../GridColumn.js';
 import { Dialog, DialogElement } from '../../Dialog.js';
 import { DatePicker, DatePickerElement } from '../../DatePicker.js';
+import { LoginOverlay, LoginOverlayElement } from '../../LoginOverlay.js';
 import { TimePicker, type TimePickerChangeEvent } from '../../TimePicker.js';
 import { TextArea, TextAreaElement, type TextAreaChangeEvent } from '../../TextArea.js';
 import { MessageInput, MessageInputElement, type MessageInputSubmitEvent } from '../../MessageInput.js';
@@ -93,3 +94,7 @@ const textAreaOnChange: typeof textAreaProps.onChange = (event) => {
 const timePickerProps = React.createElement(TimePicker, {}).props;
 
 assertType<typeof timePickerProps.onChange>((_event: TimePickerChangeEvent) => {});
+
+const loginOverlayProps = React.createElement(LoginOverlay, {}).props;
+
+assertType<LoginOverlayElement['autofocus'] | undefined>(loginOverlayProps.autofocus);
