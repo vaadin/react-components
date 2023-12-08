@@ -10,7 +10,10 @@ const assertOmitted = <C, T>(prop: keyof Omit<C, keyof T>) => prop;
 const textFieldProps = React.createElement(TextField, {}).props;
 type TextFieldProps = typeof textFieldProps;
 
-type PartialTextFieldElement = Omit<Partial<TextFieldElement>, 'draggable' | 'style' | 'translate' | 'children' | 'contentEditable'>;
+type PartialTextFieldElement = Omit<
+  Partial<TextFieldElement>,
+  'draggable' | 'style' | 'translate' | 'children' | 'contentEditable'
+>;
 
 assertType<PartialTextFieldElement>(textFieldProps);
 
@@ -39,9 +42,16 @@ assertOmitted<LitElement, TextFieldProps>('addController');
 assertOmitted<LitElement, TextFieldProps>('removeController');
 
 const gridColumnProps = React.createElement(GridColumn, {}).props;
-// TODO: This should come from the GridColumn API, not from HTMLAttributes
+type GridColumnProps = typeof gridColumnProps;
 assertType<GridColumnElement['hidden'] | undefined>(gridColumnProps.hidden);
 
-const dialogProps = React.createElement(Dialog, {}).props;
+assertOmitted<HTMLElement, GridColumnProps>('append');
+assertOmitted<HTMLElement, GridColumnProps>('prepend');
+assertOmitted<HTMLElement, GridColumnProps>('ariaLabel');
 
-assertType<DialogElement['ariaLabel'] | undefined>(dialogProps.ariaLabel);
+const dialogProps = React.createElement(Dialog, {}).props;
+type DialogProps = typeof dialogProps;
+
+assertType<DialogElement['ariaLabel'] | undefined>(dialogProps['aria-label']);
+
+assertType<DialogProps['footer']>(dialogProps.footer);
