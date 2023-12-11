@@ -65,7 +65,6 @@ assertType<DialogElement['ariaLabel'] | undefined>(dialogProps['aria-label']);
 assertType<DialogProps['footer']>(dialogProps.footer);
 
 const datePickerProps = React.createElement(DatePicker, {}).props;
-type DatePickerProps = typeof datePickerProps;
 
 const datePickerOnChange: typeof datePickerProps.onChange = (event) => {
   assertType<DatePickerElement['value']>(event.target.value);

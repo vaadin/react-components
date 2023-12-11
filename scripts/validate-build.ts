@@ -27,7 +27,7 @@ async function validateInheritedProperties() {
 
   for (const property of inheritedProperties) {
     if (typeDefinitionContent.includes(`${property}:`) || typeDefinitionContent.includes(`${property}?:`)) {
-      throw new Error(`The generated file contains the extracted property "${property}".`);
+      throw new Error(`The generated type definition file contains inherited property "${property}".`);
     }
   }
 }
