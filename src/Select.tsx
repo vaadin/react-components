@@ -1,8 +1,8 @@
 import {
-  Children,
   type ComponentType,
   type ForwardedRef,
   forwardRef,
+  isValidElement,
   type ReactElement,
   type ReactNode,
   useEffect,
@@ -26,20 +26,20 @@ export type SelectProps = Partial<Omit<_SelectProps, 'children' | 'renderer'>> &
   }>;
 
 function Select(props: SelectProps, ref: ForwardedRef<SelectElement>): ReactElement | null {
-  const children = Children.toArray(props.children as ReactNode[]);
+  // React.Children.toArray() doesn't allow functions, so we convert manually.
+  const children = Array.isArray(props.children) ? props.children : [props.children];
 
   // Components with slot attribute should stay in light DOM.
-  const slotted = children.filter((child) => {
-    return typeof child === 'object' && 'props' in child && child.props.slot;
+  const slotted = children.filter((child): child is ReactNode => {
+    return isValidElement(child) && child.props.slot;
   });
 
   // Component without slot attribute should go to the overlay.
-  const overlayChildren = children.filter((child) => !slotted.includes(child));
+  const overlayChildren = children.filter((child): child is ReactNode => {
+    return isValidElement(child) && !slotted.includes(child);
+  });
 
-  // React.Children.toArray() doesn't allow functions, so we convert manually.
-  const renderFn = (Array.isArray(props.children) ? props.children : [props.children]).find(
-    (child) => typeof child === 'function',
-  );
+  const renderFn = children.find((child) => typeof child === 'function');
 
   const innerRef = useRef<SelectElement>(null);
   const [portals, renderer] = useSimpleOrChildrenRenderer(
