@@ -30,13 +30,13 @@ function Select(props: SelectProps, ref: ForwardedRef<SelectElement>): ReactElem
   const children = Array.isArray(props.children) ? props.children : [props.children];
 
   // Components with slot attribute should stay in light DOM.
-  const slotted = children.filter((child): child is ReactNode => {
+  const slottedChildren = children.filter((child): child is ReactNode => {
     return isValidElement(child) && child.props.slot;
   });
 
   // Component without slot attribute should go to the overlay.
   const overlayChildren = children.filter((child): child is ReactNode => {
-    return isValidElement(child) && !slotted.includes(child);
+    return isValidElement(child) && !slottedChildren.includes(child);
   });
 
   const renderFn = children.find((child) => typeof child === 'function');
@@ -56,7 +56,7 @@ function Select(props: SelectProps, ref: ForwardedRef<SelectElement>): ReactElem
 
   return (
     <_Select {...props} ref={finalRef} renderer={renderer}>
-      {slotted}
+      {slottedChildren}
       {portals}
     </_Select>
   );
