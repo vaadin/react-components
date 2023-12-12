@@ -95,5 +95,15 @@ describe('Select', () => {
 
       await expect(findByQuerySelector('vaadin-select-value-button')).to.eventually.have.text('Bar');
     });
+
+    it('should correctly render the element with prefix slot', async () => {
+      render(
+        <Select renderer={Renderer}>
+          <div slot="prefix">Value:</div>
+        </Select>,
+      );
+
+      await expect(findByQuerySelector('div[slot="prefix"]')).to.eventually.have.text('Value:');
+    });
   });
 });

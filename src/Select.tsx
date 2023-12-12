@@ -1,4 +1,5 @@
 import {
+  Children,
   type ComponentType,
   type ForwardedRef,
   forwardRef,
@@ -16,15 +17,41 @@ export * from './generated/Select.js';
 
 export type SelectReactRendererProps = ReactSimpleRendererProps<SelectElement>;
 
+type SelectRenderer = ComponentType<SelectReactRendererProps>;
+
 export type SelectProps = Partial<Omit<_SelectProps, 'children' | 'renderer'>> &
   Readonly<{
-    children?: ReactNode | ComponentType<SelectReactRendererProps>;
-    renderer?: ComponentType<SelectReactRendererProps> | null;
+    children?: ReactNode | SelectRenderer | Array<ReactNode | SelectRenderer>;
+    renderer?: SelectRenderer | null;
   }>;
 
 function Select(props: SelectProps, ref: ForwardedRef<SelectElement>): ReactElement | null {
+  const children = Children.toArray(props.children as ReactNode[]);
+
+  // Components with slot attribute should stay in light DOM.
+  const slotted = children.filter((child: any) => {
+    return 'props' in child && child.props.slot;
+  });
+
+  // Component without slot attribute should go to the overlay.
+  let overlayChildren: ReactNode[] | undefined;
+
+  children.forEach((child) => {
+    if (!slotted.includes(child)) {
+      if (!overlayChildren) {
+        overlayChildren = [];
+      }
+      overlayChildren.push(child);
+    }
+  });
+
+  // React.Children.toArray() doesn't allow functions, so we convert manually.
+  const renderFn = (Array.isArray(props.children) ? props.children : [props.children]).find(
+    (child: any) => typeof child === 'function',
+  );
+
   const innerRef = useRef<SelectElement>(null);
-  const [portals, renderer] = useSimpleOrChildrenRenderer(props.renderer, props.children);
+  const [portals, renderer] = useSimpleOrChildrenRenderer(props.renderer, renderFn || overlayChildren);
   const finalRef = useMergedRefs(innerRef, ref);
 
   useEffect(() => {
@@ -35,6 +62,7 @@ function Select(props: SelectProps, ref: ForwardedRef<SelectElement>): ReactElem
 
   return (
     <_Select {...props} ref={finalRef} renderer={renderer}>
+      {slotted}
       {portals}
     </_Select>
   );
