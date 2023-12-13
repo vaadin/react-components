@@ -4,7 +4,7 @@ import {
   type WebComponentProps as _WebComponentProps,
 } from '@lit-labs/react';
 import type { ThemePropertyMixinClass } from '@vaadin/vaadin-themable-mixin/vaadin-theme-property-mixin.js';
-import React from 'react';
+import type React from 'react';
 import type { RefAttributes } from 'react';
 import type { ControllerMixinClass } from '@vaadin/component-base/src/controller-mixin.js';
 
@@ -81,7 +81,7 @@ export function createComponent<I extends HTMLElement, E extends EventNames = {}
 export function createComponent<I extends HTMLElement, E extends EventNames = {}>(options: Options<I, E>): any {
   const { elementClass } = options;
 
-  const component = _createComponent(
+  return _createComponent(
     '_properties' in elementClass
       ? {
           ...options,
@@ -93,23 +93,9 @@ export function createComponent<I extends HTMLElement, E extends EventNames = {}
           elementClass: {
             // @ts-expect-error: it is a specific workaround for Polymer classes.
             name: elementClass.name,
-            prototype: elementClass._properties,
+            prototype: { ...elementClass._properties, hidden: Boolean },
           },
         }
       : options,
   );
-
-  return React.forwardRef<typeof component, Parameters<typeof component>[0]>((props, ref) => {
-    // Map falsy boolean properties as `undefined` to avoid them from rendering with the
-    // value "false" in the attribute, for example `<vaadin-button hidden="false">`,
-    // which would actually evaluate as `hidden` being `true`.
-    const falsyBooleanProps = Object.entries(props).reduce((acc, [key, value]) => {
-      if (value === false) {
-        return { ...acc, [key]: undefined };
-      }
-      return acc;
-    }, {});
-
-    return React.createElement(component, { ...props, ...falsyBooleanProps, ref });
-  });
 }
