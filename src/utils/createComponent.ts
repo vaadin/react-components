@@ -4,7 +4,7 @@ import {
   type WebComponentProps as _WebComponentProps,
 } from '@lit-labs/react';
 import type { ThemePropertyMixinClass } from '@vaadin/vaadin-themable-mixin/vaadin-theme-property-mixin.js';
-import type React from 'react';
+import React from 'react';
 import type { RefAttributes } from 'react';
 import type { ControllerMixinClass } from '@vaadin/component-base/src/controller-mixin.js';
 
@@ -81,7 +81,7 @@ export function createComponent<I extends HTMLElement, E extends EventNames = {}
 export function createComponent<I extends HTMLElement, E extends EventNames = {}>(options: Options<I, E>): any {
   const { elementClass } = options;
 
-  return _createComponent(
+  const component = _createComponent(
     '_properties' in elementClass
       ? {
           ...options,
@@ -98,4 +98,18 @@ export function createComponent<I extends HTMLElement, E extends EventNames = {}
         }
       : options,
   );
+
+  return React.forwardRef<typeof component, Parameters<typeof component>[0]>((props, ref) => {
+    // Map falsy boolean properties as `undefined` to avoid them from rendering with the
+    // value "false" in the attribute, for example `<vaadin-button hidden="false">`,
+    // which would actually evaluate as `hidden` being `true`.
+    const falsyBooleanProps = Object.entries(props).reduce((acc, [key, value]) => {
+      if (value === false) {
+        return { ...acc, [key]: undefined };
+      }
+      return acc;
+    }, {});
+
+    return React.createElement(component, { ...props, ...falsyBooleanProps, ref });
+  });
 }
