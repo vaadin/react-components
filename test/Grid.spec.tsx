@@ -2,7 +2,7 @@ import { expect, use as useChaiPlugin } from '@esm-bundle/chai';
 import chaiDom from 'chai-dom';
 import { cleanup, render } from '@testing-library/react/pure.js';
 import { Grid } from '../src/Grid.js';
-import { GridColumn } from '../src/GridColumn.js';
+import { GridColumn, GridColumnElement } from '../src/GridColumn.js';
 import { GridFilterColumn } from '../src/GridFilterColumn.js';
 import { GridProEditColumn } from '../src/GridProEditColumn.js';
 import { GridSelectionColumn } from '../src/GridSelectionColumn.js';
@@ -10,8 +10,24 @@ import { GridSortColumn } from '../src/GridSortColumn.js';
 import type { GridBodyReactRendererProps } from '../src/renderers/grid.js';
 import catchRender from './utils/catchRender.js';
 import { GridColumnGroup } from '../src/GridColumnGroup.js';
+import { findByQuerySelector } from './utils/findByQuerySelector.js';
 
 useChaiPlugin(chaiDom);
+
+async function until(condition: () => boolean) {
+  return new Promise((resolve) => {
+    const interval = setInterval(() => {
+      if (condition()) {
+        clearInterval(interval);
+        resolve(null);
+      }
+    }, 1);
+  });
+}
+
+function getHeaderCell(column: GridColumnElement) {
+  return (column as any)._headerCell;
+}
 
 describe('Grid', () => {
   type Item = Readonly<{ name: string; surname: string; role: string }>;
@@ -119,6 +135,52 @@ describe('Grid', () => {
       expect(nameBodyCell2).to.have.text('Ringo');
       expect(surnameBodyCell2).to.have.text('Starr');
       expect(roleBodyCell2).to.have.text('drums');
+    });
+
+    it('should consider custom renderer content with column auto-width', async () => {
+      render(
+        <Grid<Item> items={items}>
+          <GridColumn<Item> header="name" autoWidth flexGrow={0}>
+            {({ item }) => <button style={{ width: '300px' }}>{item.name}</button>}
+          </GridColumn>
+        </Grid>,
+      );
+
+      const column = await findByQuerySelector('vaadin-grid-column');
+      await until(() => getHeaderCell(column).offsetWidth > 300);
+    });
+
+    it('should temporarily hide the grid content on auto-width recalculation', async () => {
+      render(
+        <Grid<Item> items={items}>
+          <GridColumn<Item> header="name" autoWidth />
+        </Grid>,
+      );
+
+      const grid = document.querySelector('vaadin-grid')!;
+      const column = await findByQuerySelector('vaadin-grid-column');
+
+      grid.recalculateColumnWidths();
+      expect(getComputedStyle(getHeaderCell(column)).visibility).to.equal('hidden');
+      await until(() => getComputedStyle(getHeaderCell(column)).visibility === 'visible');
+    });
+
+    it('should recalculate column auto-width synchronously', async () => {
+      render(
+        <Grid<Item> items={items}>
+          <GridColumn<Item> header="name" autoWidth flexGrow={0}>
+            {({ item }) => <button className="contentbutton">{item.name}</button>}
+          </GridColumn>
+        </Grid>,
+      );
+
+      const grid = document.querySelector('vaadin-grid')!;
+      const column = await findByQuerySelector('vaadin-grid-column');
+      const contentButton = await findByQuerySelector('.contentbutton');
+
+      (contentButton as HTMLButtonElement).style.width = '300px';
+      grid.recalculateColumnWidths();
+      expect(getHeaderCell(column).offsetWidth).to.be.greaterThan(300);
     });
   });
 
