@@ -1,8 +1,4 @@
-import {
-  createComponent as _createComponent,
-  type EventName,
-  type WebComponentProps as _WebComponentProps,
-} from '@lit-labs/react';
+import { createComponent as _createComponent, type EventName } from '@lit/react';
 import type { ThemePropertyMixinClass } from '@vaadin/vaadin-themable-mixin/vaadin-theme-property-mixin.js';
 import type React from 'react';
 import type { RefAttributes } from 'react';
@@ -45,10 +41,29 @@ type Options<I extends HTMLElement, E extends EventNames = {}> = Readonly<{
   tagName: string;
 }>;
 
+// A map of expected event listener types based on EventNames.
+type EventListeners<R extends EventNames> = {
+  [K in keyof R]?: R[K] extends EventName ? (e: R[K]['__eventType']) => void : (e: Event) => void;
+};
+
+// Props derived from custom element class. Currently has limitations of making
+// all properties optional and also surfaces life cycle methods in autocomplete.
+type ElementProps<I> = Partial<Omit<I, keyof HTMLElement>>;
+
+// Acceptable props to the React component.
+type ComponentProps<I, E extends EventNames = {}> = Omit<
+  React.HTMLAttributes<I>,
+  // Prefer type of provided event handler props or those on element over
+  // built-in HTMLAttributes
+  keyof E | keyof ElementProps<I>
+> &
+  EventListeners<E> &
+  ElementProps<I>;
+
 export type ThemedWebComponentProps<
   I extends ThemePropertyMixinClass & HTMLElement,
   E extends EventNames = {},
-> = _WebComponentProps<I, E> & {
+> = ComponentProps<I, E> & {
   /**
    * Attribute that can be used by the component to apply built-in style variants,
    * or to propagate its value to the sub-components in Shadow DOM.
@@ -60,7 +75,7 @@ export type ThemedWebComponentProps<
 
 type AllWebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I extends ThemePropertyMixinClass
   ? ThemedWebComponentProps<I, E>
-  : _WebComponentProps<I, E>;
+  : ComponentProps<I, E>;
 
 // TODO: LoginOverlay has "autofocus" property so we can't omit it
 type OmittedWebComponentProps = Omit<HTMLElement, keyof React.HTMLAttributes<any> | 'autofocus'> & ControllerMixinClass;
