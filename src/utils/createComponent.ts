@@ -48,7 +48,8 @@ type EventListeners<R extends EventNames> = {
 
 // Props derived from custom element class. Currently has limitations of making
 // all properties optional and also surfaces life cycle methods in autocomplete.
-type ElementProps<I> = Partial<Omit<I, keyof HTMLElement>>;
+// TODO: LoginOverlay has "autofocus" property, so we add it back manually.
+type ElementProps<I> = Partial<Omit<I, keyof HTMLElement>> & { autofocus?: boolean };
 
 // Acceptable props to the React component.
 type ComponentProps<I, E extends EventNames = {}> = Omit<
@@ -77,12 +78,9 @@ type AllWebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I 
   ? ThemedWebComponentProps<I, E>
   : ComponentProps<I, E>;
 
-// TODO: LoginOverlay has "autofocus" property so we can't omit it
-type OmittedWebComponentProps = Omit<HTMLElement, keyof React.HTMLAttributes<any> | 'autofocus'> & ControllerMixinClass;
-
 export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = Omit<
   AllWebComponentProps<I, E>,
-  keyof OmittedWebComponentProps
+  keyof ControllerMixinClass
 >;
 
 // We need a separate declaration here; otherwise, the TypeScript fails into the
