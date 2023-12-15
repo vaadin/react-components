@@ -37,6 +37,7 @@
     "url": "github.com/vaadin/react-components"
   },
   "dependencies": {
+    "@vaadin/a11y-base": "24.3.1",
     "@vaadin/accordion": "24.3.1",
     "@vaadin/app-layout": "24.3.1",
     "@vaadin/avatar": "24.3.1",
@@ -47,6 +48,7 @@
     "@vaadin/checkbox": "24.3.1",
     "@vaadin/checkbox-group": "24.3.1",
     "@vaadin/combo-box": "24.3.1",
+    "@vaadin/component-base": "24.3.1",
     "@vaadin/confirm-dialog": "24.3.1",
     "@vaadin/context-menu": "24.3.1",
     "@vaadin/cookie-consent": "24.3.1",
@@ -69,6 +71,7 @@
     "@vaadin/integer-field": "24.3.1",
     "@vaadin/item": "24.3.1",
     "@vaadin/list-box": "24.3.1",
+    "@vaadin/lit-renderer": "24.3.1",
     "@vaadin/login": "24.3.1",
     "@vaadin/map": "24.3.1",
     "@vaadin/menu-bar": "24.3.1",
@@ -77,6 +80,7 @@
     "@vaadin/multi-select-combo-box": "24.3.1",
     "@vaadin/notification": "24.3.1",
     "@vaadin/number-field": "24.3.1",
+    "@vaadin/overlay": "24.3.1",
     "@vaadin/password-field": "24.3.1",
     "@vaadin/progress-bar": "24.3.1",
     "@vaadin/radio-group": "24.3.1",
@@ -92,6 +96,9 @@
     "@vaadin/time-picker": "24.3.1",
     "@vaadin/tooltip": "24.3.1",
     "@vaadin/upload": "24.3.1",
+    "@vaadin/vaadin-lumo-styles": "24.3.1",
+    "@vaadin/vaadin-material-styles": "24.3.1",
+    "@vaadin/vaadin-themable-mixin": "24.3.1",
     "@vaadin/vertical-layout": "24.3.1",
     "@vaadin/virtual-list": "24.3.1"
   },
