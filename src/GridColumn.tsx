@@ -1,4 +1,12 @@
-import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement, type RefAttributes } from 'react';
+import {
+  type ComponentType,
+  type ForwardedRef,
+  forwardRef,
+  type ReactElement,
+  type RefAttributes,
+  useEffect,
+  useRef,
+} from 'react';
 import type { GridDefaultItem } from './generated/Grid.js';
 import {
   GridColumn as _GridColumn,
@@ -29,13 +37,29 @@ function GridColumn<TItem = GridDefaultItem>(
   const [footerPortals, footerRenderer] = useSimpleRenderer(props.footerRenderer);
   const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children);
 
+  const columnRef = useRef<GridColumnElement<TItem> | null>(null);
+  useEffect(() => {
+    const grid = (columnRef.current as any)?._grid;
+    if (grid?.__pendingRecalculateColumnWidthsReact) {
+      grid.__pendingRecalculateColumnWidthsReact = false;
+      queueMicrotask(() => grid.recalculateColumnWidths());
+    }
+  }, [headerPortals, footerPortals, bodyPortals]);
+
   return (
     <_GridColumn<TItem>
       {...props}
       footerRenderer={footerRenderer}
       headerRenderer={headerRenderer}
-      ref={ref}
       renderer={bodyRenderer}
+      ref={(el) => {
+        columnRef.current = el;
+        if (typeof ref === 'function') {
+          ref(el);
+        } else if (ref) {
+          ref.current = el;
+        }
+      }}
     >
       {headerPortals}
       {footerPortals}

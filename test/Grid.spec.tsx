@@ -150,21 +150,6 @@ describe('Grid', () => {
       await until(() => getHeaderCell(column).offsetWidth > 300);
     });
 
-    it('should temporarily hide the grid content on auto-width recalculation', async () => {
-      render(
-        <Grid<Item> items={items}>
-          <GridColumn<Item> header="name" autoWidth />
-        </Grid>,
-      );
-
-      const grid = document.querySelector('vaadin-grid')!;
-      const column = await findByQuerySelector('vaadin-grid-column');
-
-      grid.recalculateColumnWidths();
-      expect(getComputedStyle(getHeaderCell(column)).visibility).to.equal('hidden');
-      await until(() => getComputedStyle(getHeaderCell(column)).visibility === 'visible');
-    });
-
     it('should recalculate column auto-width synchronously', async () => {
       render(
         <Grid<Item> items={items}>

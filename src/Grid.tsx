@@ -45,22 +45,8 @@ const gridProto = customElements.get('vaadin-grid')?.prototype;
 const recalculateColumnWidths: (cols: HTMLElement[]) => void = gridProto._recalculateColumnWidths;
 // Patch the method to recalculate column widths after React renders custom cell content.
 gridProto._recalculateColumnWidths = function (cols: HTMLElement[]) {
-  const container: HTMLDivElement = this.$.scroller;
-  // Hide the content visually to avoid flickering.
-  container.style.visibility = 'hidden';
-
-  // Call the original method synchronously once to not change the default behavior.
+  if (this.__pendingRecalculateColumnWidthsReact === undefined) {
+    this.__pendingRecalculateColumnWidthsReact = true;
+  }
   recalculateColumnWidths.call(this, cols);
-
-  // To make the timing for both Safari and Firefox work, we need to wait for
-  // a frame and a timeout.
-  requestAnimationFrame(() => {
-    setTimeout(() => {
-      // React renders custom cell content asynchronously, so we need to wait
-      // and recalculate column widths again.
-      recalculateColumnWidths.call(this, cols);
-      // Unhide the content.
-      container.style.visibility = '';
-    });
-  });
 };
