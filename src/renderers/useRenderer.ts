@@ -1,4 +1,3 @@
-import { flushSync } from 'react-dom';
 import {
   type ComponentType,
   createElement,
@@ -8,7 +7,7 @@ import {
   useCallback,
   useReducer,
 } from 'react';
-import { createPortal } from 'react-dom';
+import { createPortal, flushSync } from 'react-dom';
 import type { Slice, WebComponentRenderer } from './renderer.js';
 
 export type UseRendererResult<W extends WebComponentRenderer> = readonly [
