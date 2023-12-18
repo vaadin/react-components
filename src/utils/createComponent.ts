@@ -73,9 +73,14 @@ export type ThemedWebComponentProps<
   theme?: string;
 };
 
-export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I extends ThemePropertyMixinClass
+type AllWebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I extends ThemePropertyMixinClass
   ? ThemedWebComponentProps<I, E>
   : ComponentProps<I, E>;
+
+export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = Omit<
+  AllWebComponentProps<I, E>,
+  keyof {}
+>;
 
 // We need a separate declaration here; otherwise, the TypeScript fails into the
 // endless loop trying to resolve the typings.
