@@ -6,7 +6,6 @@ import {
 import type { ThemePropertyMixinClass } from '@vaadin/vaadin-themable-mixin/vaadin-theme-property-mixin.js';
 import type React from 'react';
 import type { RefAttributes } from 'react';
-import type { ControllerMixinClass } from '@vaadin/component-base/src/controller-mixin.js';
 
 declare const __VERSION__: string;
 
@@ -63,7 +62,7 @@ type AllWebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I 
   : _WebComponentProps<I, E>;
 
 // TODO: LoginOverlay has "autofocus" property so we can't omit it
-type OmittedWebComponentProps = Omit<HTMLElement, keyof React.HTMLAttributes<any> | 'autofocus'> & ControllerMixinClass;
+type OmittedWebComponentProps = Omit<HTMLElement, keyof React.HTMLAttributes<any> | 'autofocus'>;
 
 export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = Omit<
   AllWebComponentProps<I, E>,
