@@ -2,7 +2,6 @@ import { createComponent as _createComponent, type EventName } from '@lit/react'
 import type { ThemePropertyMixinClass } from '@vaadin/vaadin-themable-mixin/vaadin-theme-property-mixin.js';
 import type React from 'react';
 import type { RefAttributes } from 'react';
-import type { ControllerMixinClass } from '@vaadin/component-base/src/controller-mixin.js';
 
 declare const __VERSION__: string;
 
@@ -74,14 +73,9 @@ export type ThemedWebComponentProps<
   theme?: string;
 };
 
-type AllWebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I extends ThemePropertyMixinClass
+export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I extends ThemePropertyMixinClass
   ? ThemedWebComponentProps<I, E>
   : ComponentProps<I, E>;
-
-export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = Omit<
-  AllWebComponentProps<I, E>,
-  keyof ControllerMixinClass
->;
 
 // We need a separate declaration here; otherwise, the TypeScript fails into the
 // endless loop trying to resolve the typings.
