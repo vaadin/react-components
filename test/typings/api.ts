@@ -79,8 +79,14 @@ assertType<DOMAttributes<GridColumnGroupElement>['children'] | undefined>(gridCo
 assertOmitted<GridColumnProps, GridColumnGroupElement>('renderer');
 
 const gridTreeColumnProps = React.createElement(GridTreeColumn, {}).props;
+type GridTreeColumnProps = typeof gridTreeColumnProps;
 
 assertType<string | null | undefined>(gridTreeColumnProps.path);
+
+assertOmitted<GridColumnProps, GridTreeColumnProps>('renderer');
+assertOmitted<GridColumnProps, GridTreeColumnProps>('headerRenderer');
+assertOmitted<GridColumnProps, GridTreeColumnProps>('footerRenderer');
+assertOmitted<GridColumnProps, GridTreeColumnProps>('children');
 
 const gridSortColumnProps = React.createElement(GridSortColumn, {}).props;
 const gridFilterColumnProps = React.createElement(GridFilterColumn, {}).props;

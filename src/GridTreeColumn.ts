@@ -9,7 +9,10 @@ import {
 export * from './generated/GridTreeColumn.js';
 
 export type GridTreeColumnProps<TItem> = Partial<
-  Omit<_GridTreeColumnProps<TItem>, 'footerRenderer' | 'headerRenderer' | keyof OmittedGridColumnHTMLAttributes<TItem>>
+  Omit<
+    _GridTreeColumnProps<TItem>,
+    'children' | 'footerRenderer' | 'headerRenderer' | 'renderer' | keyof OmittedGridColumnHTMLAttributes<TItem>
+  >
 >;
 
 export const GridTreeColumn = _GridTreeColumn as <TItem>(
