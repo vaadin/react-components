@@ -1,4 +1,11 @@
-import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement, type RefAttributes } from 'react';
+import {
+  type ComponentType,
+  type ForwardedRef,
+  forwardRef,
+  type ReactElement,
+  type ReactNode,
+  type RefAttributes,
+} from 'react';
 import type { GridDefaultItem } from './generated/Grid.js';
 import {
   GridSelectionColumn as _GridSelectionColumn,
@@ -7,6 +14,7 @@ import {
 } from './generated/GridSelectionColumn.js';
 import type { GridBodyReactRendererProps, GridEdgeReactRendererProps } from './renderers/grid.js';
 import { useModelRenderer } from './renderers/useModelRenderer.js';
+import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
 import { useSimpleRenderer } from './renderers/useSimpleRenderer.js';
 import type { OmittedGridColumnHTMLAttributes } from './GridColumn.js';
 
@@ -20,18 +28,25 @@ export type GridSelectionColumnProps<TItem> = Partial<
 > &
   Readonly<{
     children?: ComponentType<GridBodyReactRendererProps<TItem>> | null;
+    footer?: ReactNode;
     footerRenderer?: ComponentType<GridEdgeReactRendererProps<TItem>> | null;
     headerRenderer?: ComponentType<GridEdgeReactRendererProps<TItem>> | null;
     renderer?: ComponentType<GridBodyReactRendererProps<TItem>> | null;
   }>;
 
 function GridSelectionColumn<TItem = GridDefaultItem>(
-  props: GridSelectionColumnProps<TItem>,
+  { footer, ...props }: GridSelectionColumnProps<TItem>,
   ref: ForwardedRef<GridSelectionColumnElement<TItem>>,
 ): ReactElement | null {
-  const [headerPortals, headerRenderer] = useSimpleRenderer(props.headerRenderer, { renderSync: true });
-  const [footerPortals, footerRenderer] = useSimpleRenderer(props.footerRenderer, { renderSync: true });
-  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children, { renderSync: true });
+  const [headerPortals, headerRenderer] = useSimpleRenderer(props.headerRenderer, {
+    renderSync: true,
+  });
+  const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer, {
+    renderSync: true,
+  });
+  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children, {
+    renderSync: true,
+  });
 
   return (
     <_GridSelectionColumn<TItem>
