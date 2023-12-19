@@ -14,7 +14,7 @@ export * from './generated/GridColumn.js';
 // Properties from HTMLAttributes that are omitted from all GridColumn types
 export type OmittedGridColumnHTMLAttributes<TItem> = Omit<
   React.HTMLAttributes<GridColumnElement<TItem>>,
-  'hidden' | 'id' | 'className' | 'dangerouslySetInnerHTML' | 'slot' | 'children'
+  'hidden' | 'id' | 'className' | 'dangerouslySetInnerHTML' | 'slot' | 'children' | 'title'
 >;
 
 export type GridColumnProps<TItem> = Partial<

@@ -64,6 +64,7 @@ assertType<RefAttributes<GridColumnElement>['ref']>(gridColumnProps.ref);
 assertType<HTMLAttributes<GridColumnElement>['className']>(gridColumnProps.className);
 assertType<HTMLAttributes<GridColumnElement>['dangerouslySetInnerHTML']>(gridColumnProps.dangerouslySetInnerHTML);
 assertType<HTMLAttributes<GridColumnElement>['slot']>(gridColumnProps.slot);
+assertType<HTMLAttributes<GridColumnElement>['title']>(gridColumnProps.title);
 assertType<ComponentType<Readonly<any>> | undefined | null>(gridColumnProps.children);
 
 // Some omitted HTMLElement properties
