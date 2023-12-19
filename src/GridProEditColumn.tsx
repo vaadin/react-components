@@ -29,10 +29,10 @@ function GridProEditColumn<TItem = GridDefaultItem>(
   props: GridProEditColumnProps<TItem>,
   ref: ForwardedRef<GridProEditColumnElement<TItem>>,
 ): ReactElement | null {
-  const [editModePortals, editModeRenderer] = useModelRenderer(props.editModeRenderer);
-  const [headerPortals, headerRenderer] = useSimpleRenderer(props.headerRenderer);
-  const [footerPortals, footerRenderer] = useSimpleRenderer(props.footerRenderer);
-  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children);
+  const [editModePortals, editModeRenderer] = useModelRenderer(props.editModeRenderer, { renderSync: true });
+  const [headerPortals, headerRenderer] = useSimpleRenderer(props.headerRenderer, { renderSync: true });
+  const [footerPortals, footerRenderer] = useSimpleRenderer(props.footerRenderer, { renderSync: true });
+  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children, { renderSync: true });
 
   return (
     <_GridProEditColumn<TItem>
