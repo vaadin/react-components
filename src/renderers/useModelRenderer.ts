@@ -27,6 +27,7 @@ export function convertModelRendererArgs<I, M extends Model<I>, O extends HTMLEl
 
 export function useModelRenderer<I, M extends Model<I>, O extends HTMLElement>(
   reactRenderer?: ComponentType<ReactModelRendererProps<I, M, O>> | null,
+  config?: { renderSync?: boolean },
 ): UseRendererResult<WebComponentModelRenderer<I, M, O>> {
-  return useRenderer(reactRenderer, convertModelRendererArgs);
+  return useRenderer(reactRenderer, convertModelRendererArgs, config);
 }

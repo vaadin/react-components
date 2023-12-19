@@ -28,13 +28,24 @@ export function useRenderer<W extends WebComponentRenderer>(node: ReactNode): Us
 export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   reactRenderer: ComponentType<P> | null | undefined,
   convert: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
+  config?: { renderSync?: boolean },
 ): UseRendererResult<W>;
 export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   reactRendererOrNode: ReactNode | ComponentType<P> | null | undefined,
   convert?: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
+  config?: { renderSync?: boolean },
 ): UseRendererResult<W> {
   const [map, update] = useReducer<typeof rendererReducer<W>>(rendererReducer, initialState);
-  const renderer = useCallback(((...args: Parameters<W>) => flushSync(() => update(args))) as W, []);
+  const renderer = useCallback(
+    ((...args: Parameters<W>) => {
+      if (config?.renderSync) {
+        flushSync(() => update(args));
+      } else {
+        update(args);
+      }
+    }) as W,
+    [],
+  );
 
   return reactRendererOrNode
     ? [

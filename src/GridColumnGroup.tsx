@@ -18,8 +18,8 @@ export type GridColumnGroupProps = Partial<
   }>;
 
 function GridColumnGroup(props: GridColumnGroupProps, ref: ForwardedRef<GridColumnGroupElement>): ReactElement | null {
-  const [headerPortals, headerRenderer] = useSimpleRenderer(props.headerRenderer);
-  const [footerPortals, footerRenderer] = useSimpleRenderer(props.footerRenderer);
+  const [headerPortals, headerRenderer] = useSimpleRenderer(props.headerRenderer, { renderSync: true });
+  const [footerPortals, footerRenderer] = useSimpleRenderer(props.footerRenderer, { renderSync: true });
 
   return (
     <_GridColumnGroup {...props} footerRenderer={footerRenderer} headerRenderer={headerRenderer} ref={ref}>

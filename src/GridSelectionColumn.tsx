@@ -29,9 +29,9 @@ function GridSelectionColumn<TItem = GridDefaultItem>(
   props: GridSelectionColumnProps<TItem>,
   ref: ForwardedRef<GridSelectionColumnElement<TItem>>,
 ): ReactElement | null {
-  const [headerPortals, headerRenderer] = useSimpleRenderer(props.headerRenderer);
-  const [footerPortals, footerRenderer] = useSimpleRenderer(props.footerRenderer);
-  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children);
+  const [headerPortals, headerRenderer] = useSimpleRenderer(props.headerRenderer, { renderSync: true });
+  const [footerPortals, footerRenderer] = useSimpleRenderer(props.footerRenderer, { renderSync: true });
+  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children, { renderSync: true });
 
   return (
     <_GridSelectionColumn<TItem>
