@@ -32,7 +32,7 @@ export type GridTreeColumnProps<TItem> = Partial<
   Readonly<{
     footer?: ReactNode;
     footerRenderer?: ComponentType<GridEdgeReactRendererProps<TItem>> | null;
-    header?: ReactNode | string | null;
+    header?: ReactNode;
     headerRenderer?: ComponentType<GridEdgeReactRendererProps<TItem>> | null;
   }>;
 

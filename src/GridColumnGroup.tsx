@@ -26,7 +26,7 @@ export type GridColumnGroupProps = Partial<
   Readonly<{
     footer?: ReactNode;
     footerRenderer?: ComponentType<ReactSimpleRendererProps<GridColumnGroupElement>> | null;
-    header?: ReactNode | string | null;
+    header?: ReactNode;
     headerRenderer?: ComponentType<ReactSimpleRendererProps<GridColumnGroupElement>> | null;
   }>;
 
