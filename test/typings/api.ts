@@ -114,6 +114,13 @@ type DialogProps = typeof dialogProps;
 assertType<DialogElement['ariaLabel'] | undefined>(dialogProps['aria-label']);
 
 assertType<DialogProps['footer']>(dialogProps.footer);
+assertType<DialogProps['draggable']>(dialogProps.draggable);
+assertType<DialogProps['resizable']>(dialogProps.resizable);
+
+assertOmitted<HTMLAttributes<DialogElement>, DialogProps>('className');
+assertOmitted<HTMLAttributes<DialogElement>, DialogProps>('style');
+assertOmitted<HTMLAttributes<DialogElement>, DialogProps>('contentEditable');
+assertOmitted<HTMLAttributes<DialogElement>, DialogProps>('onClick');
 
 const datePickerProps = React.createElement(DatePicker, {}).props;
 
