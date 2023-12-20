@@ -11,6 +11,7 @@ import { GridColumnGroup, GridColumnGroupElement } from '../../GridColumnGroup.j
 import { Dialog, DialogElement } from '../../Dialog.js';
 import { DatePicker, DatePickerElement } from '../../DatePicker.js';
 import { LoginOverlay, LoginOverlayElement } from '../../LoginOverlay.js';
+import { Notification, NotificationElement } from '../../Notification.js';
 import { TimePicker, type TimePickerChangeEvent } from '../../TimePicker.js';
 import { TextArea, TextAreaElement, type TextAreaChangeEvent } from '../../TextArea.js';
 import { MessageInput, MessageInputElement, type MessageInputSubmitEvent } from '../../MessageInput.js';
@@ -121,6 +122,14 @@ assertOmitted<HTMLAttributes<DialogElement>, DialogProps>('className');
 assertOmitted<HTMLAttributes<DialogElement>, DialogProps>('style');
 assertOmitted<HTMLAttributes<DialogElement>, DialogProps>('contentEditable');
 assertOmitted<HTMLAttributes<DialogElement>, DialogProps>('onClick');
+
+const notificationProps = React.createElement(Notification, {}).props;
+type NotificationProps = typeof notificationProps;
+
+assertOmitted<HTMLAttributes<NotificationElement>, NotificationProps>('className');
+assertOmitted<HTMLAttributes<NotificationElement>, NotificationProps>('style');
+assertOmitted<HTMLAttributes<NotificationElement>, NotificationProps>('contentEditable');
+assertOmitted<HTMLAttributes<NotificationElement>, NotificationProps>('onClick');
 
 const datePickerProps = React.createElement(DatePicker, {}).props;
 
