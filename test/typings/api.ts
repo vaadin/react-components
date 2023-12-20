@@ -175,3 +175,9 @@ assertType<typeof timePickerProps.onChange>((_event: TimePickerChangeEvent) => {
 const loginOverlayProps = React.createElement(LoginOverlay, {}).props;
 
 assertType<LoginOverlayElement['autofocus'] | undefined>(loginOverlayProps.autofocus);
+type LoginOverlayProps = typeof loginOverlayProps;
+
+assertOmitted<HTMLAttributes<LoginOverlayElement>, LoginOverlayProps>('className');
+assertOmitted<HTMLAttributes<LoginOverlayElement>, LoginOverlayProps>('style');
+assertOmitted<HTMLAttributes<LoginOverlayElement>, LoginOverlayProps>('contentEditable');
+assertOmitted<HTMLAttributes<LoginOverlayElement>, LoginOverlayProps>('onClick');
