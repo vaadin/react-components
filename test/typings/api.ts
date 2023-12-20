@@ -8,6 +8,7 @@ import { GridFilterColumn } from '../../GridFilterColumn.js';
 import { GridSelectionColumn } from '../../GridSelectionColumn.js';
 import { GridProEditColumn } from '../../GridProEditColumn.js';
 import { GridColumnGroup, GridColumnGroupElement } from '../../GridColumnGroup.js';
+import { ChartSeries, ChartSeriesElement } from '../../ChartSeries.js';
 import { ConfirmDialog, ConfirmDialogElement } from '../../ConfirmDialog.js';
 import { CookieConsent, CookieConsentElement } from '../../CookieConsent.js';
 import { Dialog, DialogElement } from '../../Dialog.js';
@@ -150,6 +151,14 @@ assertOmitted<HTMLAttributes<CookieConsentElement>, CookieConsentProps>('classNa
 assertOmitted<HTMLAttributes<CookieConsentElement>, CookieConsentProps>('style');
 assertOmitted<HTMLAttributes<CookieConsentElement>, CookieConsentProps>('contentEditable');
 assertOmitted<HTMLAttributes<CookieConsentElement>, CookieConsentProps>('onClick');
+
+const chartSeriesProps = React.createElement(ChartSeries, {}).props;
+type ChartSeriesProps = typeof chartSeriesProps;
+
+assertOmitted<HTMLAttributes<ChartSeriesElement>, ChartSeriesProps>('className');
+assertOmitted<HTMLAttributes<ChartSeriesElement>, ChartSeriesProps>('style');
+assertOmitted<HTMLAttributes<ChartSeriesElement>, ChartSeriesProps>('contentEditable');
+assertOmitted<HTMLAttributes<ChartSeriesElement>, ChartSeriesProps>('onClick');
 
 const datePickerProps = React.createElement(DatePicker, {}).props;
 
