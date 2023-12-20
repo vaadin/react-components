@@ -8,6 +8,7 @@ import { GridFilterColumn } from '../../GridFilterColumn.js';
 import { GridSelectionColumn } from '../../GridSelectionColumn.js';
 import { GridProEditColumn } from '../../GridProEditColumn.js';
 import { GridColumnGroup, GridColumnGroupElement } from '../../GridColumnGroup.js';
+import { ConfirmDialog, ConfirmDialogElement } from '../../ConfirmDialog.js';
 import { Dialog, DialogElement } from '../../Dialog.js';
 import { DatePicker, DatePickerElement } from '../../DatePicker.js';
 import { LoginOverlay, LoginOverlayElement } from '../../LoginOverlay.js';
@@ -122,6 +123,16 @@ assertOmitted<HTMLAttributes<DialogElement>, DialogProps>('className');
 assertOmitted<HTMLAttributes<DialogElement>, DialogProps>('style');
 assertOmitted<HTMLAttributes<DialogElement>, DialogProps>('contentEditable');
 assertOmitted<HTMLAttributes<DialogElement>, DialogProps>('onClick');
+
+const confirmDialogProps = React.createElement(ConfirmDialog, {}).props;
+type ConfirmDialogProps = typeof confirmDialogProps;
+
+assertType<ConfirmDialogElement['ariaLabel'] | undefined>(confirmDialogProps['aria-label']);
+
+assertOmitted<HTMLAttributes<ConfirmDialogElement>, ConfirmDialogProps>('className');
+assertOmitted<HTMLAttributes<ConfirmDialogElement>, ConfirmDialogProps>('style');
+assertOmitted<HTMLAttributes<ConfirmDialogElement>, ConfirmDialogProps>('contentEditable');
+assertOmitted<HTMLAttributes<ConfirmDialogElement>, ConfirmDialogProps>('onClick');
 
 const notificationProps = React.createElement(Notification, {}).props;
 type NotificationProps = typeof notificationProps;
