@@ -9,6 +9,7 @@ import { GridSelectionColumn } from '../../GridSelectionColumn.js';
 import { GridProEditColumn } from '../../GridProEditColumn.js';
 import { GridColumnGroup, GridColumnGroupElement } from '../../GridColumnGroup.js';
 import { ConfirmDialog, ConfirmDialogElement } from '../../ConfirmDialog.js';
+import { CookieConsent, CookieConsentElement } from '../../CookieConsent.js';
 import { Dialog, DialogElement } from '../../Dialog.js';
 import { DatePicker, DatePickerElement } from '../../DatePicker.js';
 import { LoginOverlay, LoginOverlayElement } from '../../LoginOverlay.js';
@@ -141,6 +142,14 @@ assertOmitted<HTMLAttributes<NotificationElement>, NotificationProps>('className
 assertOmitted<HTMLAttributes<NotificationElement>, NotificationProps>('style');
 assertOmitted<HTMLAttributes<NotificationElement>, NotificationProps>('contentEditable');
 assertOmitted<HTMLAttributes<NotificationElement>, NotificationProps>('onClick');
+
+const cookieConsentProps = React.createElement(CookieConsent, {}).props;
+type CookieConsentProps = typeof cookieConsentProps;
+
+assertOmitted<HTMLAttributes<CookieConsentElement>, CookieConsentProps>('className');
+assertOmitted<HTMLAttributes<CookieConsentElement>, CookieConsentProps>('style');
+assertOmitted<HTMLAttributes<CookieConsentElement>, CookieConsentProps>('contentEditable');
+assertOmitted<HTMLAttributes<CookieConsentElement>, CookieConsentProps>('onClick');
 
 const datePickerProps = React.createElement(DatePicker, {}).props;
 
