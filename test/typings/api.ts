@@ -195,6 +195,7 @@ const loginOverlayProps = React.createElement(LoginOverlay, {}).props;
 assertType<LoginOverlayElement['autofocus'] | undefined>(loginOverlayProps.autofocus);
 type LoginOverlayProps = typeof loginOverlayProps;
 
+assertType<string | undefined>(loginOverlayProps.title);
 assertOmitted<HTMLAttributes<LoginOverlayElement>, LoginOverlayProps>('className');
 assertOmitted<HTMLAttributes<LoginOverlayElement>, LoginOverlayProps>('style');
 assertOmitted<HTMLAttributes<LoginOverlayElement>, LoginOverlayProps>('contentEditable');

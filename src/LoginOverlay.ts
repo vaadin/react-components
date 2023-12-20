@@ -9,7 +9,7 @@ export * from './generated/LoginOverlay.js';
 
 type OmittedLoginOverlayHTMLAttributes = Omit<
   HTMLAttributes<LoginOverlayElement>,
-  'id' | 'dangerouslySetInnerHTML' | 'slot' | 'children'
+  'id' | 'dangerouslySetInnerHTML' | 'slot' | 'children' | 'title'
 >;
 
 export type LoginOverlayProps = Partial<Omit<_LoginOverlayProps, keyof OmittedLoginOverlayHTMLAttributes>>;
