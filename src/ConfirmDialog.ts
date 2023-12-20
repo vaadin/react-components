@@ -9,7 +9,7 @@ export * from './generated/ConfirmDialog.js';
 
 type OmittedConfirmDialogHTMLAttributes = Omit<
   HTMLAttributes<ConfirmDialogElement>,
-  'id' | 'dangerouslySetInnerHTML' | 'slot' | 'children' | 'aria-label'
+  'id' | 'className' | 'dangerouslySetInnerHTML' | 'slot' | 'children' | 'aria-label'
 >;
 
 export type ConfirmDialogProps = Partial<Omit<_ConfirmDialogProps, keyof OmittedConfirmDialogHTMLAttributes>>;

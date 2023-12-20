@@ -9,7 +9,7 @@ export * from './generated/ChartSeries.js';
 
 type OmittedChartSeriesHTMLAttributes = Omit<
   HTMLAttributes<ChartSeriesElement>,
-  'id' | 'dangerouslySetInnerHTML' | 'slot' | 'title'
+  'id' | 'className' | 'dangerouslySetInnerHTML' | 'slot' | 'title'
 >;
 
 export type ChartSeriesProps = Partial<Omit<_ChartSeriesProps, keyof OmittedChartSeriesHTMLAttributes>>;

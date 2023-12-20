@@ -9,7 +9,7 @@ export * from './generated/CookieConsent.js';
 
 type OmittedCookieConsentHTMLAttributes = Omit<
   HTMLAttributes<CookieConsentElement>,
-  'id' | 'dangerouslySetInnerHTML' | 'slot'
+  'id' | 'className' | 'dangerouslySetInnerHTML' | 'slot'
 >;
 
 export type CookieConsentProps = Partial<Omit<_CookieConsentProps, keyof OmittedCookieConsentHTMLAttributes>>;

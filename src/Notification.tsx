@@ -23,7 +23,7 @@ export type NotificationReactRendererProps = ReactSimpleRendererProps<Notificati
 
 type OmittedNotificationHTMLAttributes = Omit<
   HTMLAttributes<NotificationElement>,
-  'id' | 'dangerouslySetInnerHTML' | 'slot'
+  'id' | 'className' | 'dangerouslySetInnerHTML' | 'slot'
 >;
 
 export type NotificationProps = Partial<

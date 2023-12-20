@@ -121,7 +121,6 @@ assertType<DialogProps['footer']>(dialogProps.footer);
 assertType<DialogProps['draggable']>(dialogProps.draggable);
 assertType<DialogProps['resizable']>(dialogProps.resizable);
 
-assertOmitted<HTMLAttributes<DialogElement>, DialogProps>('className');
 assertOmitted<HTMLAttributes<DialogElement>, DialogProps>('style');
 assertOmitted<HTMLAttributes<DialogElement>, DialogProps>('contentEditable');
 assertOmitted<HTMLAttributes<DialogElement>, DialogProps>('onClick');
@@ -131,7 +130,6 @@ type ConfirmDialogProps = typeof confirmDialogProps;
 
 assertType<ConfirmDialogElement['ariaLabel'] | undefined>(confirmDialogProps['aria-label']);
 
-assertOmitted<HTMLAttributes<ConfirmDialogElement>, ConfirmDialogProps>('className');
 assertOmitted<HTMLAttributes<ConfirmDialogElement>, ConfirmDialogProps>('style');
 assertOmitted<HTMLAttributes<ConfirmDialogElement>, ConfirmDialogProps>('contentEditable');
 assertOmitted<HTMLAttributes<ConfirmDialogElement>, ConfirmDialogProps>('onClick');
@@ -139,7 +137,6 @@ assertOmitted<HTMLAttributes<ConfirmDialogElement>, ConfirmDialogProps>('onClick
 const notificationProps = React.createElement(Notification, {}).props;
 type NotificationProps = typeof notificationProps;
 
-assertOmitted<HTMLAttributes<NotificationElement>, NotificationProps>('className');
 assertOmitted<HTMLAttributes<NotificationElement>, NotificationProps>('style');
 assertOmitted<HTMLAttributes<NotificationElement>, NotificationProps>('contentEditable');
 assertOmitted<HTMLAttributes<NotificationElement>, NotificationProps>('onClick');
@@ -147,7 +144,6 @@ assertOmitted<HTMLAttributes<NotificationElement>, NotificationProps>('onClick')
 const cookieConsentProps = React.createElement(CookieConsent, {}).props;
 type CookieConsentProps = typeof cookieConsentProps;
 
-assertOmitted<HTMLAttributes<CookieConsentElement>, CookieConsentProps>('className');
 assertOmitted<HTMLAttributes<CookieConsentElement>, CookieConsentProps>('style');
 assertOmitted<HTMLAttributes<CookieConsentElement>, CookieConsentProps>('contentEditable');
 assertOmitted<HTMLAttributes<CookieConsentElement>, CookieConsentProps>('onClick');
@@ -155,7 +151,6 @@ assertOmitted<HTMLAttributes<CookieConsentElement>, CookieConsentProps>('onClick
 const chartSeriesProps = React.createElement(ChartSeries, {}).props;
 type ChartSeriesProps = typeof chartSeriesProps;
 
-assertOmitted<HTMLAttributes<ChartSeriesElement>, ChartSeriesProps>('className');
 assertOmitted<HTMLAttributes<ChartSeriesElement>, ChartSeriesProps>('style');
 assertOmitted<HTMLAttributes<ChartSeriesElement>, ChartSeriesProps>('contentEditable');
 assertOmitted<HTMLAttributes<ChartSeriesElement>, ChartSeriesProps>('onClick');
@@ -196,7 +191,6 @@ assertType<LoginOverlayElement['autofocus'] | undefined>(loginOverlayProps.autof
 type LoginOverlayProps = typeof loginOverlayProps;
 
 assertType<string | undefined>(loginOverlayProps.title);
-assertOmitted<HTMLAttributes<LoginOverlayElement>, LoginOverlayProps>('className');
 assertOmitted<HTMLAttributes<LoginOverlayElement>, LoginOverlayProps>('style');
 assertOmitted<HTMLAttributes<LoginOverlayElement>, LoginOverlayProps>('contentEditable');
 assertOmitted<HTMLAttributes<LoginOverlayElement>, LoginOverlayProps>('onClick');

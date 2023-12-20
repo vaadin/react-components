@@ -16,7 +16,7 @@ export type DialogReactRendererProps = ReactSimpleRendererProps<DialogElement>;
 
 type OmittedDialogHTMLAttributes = Omit<
   HTMLAttributes<DialogElement>,
-  'id' | 'dangerouslySetInnerHTML' | 'slot' | 'aria-label' | 'draggable'
+  'id' | 'className' | 'dangerouslySetInnerHTML' | 'slot' | 'aria-label' | 'draggable'
 >;
 
 export type DialogProps = Partial<
