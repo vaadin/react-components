@@ -1,4 +1,4 @@
-import { MenuBar } from '../../src/MenuBar.js';
+import { MenuBar, type MenuBarItem } from '../../src/MenuBar.js';
 import { Tooltip } from '../../src/Tooltip.js';
 import { Icon } from '../../src/Icon.js';
 import '@vaadin/icons';
@@ -9,7 +9,7 @@ const iconStyle = {
   marginRight: 'var(--lumo-space-s)',
 };
 
-const items = [
+const items: MenuBarItem[] = [
   { text: 'View', tooltip: 'Options for how to view the content' },
   { text: 'Edit' },
   {
