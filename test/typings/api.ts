@@ -26,6 +26,7 @@ import { TextArea, TextAreaElement, type TextAreaChangeEvent } from '../../TextA
 import { MessageInput, MessageInputElement, type MessageInputSubmitEvent } from '../../MessageInput.js';
 import { ComboBox, type ComboBoxChangeEvent } from '../../ComboBox.js';
 import { ContextMenu, type ContextMenuItem } from '../../ContextMenu.js';
+import { MenuBar, type MenuBarItem } from '../../MenuBar.js';
 
 const assertType = <TExpected>(value: TExpected) => value;
 const assertOmitted = <C, T>(prop: keyof Omit<C, keyof T>) => prop;
@@ -206,3 +207,7 @@ const contextMenuProps = React.createElement(ContextMenu, {}).props;
 
 assertType<ReactElement | string | undefined>(contextMenuProps.items![0].component);
 assertType<ContextMenuItem[]>(contextMenuProps.items!);
+
+const menuBarProps = React.createElement(MenuBar, {}).props;
+assertType<ReactElement | string | undefined>(menuBarProps.items![0].component);
+assertType<MenuBarItem[]>(menuBarProps.items!);
