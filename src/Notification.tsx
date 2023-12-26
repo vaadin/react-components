@@ -10,12 +10,12 @@ import {
 } from 'react';
 import {
   Notification as _Notification,
-  NotificationElement,
+  type NotificationElement,
   type NotificationProps as _NotificationProps,
-  type ShowOptions,
 } from './generated/Notification.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
 import type { ReactSimpleRendererProps } from './renderers/useSimpleRenderer.js';
+import type { ShowOptions } from '@vaadin/notification';
 
 export * from './generated/Notification.js';
 
@@ -47,11 +47,22 @@ function Notification(
   );
 }
 
-export type NotificationFunction = ForwardRefExoticComponent<NotificationProps & RefAttributes<NotificationElement>> & {
-  show(contents: string, options?: ShowOptions): NotificationElement;
+type NotificationShow = {
+  show(contents: string, options?: ShowOptions): Promise<NotificationElement>;
 };
 
+export type NotificationFunction = ForwardRefExoticComponent<NotificationProps & RefAttributes<NotificationElement>> &
+  NotificationShow;
+
 const ForwardedNotification = forwardRef(Notification) as NotificationFunction;
-ForwardedNotification.show = NotificationElement.show;
+
+ForwardedNotification.show = function (contents: string, options?: ShowOptions) {
+  return new Promise((resolve) => {
+    customElements.whenDefined('vaadin-notification').then(() => {
+      const Notification = customElements.get('vaadin-notification') as unknown as NotificationShow;
+      resolve(Notification.show(contents, options));
+    });
+  });
+};
 
 export { ForwardedNotification as Notification };

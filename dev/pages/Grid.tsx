@@ -1,7 +1,7 @@
 import { Grid, type GridDataProvider } from '../../src/Grid.js';
 import { GridSelectionColumn } from '../../src/GridSelectionColumn.js';
 import { GridTreeColumn } from '../../src/GridTreeColumn.js';
-import { GridColumn, GridColumnElement } from '../../src/GridColumn.js';
+import { GridColumn, type GridColumnElement } from '../../src/GridColumn.js';
 import { Tooltip } from '../../src/Tooltip.js';
 
 type Item = {

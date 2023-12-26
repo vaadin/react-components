@@ -48,8 +48,8 @@ describe('Notification', () => {
   });
 
   describe('show()', () => {
-    it('should render correctly', () => {
-      ref.current = Notification.show('FooBar');
+    it('should render correctly', async () => {
+      ref.current = await Notification.show('FooBar');
       assert();
     });
   });

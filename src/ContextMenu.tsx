@@ -1,10 +1,9 @@
 import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
+import type { ContextMenuItem as _ContextMenuItem, ContextMenuRendererContext } from '@vaadin/context-menu';
 import {
   ContextMenu as _ContextMenu,
-  type ContextMenuRendererContext,
   type ContextMenuElement,
   type ContextMenuProps as _ContextMenuProps,
-  type ContextMenuItem as _ContextMenuItem,
 } from './generated/ContextMenu.js';
 import { type ReactContextRendererProps, useContextRenderer } from './renderers/useContextRenderer.js';
 import { getOriginalItem, mapItemsWithComponents } from './utils/mapItemsWithComponents.js';

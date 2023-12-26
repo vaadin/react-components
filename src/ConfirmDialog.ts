@@ -1,6 +1,6 @@
 import type { HTMLAttributes, ReactElement, RefAttributes } from 'react';
 import {
-  ConfirmDialogElement,
+  type ConfirmDialogElement,
   ConfirmDialog as _ConfirmDialog,
   type ConfirmDialogProps as _ConfirmDialogProps,
 } from './generated/ConfirmDialog.js';

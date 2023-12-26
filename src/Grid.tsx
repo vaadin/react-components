@@ -1,10 +1,6 @@
 import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement, type RefAttributes } from 'react';
-import {
-  Grid as _Grid,
-  type GridDefaultItem,
-  type GridElement,
-  type GridProps as _GridProps,
-} from './generated/Grid.js';
+import type { GridDefaultItem } from '@vaadin/grid';
+import { Grid as _Grid, type GridElement, type GridProps as _GridProps } from './generated/Grid.js';
 import type { GridRowDetailsReactRendererProps } from './renderers/grid.js';
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 
@@ -14,7 +10,7 @@ import { useModelRenderer } from './renderers/useModelRenderer.js';
 // Fix: use re-exports from raw "src/vaadin-grid.js" as a workaround, until
 // the re-export is removed.
 export * from '@vaadin/grid/src/vaadin-grid.js';
-export { GridElement, type GridEventMap } from './generated/Grid.js';
+export type { GridElement, GridEventMap } from './generated/Grid.js';
 
 export type GridProps<TItem> = Partial<Omit<_GridProps<TItem>, 'rowDetailsRenderer'>> &
   Readonly<{

@@ -35,6 +35,7 @@ const CREATE_COMPONENT_PATH = '$CREATE_COMPONENT_PATH$';
 const EVENT_MAP = '$EVENT_MAP$';
 const EVENT_MAP_REF_IN_EVENTS = '$EVENT_MAP_REF_IN_EVENTS$';
 const EVENTS_DECLARATION = '$EVENTS_DECLARATION$';
+const PROPERTIES_DECLARATION = '$PROPERTIES_DECLARATION$';
 const LIT_REACT_PATH = '@lit/react';
 const MODULE_PATH = '$MODULE_PATH$';
 
@@ -87,6 +88,10 @@ function isEventMapDeclaration(node: Node): node is TypeAliasDeclaration {
 
 function isEventListDeclaration(node: Node): node is Identifier {
   return ts.isIdentifier(node) && node.text === EVENTS_DECLARATION;
+}
+
+function isPropertiesListDeclaration(node: Node): node is Identifier {
+  return ts.isIdentifier(node) && node.text === PROPERTIES_DECLARATION;
 }
 
 function isEventMapReferenceInEventsDeclaration(node: Node): node is Identifier {
@@ -159,6 +164,29 @@ function createEventList(elementName: string, events: readonly NamedGenericJsCon
         );
       }),
   );
+}
+
+function createPropertiesList(
+  elementName: string,
+  properties: readonly NamedGenericJsContribution[] | undefined,
+): Node {
+  return ts.factory.createObjectLiteralExpression([
+    ts.factory.createPropertyAssignment(
+      ts.factory.createIdentifier('name'),
+      ts.factory.createStringLiteral(elementName),
+    ),
+    ts.factory.createPropertyAssignment(
+      ts.factory.createIdentifier('_properties'),
+      ts.factory.createObjectLiteralExpression(
+        properties?.map((property) => {
+          return ts.factory.createPropertyAssignment(
+            ts.factory.createIdentifier(property.name),
+            ts.factory.createStringLiteral(''),
+          );
+        }),
+      ),
+    ),
+  ]);
 }
 
 function removeAllEventRelated(node: Node, hasEvents: boolean, hasKnownEvents: boolean): Node | undefined {
@@ -302,6 +330,7 @@ function generateReactComponent({ name, js }: SchemaHTMLElement, { packageName, 
 
   const hasEvents = !!js?.events && js.events.length > 0;
   const events = js?.events;
+  const properties = js?.properties as readonly NamedGenericJsContribution[] | undefined;
   const eventNameMissingLogger = () => console.error(`[${packageName}]: event name is missing`);
   const namedEvents = pickNamedEvents(events, eventNameMissingLogger);
   const { remove: eventsToRemove, makeUnknown: eventsToBeUnknown } = eventSettings.get(elementName) ?? {};
@@ -311,27 +340,29 @@ function generateReactComponent({ name, js }: SchemaHTMLElement, { packageName, 
   const ast = template(
     `
 import type { EventName } from "${LIT_REACT_PATH}";
-import {
+import type {
   ${COMPONENT_NAME} as ${COMPONENT_NAME}Element
-  type ${COMPONENT_NAME}EventMap as _${COMPONENT_NAME}EventMap,
+  ${COMPONENT_NAME}EventMap as _${COMPONENT_NAME}EventMap,
 } from "${MODULE_PATH}";
 import * as React from "react";
-import { createComponent, type WebComponentProps } from "${CREATE_COMPONENT_PATH}";
+import { createComponent, type PolymerConstructor, type WebComponentProps } from "${CREATE_COMPONENT_PATH}";
 
-export * from "${MODULE_PATH}";
+const importFunc = () => import("${MODULE_PATH}");
 
-export {
+export type {
   ${COMPONENT_NAME}Element,
 };
 
 export type ${EVENT_MAP};
+const elementClass = ${PROPERTIES_DECLARATION} as unknown as PolymerConstructor<${COMPONENT_NAME}Element>;
 const events = ${EVENTS_DECLARATION} as ${EVENT_MAP_REF_IN_EVENTS};
 export type ${COMPONENT_NAME}Props = WebComponentProps<${COMPONENT_NAME}Element, ${EVENT_MAP}>;
 export const ${COMPONENT_NAME} = createComponent({
-  elementClass: ${COMPONENT_NAME}Element,
+  elementClass,
   events,
   react: React,
-  tagName: ${COMPONENT_TAG}
+  tagName: ${COMPONENT_TAG},
+  importFunc
 });
 `,
     (statements) => statements,
@@ -341,6 +372,7 @@ export const ${COMPONENT_NAME} = createComponent({
         isEventMapDeclaration(node) ? createEventMapDeclaration(node, elementName, namedEvents) : node,
       ),
       transform((node) => (isEventListDeclaration(node) ? createEventList(elementName, namedEvents) : node)),
+      transform((node) => (isPropertiesListDeclaration(node) ? createPropertiesList(elementName, properties) : node)),
       transform((node) => addGenerics(node, elementName)),
       transform((node) => {
         if (!ts.isStringLiteral(node)) {

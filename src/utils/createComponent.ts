@@ -1,6 +1,6 @@
 import { createComponent as _createComponent, type EventName } from '@lit/react';
 import type { ThemePropertyMixinClass } from '@vaadin/vaadin-themable-mixin/vaadin-theme-property-mixin.js';
-import type React from 'react';
+import React from 'react';
 import type { RefAttributes } from 'react';
 
 declare const __VERSION__: string;
@@ -31,13 +31,14 @@ window.Vaadin.registrations.push({
 // TODO: Remove when types from @lit-labs/react are exported
 export type EventNames = Record<string, EventName | string>;
 type Constructor<T> = { new (): T; name: string };
-type PolymerConstructor<T> = Constructor<T> & { _properties: Record<string, unknown> };
+export type PolymerConstructor<T> = Constructor<T> & { _properties: Record<string, unknown> };
 type Options<I extends HTMLElement, E extends EventNames = {}> = Readonly<{
   displayName?: string;
   elementClass: Constructor<I> | PolymerConstructor<I>;
   events?: E;
   react: typeof window.React;
   tagName: string;
+  importFunc?: Function;
 }>;
 
 // A map of expected event listener types based on EventNames.
@@ -86,9 +87,9 @@ export function createComponent<I extends HTMLElement, E extends EventNames = {}
 ): (props: WebComponentProps<I, E> & RefAttributes<I>) => React.ReactElement | null;
 
 export function createComponent<I extends HTMLElement, E extends EventNames = {}>(options: Options<I, E>): any {
-  const { elementClass } = options;
+  const { elementClass, importFunc } = options;
 
-  return _createComponent(
+  const Component = _createComponent(
     '_properties' in elementClass
       ? {
           ...options,
@@ -105,4 +106,20 @@ export function createComponent<I extends HTMLElement, E extends EventNames = {}
         }
       : options,
   );
+
+  const originalRenderFunc = (Component as any).render;
+
+  (Component as any).render = (props: any, ...rest: any) => {
+    React.useEffect(() => {
+      // Run dynamic import for the component
+      if (importFunc && !('__called' in importFunc)) {
+        (importFunc as any).__called = true;
+        importFunc();
+      }
+    }, []);
+
+    return originalRenderFunc(props, ...rest);
+  };
+
+  return Component;
 }

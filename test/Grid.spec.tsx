@@ -2,7 +2,7 @@ import { expect, use as useChaiPlugin } from '@esm-bundle/chai';
 import chaiDom from 'chai-dom';
 import { cleanup, render } from '@testing-library/react/pure.js';
 import { Grid, type GridDataProvider } from '../src/Grid.js';
-import { GridColumn, GridColumnElement } from '../src/GridColumn.js';
+import { GridColumn, type GridColumnElement } from '../src/GridColumn.js';
 import { GridFilterColumn } from '../src/GridFilterColumn.js';
 import { GridProEditColumn } from '../src/GridProEditColumn.js';
 import { GridSelectionColumn } from '../src/GridSelectionColumn.js';

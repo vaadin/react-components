@@ -1,6 +1,6 @@
 import type { HTMLAttributes, ReactElement, RefAttributes } from 'react';
 import {
-  CookieConsentElement,
+  type CookieConsentElement,
   CookieConsent as _CookieConsent,
   type CookieConsentProps as _CookieConsentProps,
 } from './generated/CookieConsent.js';

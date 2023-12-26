@@ -1,6 +1,6 @@
 import type { HTMLAttributes, ReactElement, RefAttributes } from 'react';
 import {
-  LoginOverlayElement,
+  type LoginOverlayElement,
   LoginOverlay as _LoginOverlay,
   type LoginOverlayProps as _LoginOverlayProps,
 } from './generated/LoginOverlay.js';

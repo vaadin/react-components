@@ -1,12 +1,11 @@
 import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement, type RefAttributes } from 'react';
 import {
   VirtualList as _VirtualList,
-  type VirtualListDefaultItem,
   type VirtualListElement,
-  type VirtualListItemModel,
   type VirtualListProps as _VirtualListProps,
 } from './generated/VirtualList.js';
 import { type ReactModelRendererProps, useModelRenderer } from './renderers/useModelRenderer.js';
+import type { VirtualListDefaultItem, VirtualListItemModel } from '@vaadin/virtual-list';
 
 export * from './generated/VirtualList.js';
 
