@@ -19,6 +19,26 @@ type TabSheetTabProps = React.PropsWithChildren<{
 
 type TabSheetTab = React.ReactElement<TabSheetTabProps>;
 
+/**
+ * `TabSheetTab` is a helper component designed for creating tabs within a `<TabSheet/>`.
+ * Use this component as a direct child of the `<TabSheet/>` component.
+ * It accepts a `label` property, which can be either a string or a React node.
+ * The children of the component will be rendered as the content of the tab.
+ *
+ * ### Usage
+ *
+ * ```tsx
+ * <TabSheet>
+ *   <TabSheetTab label="Dashboard">
+ *     <div>This is the Dashboard tab content</div>
+ *   </TabSheetTab>
+ *
+ *   <TabSheetTab label={<i>Payment</i>}>
+ *     <div>This is the Payment tab content</div>
+ *   </TabSheetTab>
+ * </TabSheet>
+ * ```
+ */
 export const TabSheetTab = (_props: TabSheetTabProps) => null;
 
 let uniqueId = 0;
