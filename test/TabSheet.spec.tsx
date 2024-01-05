@@ -35,12 +35,37 @@ describe.only('TabSheet', () => {
     expect(getTabContent(tabs[1])).to.have.text('Content 2');
   });
 
+  it('should pass props to the tab', async () => {
+    render(
+      <TabSheet>
+        <TabSheetTab label="Tab 1" aria-label="tab">
+          Content 1
+        </TabSheetTab>
+      </TabSheet>,
+    );
+
+    const tab = getTabSheet().querySelector('vaadin-tab')!;
+    expect(tab.ariaLabel).to.equal('tab');
+  });
+
+  it('should support custom id for tab', async () => {
+    render(
+      <TabSheet>
+        <TabSheetTab label="Tab 1" id="foo">
+          Content 1
+        </TabSheetTab>
+      </TabSheet>,
+    );
+
+    const tab = getTabSheet().querySelector('vaadin-tab')!;
+    expect(tab.id).to.equal('foo');
+    expect(getTabContent(tab)).to.have.text('Content 1');
+  });
+
   it('should render prefix and suffix', async () => {
     render(
       <TabSheet>
         <div slot="prefix">PREFIX</div>
-        <TabSheetTab label="Tab 1">Content 1</TabSheetTab>
-        <TabSheetTab label="Tab 2">Content 2</TabSheetTab>
         <div slot="suffix">SUFFIX</div>
       </TabSheet>,
     );

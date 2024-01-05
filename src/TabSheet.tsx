@@ -20,6 +20,9 @@ export const TabSheetTab = (_props: TabSheetTabProps) => null;
 let uniqueId = 0;
 const generatedTabIds = new WeakMap<TabSheetTab, string>();
 function getTabId(tab: TabSheetTab) {
+  if (tab.props.id) {
+    return tab.props.id;
+  }
   if (!generatedTabIds.has(tab)) {
     generatedTabIds.set(tab, 'tabsheet-tab-' + uniqueId++);
   }
