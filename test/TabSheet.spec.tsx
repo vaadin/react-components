@@ -4,6 +4,7 @@ import { cleanup, render } from '@testing-library/react/pure.js';
 import { TabSheet, TabSheetTab, tab } from '../src/TabSheet.js';
 import type { TabElement } from '../src/Tab.js';
 import sinon from 'sinon';
+import { useState } from 'react';
 
 function getTabSheet() {
   return document.querySelector('vaadin-tabsheet')!;
@@ -11,6 +12,12 @@ function getTabSheet() {
 
 function getTabContent(tab: TabElement) {
   return getTabSheet().querySelector(`[tab="${tab.id}"]`);
+}
+
+async function until(predicate: () => boolean) {
+  while (!predicate()) {
+    await new Promise((r) => setTimeout(r, 10));
+  }
 }
 
 // TODO: Remove only
@@ -60,6 +67,39 @@ describe.only('TabSheet', () => {
     const tab = getTabSheet().querySelector('vaadin-tab')!;
     expect(tab.id).to.equal('foo');
     expect(getTabContent(tab)).to.have.text('Content 1');
+  });
+
+  it('should maintain selected tab on re-render', async function () {
+    function Test() {
+      const [count, setCount] = useState(2);
+      return (
+        <>
+          <TabSheet>
+            {Array.from({ length: count }, (_, i) => (
+              <TabSheetTab label={`Tab ${i + 1}`} key={i}>
+                Content {i + 1}
+              </TabSheetTab>
+            ))}
+          </TabSheet>
+
+          <button onClick={() => setCount(count + 1)}>Add tab</button>
+        </>
+      );
+    }
+
+    render(<Test />);
+    const addTabButton = document.querySelector('button')!;
+    getTabSheet().selected = 1;
+    addTabButton.click();
+
+    await until(() => getTabSheet().querySelectorAll('vaadin-tab').length === 3);
+
+    const tabs = getTabSheet().querySelectorAll('vaadin-tab');
+    expect(getTabContent(tabs[0])).to.have.text('Content 1');
+    expect(getTabContent(tabs[1])).to.have.text('Content 2');
+    expect(getTabContent(tabs[2])).to.have.text('Content 3');
+
+    expect(getTabSheet().selected).to.equal(1);
   });
 
   it('should render prefix and suffix', async () => {
