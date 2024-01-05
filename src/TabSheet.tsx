@@ -1,6 +1,10 @@
-import React, { type HTMLAttributes, type ReactNode } from 'react';
+import React, { forwardRef, type ForwardedRef, type HTMLAttributes, type ReactNode } from 'react';
 import { Tab, type TabElement } from './Tab.js';
-import { TabSheet as _TabSheet, type TabSheetProps as _TabSheetProps } from './generated/TabSheet.js';
+import {
+  TabSheet as _TabSheet,
+  type TabSheetElement,
+  type TabSheetProps as _TabSheetProps,
+} from './generated/TabSheet.js';
 import { Tabs } from './Tabs.js';
 
 export * from './generated/TabSheet.js';
@@ -34,7 +38,7 @@ function getTabId(tab: TabSheetTab) {
 
 export type TabSheetProps = Partial<Omit<_TabSheetProps, 'items'>>;
 
-export function TabSheet(props: TabSheetProps) {
+function TabSheet(props: TabSheetProps, ref: ForwardedRef<TabSheetElement>) {
   const tabs = React.Children.toArray(props.children).filter((child): child is TabSheetTab => {
     return React.isValidElement(child) && child.type === TabSheetTab;
   });
@@ -44,7 +48,7 @@ export function TabSheet(props: TabSheetProps) {
   });
 
   return (
-    <_TabSheet>
+    <_TabSheet ref={ref}>
       {tabs.length > 0 ? (
         <Tabs slot="tabs">
           {tabs.map((child) => {
@@ -68,6 +72,10 @@ export function TabSheet(props: TabSheetProps) {
     </_TabSheet>
   );
 }
+
+const ForwardedTabSheet = forwardRef(TabSheet);
+
+export { ForwardedTabSheet as TabSheet };
 
 /**
  * A helper function that allows declaring the tab identifier on the children
