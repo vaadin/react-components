@@ -20,8 +20,7 @@ async function until(predicate: () => boolean) {
   }
 }
 
-// TODO: Remove only
-describe.only('TabSheet', () => {
+describe('TabSheet', () => {
   afterEach(() => cleanup());
 
   it('should render two tabs', async () => {
