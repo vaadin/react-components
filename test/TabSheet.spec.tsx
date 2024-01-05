@@ -41,6 +41,20 @@ describe('TabSheet', () => {
     expect(getTabContent(tabs[1])).to.have.text('Content 2');
   });
 
+  it('should have the second tab selected', async () => {
+    render(
+      <TabSheet selected={1}>
+        <TabSheetTab label="Tab 1">Content 1</TabSheetTab>
+        <TabSheetTab label="Tab 2">Content 2</TabSheetTab>
+      </TabSheet>,
+    );
+
+    const tabs = getTabSheet().querySelectorAll('vaadin-tab');
+
+    await until(() => tabs[1].selected);
+    expect(tabs[0].selected).to.be.false;
+  });
+
   it('should pass props to the tab', async () => {
     render(
       <TabSheet>
@@ -68,7 +82,7 @@ describe('TabSheet', () => {
     expect(getTabContent(tab)).to.have.text('Content 1');
   });
 
-  it('should maintain selected tab on re-render', async function () {
+  it('should maintain selected tab on re-render', async () => {
     function Test() {
       const [count, setCount] = useState(2);
       return (

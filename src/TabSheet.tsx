@@ -39,22 +39,26 @@ function getTabId(tab: TabSheetTab) {
 export type TabSheetProps = Partial<Omit<_TabSheetProps, 'items'>>;
 
 function TabSheet(props: TabSheetProps, ref: ForwardedRef<TabSheetElement>) {
-  const tabs = React.Children.toArray(props.children).filter((child): child is TabSheetTab => {
+  const { children, ...tabSheetRest } = props;
+
+  // The direct TabSheetTab children of the TabSheet
+  const tabs = React.Children.toArray(children).filter((child): child is TabSheetTab => {
     return React.isValidElement(child) && child.type === TabSheetTab;
   });
 
-  const children = React.Children.toArray(props.children).filter((child) => {
+  // All the other children of the TabSheet
+  const remainingChildren = React.Children.toArray(children).filter((child) => {
     return React.isValidElement(child) && child.type !== TabSheetTab;
   });
 
   return (
-    <_TabSheet ref={ref}>
+    <_TabSheet {...tabSheetRest} ref={ref}>
       {tabs.length > 0 ? (
         <Tabs slot="tabs">
           {tabs.map((child) => {
-            const { children, label, ...rest } = child.props;
+            const { children, label, ...tabRest } = child.props;
             return (
-              <Tab {...rest} id={getTabId(child)} key={getTabId(child)}>
+              <Tab {...tabRest} id={getTabId(child)} key={getTabId(child)}>
                 {child.props.label}
               </Tab>
             );
@@ -68,7 +72,7 @@ function TabSheet(props: TabSheetProps, ref: ForwardedRef<TabSheetElement>) {
         </div>
       ))}
 
-      {children}
+      {remainingChildren}
     </_TabSheet>
   );
 }
