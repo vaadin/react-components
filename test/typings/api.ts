@@ -3,6 +3,7 @@ import React, {
   type DOMAttributes,
   type HTMLAttributes,
   type ReactElement,
+  type ReactNode,
   type RefAttributes,
 } from 'react';
 import { TextField, TextFieldElement } from '../../TextField.js';
@@ -28,6 +29,7 @@ import { ComboBox, type ComboBoxChangeEvent } from '../../ComboBox.js';
 import { ContextMenu, type ContextMenuItem } from '../../ContextMenu.js';
 import { MenuBar, type MenuBarItem } from '../../MenuBar.js';
 import type { SubMenuItem } from '../../src/MenuBar.js';
+import { TabSheet, TabSheetElement, TabSheetTab } from '../../src/TabSheet.js';
 
 const assertType = <TExpected>(value: TExpected) => value;
 const assertOmitted = <C, T>(prop: keyof Omit<C, keyof T>) => prop;
@@ -215,3 +217,15 @@ assertType<MenuBarItem[] | undefined>(menuBarProps.items);
 assertType<boolean | undefined>(menuBarProps.items![0].children![0].checked);
 assertOmitted<SubMenuItem, MenuBarItem>('checked');
 assertType<SubMenuItem[] | undefined>(menuBarProps.items![0].children);
+
+const tabSheetProps = React.createElement(TabSheet, {}).props;
+type TabSheetProps = typeof tabSheetProps;
+assertType<number | null | undefined>(tabSheetProps.selected);
+assertType<HTMLAttributes<TabSheetElement>['children']>(tabSheetProps.children);
+assertType<TabSheetElement['hidden'] | undefined>(tabSheetProps.hidden);
+assertType<HTMLAttributes<TabSheetElement>['aria-label']>(tabSheetProps['aria-label']);
+assertOmitted<TabSheetElement, TabSheetProps>('items');
+
+const tabSheetTabProps = React.createElement(TabSheetTab, {}).props;
+assertType<ReactNode>(tabSheetTabProps.label);
+assertType<ReactNode>(tabSheetTabProps.children);

@@ -1,6 +1,6 @@
 import React, { type ReactNode } from 'react';
 import { Tab } from './Tab.js';
-import { TabSheet as _TabSheet } from './generated/TabSheet.js';
+import { TabSheet as _TabSheet, type TabSheetProps as _TabSheetProps } from './generated/TabSheet.js';
 import { Tabs } from './Tabs.js';
 
 export * from './generated/TabSheet.js';
@@ -25,7 +25,9 @@ function getTabId(tab: TabSheetTab) {
   return generatedTabIds.get(tab);
 }
 
-export function TabSheet(props: React.PropsWithChildren<{}>) {
+export type TabSheetProps = Partial<Omit<_TabSheetProps, 'items'>>;
+
+export function TabSheet(props: TabSheetProps) {
   const tabs = React.Children.toArray(props.children).filter((child): child is TabSheetTab => {
     return React.isValidElement(child) && child.type === TabSheetTab;
   });
