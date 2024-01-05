@@ -229,3 +229,5 @@ assertOmitted<TabSheetElement, TabSheetProps>('items');
 const tabSheetTabProps = React.createElement(TabSheetTab, {}).props;
 assertType<ReactNode>(tabSheetTabProps.label);
 assertType<ReactNode>(tabSheetTabProps.children);
+assertType<string | undefined>(tabSheetTabProps.id);
+assertType<string | undefined>(tabSheetTabProps['aria-label']);

@@ -1,5 +1,5 @@
-import React, { type ReactNode } from 'react';
-import { Tab } from './Tab.js';
+import React, { type HTMLAttributes, type ReactNode } from 'react';
+import { Tab, type TabElement } from './Tab.js';
 import { TabSheet as _TabSheet, type TabSheetProps as _TabSheetProps } from './generated/TabSheet.js';
 import { Tabs } from './Tabs.js';
 
@@ -10,7 +10,8 @@ type TabSheetTabProps = React.PropsWithChildren<{
    * The label of the tab.
    */
   label?: ReactNode;
-}>;
+}> &
+  HTMLAttributes<TabElement>;
 
 type TabSheetTab = React.ReactElement<TabSheetTabProps>;
 
