@@ -21,9 +21,12 @@ let uniqueId = 0;
 const generatedTabIds = new WeakMap<TabSheetTab, string>();
 function getTabId(tab: TabSheetTab) {
   if (tab.props.id) {
+    // Support custom id for a tabsheet tab
     return tab.props.id;
   }
+
   if (!generatedTabIds.has(tab)) {
+    // Generate a temporary id for the tab while it's being rendered
     generatedTabIds.set(tab, 'tabsheet-tab-' + uniqueId++);
   }
   return generatedTabIds.get(tab);
@@ -37,7 +40,7 @@ export function TabSheet(props: TabSheetProps) {
   });
 
   const children = React.Children.toArray(props.children).filter((child) => {
-    return React.isValidElement(child) && child.type !== Tab;
+    return React.isValidElement(child) && child.type !== TabSheetTab;
   });
 
   return (
