@@ -7,7 +7,7 @@ export * from './generated/TabSheet.js';
 
 type TabSheetTabProps = React.PropsWithChildren<{
   /**
-   * The content to display as the tab header in a `TabSheet`.
+   * The label of the tab.
    */
   label?: ReactNode;
 }>;
@@ -80,8 +80,9 @@ export function TabSheet(props: React.PropsWithChildren<{}>) {
  * @param tab The identifier of the correspoding tab.
  *
  * @returns object with HTML attribute values recognized on tab sheet children.
+ * @deprecated Use `<TabSheetTab/>` instead.
  */
 export function tab(tab: string): Record<string, string> {
-  console.warn('Using the `tab` helper function is deprecated.');
+  console.warn('Using the `tab` helper function is deprecated. Use <TabSheetTab/> instead.');
   return { tab } as Record<string, string>;
 }
