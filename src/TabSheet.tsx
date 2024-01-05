@@ -1,5 +1,5 @@
-import React, { forwardRef, type ForwardedRef, type HTMLAttributes, type ReactNode } from 'react';
-import { Tab, type TabElement } from './Tab.js';
+import React, { forwardRef, type ForwardedRef, type ReactNode } from 'react';
+import { Tab, type TabProps } from './Tab.js';
 import {
   TabSheet as _TabSheet,
   type TabSheetElement,
@@ -9,13 +9,12 @@ import { Tabs } from './Tabs.js';
 
 export * from './generated/TabSheet.js';
 
-type TabSheetTabProps = React.PropsWithChildren<{
+type TabSheetTabProps = Omit<TabProps, 'selected' | 'value'> & {
   /**
    * The label of the tab.
    */
   label?: ReactNode;
-}> &
-  HTMLAttributes<TabElement>;
+};
 
 type TabSheetTab = React.ReactElement<TabSheetTabProps>;
 

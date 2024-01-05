@@ -55,6 +55,22 @@ describe('TabSheet', () => {
     expect(tabs[0].selected).to.be.false;
   });
 
+  it('should have the second tab disabled', async () => {
+    render(
+      <TabSheet>
+        <TabSheetTab label="Tab 1">Content 1</TabSheetTab>
+        <TabSheetTab label="Tab 2" disabled>
+          Content 2
+        </TabSheetTab>
+      </TabSheet>,
+    );
+
+    const tabs = getTabSheet().querySelectorAll('vaadin-tab');
+
+    await until(() => tabs[1].disabled);
+    expect(tabs[0].disabled).to.be.false;
+  });
+
   it('should pass props to the tab', async () => {
     render(
       <TabSheet>

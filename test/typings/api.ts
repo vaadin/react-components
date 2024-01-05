@@ -30,6 +30,7 @@ import { ContextMenu, type ContextMenuItem } from '../../ContextMenu.js';
 import { MenuBar, type MenuBarItem } from '../../MenuBar.js';
 import type { SubMenuItem } from '../../src/MenuBar.js';
 import { TabSheet, TabSheetElement, TabSheetTab } from '../../src/TabSheet.js';
+import type { TabElement } from '../../src/Tab.js';
 
 const assertType = <TExpected>(value: TExpected) => value;
 const assertOmitted = <C, T>(prop: keyof Omit<C, keyof T>) => prop;
@@ -227,7 +228,11 @@ assertType<HTMLAttributes<TabSheetElement>['aria-label']>(tabSheetProps['aria-la
 assertOmitted<TabSheetElement, TabSheetProps>('items');
 
 const tabSheetTabProps = React.createElement(TabSheetTab, {}).props;
+type TabSheetTabProps = typeof tabSheetTabProps;
 assertType<ReactNode>(tabSheetTabProps.label);
 assertType<ReactNode>(tabSheetTabProps.children);
 assertType<string | undefined>(tabSheetTabProps.id);
 assertType<string | undefined>(tabSheetTabProps['aria-label']);
+assertType<boolean | undefined>(tabSheetTabProps.disabled);
+assertOmitted<TabElement, TabSheetTabProps>('value');
+assertOmitted<TabElement, TabSheetTabProps>('selected');
