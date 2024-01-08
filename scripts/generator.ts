@@ -38,6 +38,7 @@ const EVENTS_DECLARATION = '$EVENTS_DECLARATION$';
 const PROPERTIES_DECLARATION = '$PROPERTIES_DECLARATION$';
 const LIT_REACT_PATH = '@lit/react';
 const MODULE_PATH = '$MODULE_PATH$';
+const THEME_PATH = '$THEME_PATH$';
 
 type ElementData = Readonly<{
   packageName: string;
@@ -323,6 +324,7 @@ function generateReactComponent({ name, js }: SchemaHTMLElement, { packageName, 
 
   const elementName = convertElementNameToClassName(name);
   const elementModulePath = createImportPath(relative(nodeModulesDir, path), false);
+  const elementThemePath = createImportPath(relative(nodeModulesDir, path.replace('/vaadin-', '/theme/lumo/vaadin-')), false);
   const eventMapId = ts.factory.createIdentifier(`${elementName}EventMap`);
   const elementClassNameId = ts.factory.createIdentifier(`${elementName}Element`);
   const componentTagLiteral = ts.factory.createStringLiteral(name);
@@ -347,7 +349,7 @@ import type {
 import * as React from "react";
 import { createComponent, type PolymerConstructor, type WebComponentProps } from "${CREATE_COMPONENT_PATH}";
 
-const importFunc = () => import("${MODULE_PATH}");
+const importFunc = () => import("${THEME_PATH}");
 
 export type {
   ${COMPONENT_NAME}Element,
@@ -384,6 +386,8 @@ export const ${COMPONENT_NAME} = createComponent({
             return ts.factory.createStringLiteral(createComponentPath);
           case MODULE_PATH:
             return ts.factory.createStringLiteral(elementModulePath);
+          case THEME_PATH:
+            return ts.factory.createStringLiteral(elementThemePath);
           default:
             // When createSourceFile hass setParentNodes flag, original string
             // literals are not emitted for some reason. Copy as a workaroud.
