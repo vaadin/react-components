@@ -13,7 +13,7 @@ import { useModelRenderer } from './renderers/useModelRenderer.js';
 // suggested in React context, see https://github.com/vaadin/react-components/issues/68
 // Fix: use re-exports from raw "src/vaadin-grid.js" as a workaround, until
 // the re-export is removed.
-export * from '@vaadin/grid/src/vaadin-grid.js';
+export type * from '@vaadin/grid/src/vaadin-grid.js';
 export type { GridElement, GridEventMap } from './generated/Grid.js';
 
 export type GridProps<TItem> = Partial<Omit<_GridProps<TItem>, 'rowDetailsRenderer'>> &
