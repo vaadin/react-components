@@ -49,7 +49,11 @@ function Select(props: SelectProps, ref: ForwardedRef<SelectElement>): ReactElem
   const finalRef = useMergedRefs(innerRef, ref);
 
   useEffect(() => {
-    if (props.renderer || props.children) {
+    if (
+      (props.renderer || props.children) &&
+      innerRef.current &&
+      typeof innerRef.current.requestContentUpdate === 'function'
+    ) {
       innerRef.current?.requestContentUpdate();
     }
   }, [innerRef.current, props.renderer, props.children]);
