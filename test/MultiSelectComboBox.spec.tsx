@@ -1,6 +1,7 @@
 import { expect, use as useChaiPlugin } from '@esm-bundle/chai';
 import { cleanup, render } from '@testing-library/react/pure.js';
 import chaiDom from 'chai-dom';
+import sinon from 'sinon';
 import { MultiSelectComboBox, type MultiSelectComboBoxElement } from '../src/MultiSelectComboBox.js';
 import createOverlayCloseCatcher from './utils/createOverlayCloseCatcher.js';
 
@@ -17,7 +18,13 @@ describe('MultiSelectComboBox', () => {
   afterEach(cleanup);
   afterEach(catcher);
 
-  it('should render correctly', (done) => {
+  async function until(predicate: () => boolean) {
+    while (!predicate()) {
+      await new Promise((r) => setTimeout(r, 10));
+    }
+  }
+
+  it('should render correctly', async () => {
     type Item = Readonly<{ value: string; index: number }>;
 
     const items: Item[] = [
@@ -25,22 +32,22 @@ describe('MultiSelectComboBox', () => {
       { value: 'bar', index: 1 },
     ];
 
+    const spy = sinon.spy();
+
     const { container } = render(
       <MultiSelectComboBox<Item>
         ref={ref}
         items={items}
         opened
         renderer={({ item }) => <>{item.value}</>}
-        onSelectedItemsChanged={(event) => {
-          expect(event.detail.value[0].value).to.equal('bar');
-          expect(event.detail.value[0].index).to.equal(1);
-          done();
-        }}
+        onSelectedItemsChanged={spy}
       />,
     );
 
     const comboBox = container.querySelector('vaadin-multi-select-combo-box');
     expect(comboBox).to.exist;
+
+    await until(() => !!document.querySelector(`${overlayTag}[opened]`));
 
     const comboBoxOverlay = document.body.querySelector(overlayTag);
     expect(comboBoxOverlay).to.exist;
@@ -49,5 +56,9 @@ describe('MultiSelectComboBox', () => {
     expect(bar).to.exist;
 
     bar!.dispatchEvent(new PointerEvent('click', { bubbles: true }));
+
+    const event = spy.firstCall.args[0];
+    expect(event.detail.value[0].value).to.equal('bar');
+    expect(event.detail.value[0].index).to.equal(1);
   });
 });
