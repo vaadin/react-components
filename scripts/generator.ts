@@ -25,7 +25,7 @@ import {
   transform,
   convertElementNameToClassName,
 } from './utils/misc.js';
-import { eventSettings, genericElements, NonGenericInterface } from './utils/settings.js';
+import { elementsWithoutTheme, eventSettings, genericElements, NonGenericInterface } from './utils/settings.js';
 
 // Placeholders
 const CALL_EXPRESSION = '$CALL_EXPRESSION$';
@@ -324,7 +324,10 @@ function generateReactComponent({ name, js }: SchemaHTMLElement, { packageName, 
 
   const elementName = convertElementNameToClassName(name);
   const elementModulePath = createImportPath(relative(nodeModulesDir, path), false);
-  const elementThemePath = createImportPath(relative(nodeModulesDir, path.replace('/vaadin-', '/theme/lumo/vaadin-')), false);
+  const themePath = elementsWithoutTheme.some((el) => path.includes(el))
+    ? path
+    : path.replace('/vaadin-', '/theme/lumo/vaadin-');
+  const elementThemePath = createImportPath(relative(nodeModulesDir, themePath), false);
   const eventMapId = ts.factory.createIdentifier(`${elementName}EventMap`);
   const elementClassNameId = ts.factory.createIdentifier(`${elementName}Element`);
   const componentTagLiteral = ts.factory.createStringLiteral(name);
