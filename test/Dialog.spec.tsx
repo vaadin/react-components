@@ -15,7 +15,15 @@ describe('Dialog', () => {
     ref.opened = false;
   });
 
-  function assert() {
+  async function until(predicate: () => boolean) {
+    while (!predicate()) {
+      await new Promise((r) => setTimeout(r, 10));
+    }
+  }
+
+  async function assert() {
+    await until(() => !!document.querySelector(`${overlayTag}[opened]`));
+
     const dialog = document.querySelector(overlayTag);
     expect(dialog).to.exist;
 
@@ -40,7 +48,7 @@ describe('Dialog', () => {
         FooBar
       </Dialog>,
     );
-    assert();
+    await assert();
   });
 
   it('should use renderer prop if it is set', async () => {
@@ -53,7 +61,7 @@ describe('Dialog', () => {
         renderer={() => <>FooBar</>}
       ></Dialog>,
     );
-    assert();
+    await assert();
   });
 
   it('should use children as renderer prop', async () => {
@@ -62,7 +70,7 @@ describe('Dialog', () => {
         {() => <>FooBar</>}
       </Dialog>,
     );
-    assert();
+    await assert();
   });
 
   it('should not warn on open', async () => {
