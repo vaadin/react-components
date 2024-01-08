@@ -12,6 +12,7 @@ import { ListBox } from '../src/ListBox.js';
 import catchRender from './utils/catchRender.js';
 import createOverlayCloseCatcher from './utils/createOverlayCloseCatcher.js';
 import sinon from 'sinon';
+import { findByQuerySelector } from './utils/findByQuerySelector.js';
 
 useChaiPlugin(chaiDom);
 
@@ -77,6 +78,9 @@ describe('ContextMenu', () => {
       </ContextMenu>,
     );
 
+    const menu = await findByQuerySelector('vaadin-context-menu');
+    await until(() => !!menu?.shadowRoot);
+
     await assert(container.querySelector<HTMLDivElement>('#actor')!);
   });
 
@@ -87,6 +91,9 @@ describe('ContextMenu', () => {
       </ContextMenu>,
     );
 
+    const menu = await findByQuerySelector('vaadin-context-menu');
+    await until(() => !!menu?.shadowRoot);
+
     await assert(container.querySelector<HTMLDivElement>('#actor')!);
   });
 
@@ -96,6 +103,9 @@ describe('ContextMenu', () => {
         <div id="target">target</div>
       </ContextMenu>,
     );
+
+    const menu = await findByQuerySelector('vaadin-context-menu');
+    await until(() => !!menu?.shadowRoot);
 
     const target = container.querySelector<HTMLDivElement>('#target')!;
     await openContextMenu(target);
@@ -112,6 +122,9 @@ describe('ContextMenu', () => {
       </ContextMenu>,
     );
 
+    const menu = await findByQuerySelector('vaadin-context-menu');
+    await until(() => !!menu?.shadowRoot);
+
     const target = container.querySelector<HTMLDivElement>('#target')!;
     await openContextMenu(target);
 
@@ -125,6 +138,9 @@ describe('ContextMenu', () => {
         <div id="target">target</div>
       </ContextMenu>,
     );
+
+    const menu = await findByQuerySelector('vaadin-context-menu');
+    await until(() => !!menu?.shadowRoot);
 
     const target = container.querySelector<HTMLDivElement>('#target')!;
     await openContextMenu(target);
