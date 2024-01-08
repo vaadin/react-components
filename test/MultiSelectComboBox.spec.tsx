@@ -48,6 +48,7 @@ describe('MultiSelectComboBox', () => {
     expect(comboBox).to.exist;
 
     await until(() => !!document.querySelector(`${overlayTag}[opened]`));
+    spy.resetHistory();
 
     const comboBoxOverlay = document.body.querySelector(overlayTag);
     expect(comboBoxOverlay).to.exist;
