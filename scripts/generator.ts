@@ -390,7 +390,9 @@ export const ${COMPONENT_NAME} = createComponent({
           case MODULE_PATH:
             return ts.factory.createStringLiteral(elementModulePath);
           case THEME_PATH:
-            return ts.factory.createStringLiteral(elementThemePath);
+            const literal = ts.factory.createStringLiteral(elementThemePath);
+            ts.addSyntheticLeadingComment(literal, ts.SyntaxKind.SingleLineCommentTrivia, '@ts-ignore');
+            return literal;
           default:
             // When createSourceFile hass setParentNodes flag, original string
             // literals are not emitted for some reason. Copy as a workaroud.
