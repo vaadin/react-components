@@ -1,7 +1,12 @@
 import { type ForwardedRef, forwardRef, type ReactElement } from 'react';
-import { MenuBar as _MenuBar, type MenuBarElement, type MenuBarProps as _MenuBarProps } from './generated/MenuBar.js';
+import {
+  MenuBar as _MenuBar,
+  type MenuBarElement,
+  type MenuBarProps as _MenuBarProps,
+  type MenuBarItem as _MenuBarItem,
+  type SubMenuItem as _SubMenuItem,
+} from './generated/MenuBar.js';
 import { getOriginalItem, mapItemsWithComponents } from './utils/mapItemsWithComponents.js';
-import type { MenuBarItem as _MenuBarItem, SubMenuItem as _SubMenuItem } from '@vaadin/menu-bar';
 
 export * from './generated/MenuBar.js';
 

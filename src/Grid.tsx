@@ -1,6 +1,10 @@
 import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement, type RefAttributes } from 'react';
-import type { GridDefaultItem } from '@vaadin/grid';
-import { Grid as _Grid, type GridElement, type GridProps as _GridProps } from './generated/Grid.js';
+import {
+  Grid as _Grid,
+  type GridDefaultItem,
+  type GridElement,
+  type GridProps as _GridProps,
+} from './generated/Grid.js';
 import type { GridRowDetailsReactRendererProps } from './renderers/grid.js';
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 

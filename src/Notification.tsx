@@ -12,10 +12,10 @@ import {
   Notification as _Notification,
   type NotificationElement,
   type NotificationProps as _NotificationProps,
+  type ShowOptions,
 } from './generated/Notification.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
 import type { ReactSimpleRendererProps } from './renderers/useSimpleRenderer.js';
-import type { ShowOptions } from '@vaadin/notification';
 
 export * from './generated/Notification.js';
 

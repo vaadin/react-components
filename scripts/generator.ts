@@ -354,6 +354,8 @@ import { createComponent, type PolymerConstructor, type WebComponentProps } from
 
 const importFunc = () => import("${THEME_PATH}");
 
+export type * from "${MODULE_PATH}";
+
 export type {
   ${COMPONENT_NAME}Element,
 };

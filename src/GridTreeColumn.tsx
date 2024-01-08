@@ -6,7 +6,7 @@ import {
   type ReactNode,
   type RefAttributes,
 } from 'react';
-import type { GridDefaultItem } from '@vaadin/grid';
+import type { GridDefaultItem } from './generated/Grid.js';
 import {
   type GridTreeColumnElement,
   GridTreeColumn as _GridTreeColumn,
