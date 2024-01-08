@@ -33,6 +33,7 @@ describe('MenuBar', () => {
     const { container } = render(<MenuBar items={[{ text: 'foo' }]} />);
 
     const menuBar = container.querySelector<HTMLDivElement>('vaadin-menu-bar')!;
+    await until(() => !!menuBar?.shadowRoot);
 
     const item = menuBar.querySelector(menuButtonTag);
     expect(item?.firstElementChild).not.to.exist;
@@ -43,6 +44,7 @@ describe('MenuBar', () => {
     const { container } = render(<MenuBar items={[{ component: <span>foo</span> }]} />);
 
     const menuBar = container.querySelector<HTMLDivElement>('vaadin-menu-bar')!;
+    await until(() => !!menuBar?.shadowRoot);
 
     const item = menuBar.querySelector(`${menuItemTag} > span`);
     expect(item).to.have.text('foo');
@@ -54,6 +56,7 @@ describe('MenuBar', () => {
     );
 
     const menuBar = container.querySelector<HTMLDivElement>('vaadin-menu-bar')!;
+    await until(() => !!menuBar?.shadowRoot);
 
     const rootItem = menuBar.querySelector(menuButtonTag)!;
     await openRootItemSubMenu(rootItem);
