@@ -60,12 +60,11 @@ function editColumnReactRenderer<TItem>(reactBodyRenderer?: ReactBodyRenderer<TI
     return undefined;
   }
 
-  reactBodyRenderer.__wrapperRenderer ||= (props) => {
+  reactBodyRenderer.__wrapperRenderer ||= function GridProEditColumnRenderer(props) {
     // If the model has __renderEmpty set, return null, otherwise call the original renderer
     return '__renderEmpty' in props.model ? null : createElement(reactBodyRenderer, props);
   };
 
-  reactBodyRenderer.__wrapperRenderer.displayName = 'GridProEditColumnRenderer';
   return reactBodyRenderer.__wrapperRenderer;
 }
 
