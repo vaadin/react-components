@@ -65,6 +65,7 @@ function editColumnReactRenderer<TItem>(reactBodyRenderer?: ReactBodyRenderer<TI
     return '__renderEmpty' in props.model ? null : createElement(reactBodyRenderer, props);
   };
 
+  reactBodyRenderer.__wrapperRenderer.displayName = 'GridProEditColumnRenderer';
   return reactBodyRenderer.__wrapperRenderer;
 }
 
