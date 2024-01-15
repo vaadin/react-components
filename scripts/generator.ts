@@ -392,6 +392,8 @@ export const ${COMPONENT_NAME} = createComponent({
           case MODULE_PATH:
             return ts.factory.createStringLiteral(elementModulePath);
           case THEME_PATH:
+            // TODO: remove after adding typings to WC theme folders
+            // https://github.com/vaadin/web-components/issues/7073
             const literal = ts.factory.createStringLiteral(elementThemePath);
             ts.addSyntheticLeadingComment(literal, ts.SyntaxKind.SingleLineCommentTrivia, '@ts-ignore');
             return literal;
