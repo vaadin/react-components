@@ -13,6 +13,7 @@ declare global {
 
   interface Vaadin {
     registrations?: VaadinRegistration[];
+    suppressPostFinalizeStylesWarning?: boolean;
   }
 
   interface Window {
@@ -22,6 +23,7 @@ declare global {
 }
 
 window.Vaadin ??= {};
+window.Vaadin.suppressPostFinalizeStylesWarning = true;
 window.Vaadin.registrations ??= [];
 window.Vaadin.registrations.push({
   is: '@vaadin/react-components',
