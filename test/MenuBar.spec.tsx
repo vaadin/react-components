@@ -1,7 +1,8 @@
 import { expect, use as useChaiPlugin } from '@esm-bundle/chai';
 import { render } from '@testing-library/react/pure.js';
 import chaiDom from 'chai-dom';
-import { MenuBar } from '../src/MenuBar.js';
+import { MenuBar, MenuBarElement } from '../src/MenuBar.js';
+import sinon from 'sinon';
 
 useChaiPlugin(chaiDom);
 
@@ -59,5 +60,20 @@ describe('MenuBar', () => {
 
     const item = document.querySelector(`${overlayTag} ${menuItemTag} > span`);
     expect(item).to.have.text('foo');
+  });
+
+  it('should have the correct item reference in the item-selected event', async () => {
+    const items = [{ text: 'foo' }, { text: 'bar' }];
+
+    const spy = sinon.spy();
+    const { container } = render(<MenuBar items={items} onItemSelected={spy}></MenuBar>);
+
+    const menuBar = container.querySelector<MenuBarElement>('vaadin-menu-bar')!;
+
+    const rootItem = menuBar.querySelector<HTMLElement>(menuButtonTag)!;
+    rootItem.click();
+
+    expect(spy.called).to.be.true;
+    expect(spy.firstCall.args[0].detail.value).to.equal(items[0]);
   });
 });
