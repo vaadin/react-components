@@ -58,10 +58,15 @@ const ForwardedNotification = forwardRef(Notification) as NotificationFunction;
 
 ForwardedNotification.show = function (contents: string, options?: ShowOptions) {
   return new Promise((resolve) => {
-    customElements.whenDefined('vaadin-notification').then(() => {
-      const Notification = customElements.get('vaadin-notification') as unknown as NotificationShow;
+    const Notification = customElements.get('vaadin-notification') as unknown as NotificationShow | undefined;
+    if (Notification) {
       resolve(Notification.show(contents, options));
-    });
+    } else {
+      import('@vaadin/notification').then((res) => {
+        const { Notification } = res;
+        resolve(Notification.show(contents, options));
+      });
+    }
   });
 };
 
