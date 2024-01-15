@@ -111,7 +111,7 @@ export function createComponent<I extends HTMLElement, E extends EventNames = {}
 
   const originalRenderFunc = (Component as any).render;
 
-  (Component as any).render = (props: any, ...rest: any) => {
+  (Component as any).render = (...args: any) => {
     React.useEffect(() => {
       // Run dynamic import for the component
       if (importFunc && !('__called' in importFunc)) {
@@ -120,7 +120,7 @@ export function createComponent<I extends HTMLElement, E extends EventNames = {}
       }
     }, []);
 
-    return originalRenderFunc(props, ...rest);
+    return originalRenderFunc(...args);
   };
 
   return Component;
