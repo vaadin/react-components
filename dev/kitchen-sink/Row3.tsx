@@ -4,6 +4,7 @@ import { ComboBox } from '../../src/ComboBox.js';
 import { ContextMenu } from '../../src/ContextMenu.js';
 import { CookieConsent } from '../../src/CookieConsent.js';
 import { Crud, crudPath } from '../../src/Crud.js';
+import { CrudEditColumn } from '../../src/CrudEditColumn.js';
 import { FormLayout } from '../../src/FormLayout.js';
 import { Item } from '../../src/Item.js';
 import { ListBox } from '../../src/ListBox.js';
@@ -22,6 +23,7 @@ export default function Row3() {
       </ContextMenu>
       <CookieConsent position="bottom-right"></CookieConsent>
       <Crud items={crudData}>
+        <CrudEditColumn></CrudEditColumn>
         <FormLayout slot="form">
           <TextField label="Name" {...crudPath('name')} />
           <ComboBox label="Role" items={Object.values(CrudRole)} {...crudPath('role')} />
