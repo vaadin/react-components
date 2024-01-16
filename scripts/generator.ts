@@ -289,9 +289,9 @@ function addGenerics(node: Node, elementName: string) {
 
     const asExpression = template(
       `
-${CALL_EXPRESSION} as (
+${CALL_EXPRESSION} as ((
   props: ${COMPONENT_NAME}Props & React.RefAttributes<${COMPONENT_NAME}Element>,
-) => React.ReactElement | null
+) => React.ReactElement | null) & { define: () => Promise<void> }
   `,
       (statements) => (statements[0] as ExpressionStatement).expression,
       [

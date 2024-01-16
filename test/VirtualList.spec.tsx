@@ -17,29 +17,23 @@ describe('VirtualList', () => {
     return <>{item.value}</>;
   }
 
-  async function until(predicate: () => boolean) {
-    while (!predicate()) {
-      await new Promise((r) => setTimeout(r, 10));
-    }
-  }
-
-  async function assert() {
+  function assert() {
     const list = document.querySelector('vaadin-virtual-list');
     expect(list).to.exist;
-    await until(() => !!list?.shadowRoot);
-
     expect(list).to.have.text('FooBar');
   }
 
+  before(VirtualList.define);
+
   afterEach(cleanup);
 
-  it('should use renderer prop if it is set', async () => {
+  it('should use renderer prop if it is set', () => {
     render(<VirtualList items={items} renderer={Renderer} />);
-    await assert();
+    assert();
   });
 
-  it('should use children render function as a renderer prop', async () => {
+  it('should use children render function as a renderer prop', () => {
     render(<VirtualList items={items}>{Renderer}</VirtualList>);
-    await assert();
+    assert();
   });
 });
