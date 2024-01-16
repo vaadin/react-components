@@ -29,8 +29,15 @@ function ComboBox<TItem = ComboBoxDefaultItem>(
   );
 }
 
+function withDefine<T extends typeof ComboBox>(component: T): T & { define: () => Promise<void> } {
+  Object.assign(component, { define: _ComboBox.define });
+  return component as T & { define: () => Promise<void> };
+}
+
 const ForwardedComboBox = forwardRef(ComboBox) as <TItem = ComboBoxDefaultItem>(
   props: ComboBoxProps<TItem> & RefAttributes<ComboBoxElement<TItem>>,
 ) => ReactElement | null;
 
-export { ForwardedComboBox as ComboBox };
+const ComboBoxWithDefine = withDefine(ForwardedComboBox);
+
+export { ComboBoxWithDefine as ComboBox };
