@@ -1,10 +1,12 @@
 import {
   type ComponentType,
   type ForwardedRef,
+  type ForwardRefExoticComponent,
   type HTMLAttributes,
   forwardRef,
   type ReactElement,
   type ReactNode,
+  type RefAttributes,
 } from 'react';
 import { Dialog as _Dialog, type DialogElement, type DialogProps as _DialogProps } from './generated/Dialog.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
@@ -48,6 +50,10 @@ function Dialog(
   );
 }
 
-const ForwardedDialog = forwardRef(Dialog);
+const ForwardedDialog = forwardRef(Dialog) as ForwardRefExoticComponent<DialogProps & RefAttributes<DialogElement>> & {
+  define(): Promise<void>;
+};
+
+Object.assign(ForwardedDialog, { define: _Dialog.define });
 
 export { ForwardedDialog as Dialog };

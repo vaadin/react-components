@@ -15,15 +15,7 @@ describe('Dialog', () => {
     ref.opened = false;
   });
 
-  async function until(predicate: () => boolean) {
-    while (!predicate()) {
-      await new Promise((r) => setTimeout(r, 10));
-    }
-  }
-
-  async function assert() {
-    await until(() => !!document.querySelector(`${overlayTag}[opened]`));
-
+  function assert() {
     const dialog = document.querySelector(overlayTag);
     expect(dialog).to.exist;
 
@@ -39,19 +31,21 @@ describe('Dialog', () => {
     expect(body).to.have.text('FooBar');
   }
 
+  before(Dialog.define);
+
   afterEach(cleanup);
   afterEach(catcher);
 
-  it('should use children if no renderer property set', async () => {
+  it('should use children if no renderer property set', () => {
     render(
       <Dialog ref={ref} opened header={<>Title</>} footer={<>Footer</>}>
         FooBar
       </Dialog>,
     );
-    await assert();
+    assert();
   });
 
-  it('should use renderer prop if it is set', async () => {
+  it('should use renderer prop if it is set', () => {
     render(
       <Dialog
         ref={ref}
@@ -61,16 +55,16 @@ describe('Dialog', () => {
         renderer={() => <>FooBar</>}
       ></Dialog>,
     );
-    await assert();
+    assert();
   });
 
-  it('should use children as renderer prop', async () => {
+  it('should use children as renderer prop', () => {
     render(
       <Dialog ref={ref} opened headerRenderer={() => <>Title</>} footerRenderer={() => <>Footer</>}>
         {() => <>FooBar</>}
       </Dialog>,
     );
-    await assert();
+    assert();
   });
 
   it('should not warn on open', async () => {
