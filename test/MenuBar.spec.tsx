@@ -63,17 +63,19 @@ describe('MenuBar', () => {
   });
 
   it('should have the correct item reference in the item-selected event', async () => {
-    const items = [{ text: 'foo' }, { text: 'bar' }];
+    const items = [{ text: 'foo' }, { component: <b>bar</b> }];
 
     const spy = sinon.spy();
     const { container } = render(<MenuBar items={items} onItemSelected={spy}></MenuBar>);
 
     const menuBar = container.querySelector<MenuBarElement>('vaadin-menu-bar')!;
 
-    const rootItem = menuBar.querySelector<HTMLElement>(menuButtonTag)!;
-    rootItem.click();
+    const rootItems = Array.from(menuBar.querySelectorAll<HTMLElement>(menuButtonTag));
+    rootItems[0].click();
+    rootItems[1].click();
 
     expect(spy.called).to.be.true;
     expect(spy.firstCall.args[0].detail.value).to.equal(items[0]);
+    expect(spy.secondCall.args[0].detail.value).to.equal(items[1]);
   });
 });
