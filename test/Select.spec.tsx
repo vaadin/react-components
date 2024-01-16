@@ -12,12 +12,6 @@ import { findByQuerySelector } from './utils/findByQuerySelector.js';
 useChaiPlugin(chaiDom);
 useChaiPlugin(chaiAsPromised);
 
-async function until(predicate: () => boolean) {
-  while (!predicate()) {
-    await new Promise((r) => setTimeout(r, 10));
-  }
-}
-
 describe('Select', () => {
   const items = [
     { label: 'Foo', value: 'foo' },
@@ -47,6 +41,8 @@ describe('Select', () => {
 
   let user: ReturnType<UserEvent['setup']>;
 
+  before(Select.define);
+
   beforeEach(() => {
     user = userEvent.setup();
   });
@@ -58,10 +54,6 @@ describe('Select', () => {
 
   it('should correctly render the value if default value changed', async () => {
     const { rerender } = render(<Select renderer={Renderer} value="bar" />);
-
-    const select = await findByQuerySelector('vaadin-select');
-    await until(() => !!select?.shadowRoot);
-
     await expect(findByQuerySelector('vaadin-select-value-button')).to.eventually.have.text('Bar');
 
     rerender(<Select renderer={Renderer} value="foo" />);
