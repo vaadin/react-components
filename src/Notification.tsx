@@ -56,18 +56,10 @@ export type NotificationFunction = ForwardRefExoticComponent<NotificationProps &
 
 const ForwardedNotification = forwardRef(Notification) as NotificationFunction;
 
-ForwardedNotification.show = function (contents: string, options?: ShowOptions) {
-  return new Promise((resolve) => {
-    const Notification = customElements.get('vaadin-notification') as unknown as NotificationShow | undefined;
-    if (Notification) {
-      resolve(Notification.show(contents, options));
-    } else {
-      import('@vaadin/notification').then((res) => {
-        const { Notification } = res;
-        resolve(Notification.show(contents, options));
-      });
-    }
-  });
+ForwardedNotification.show = async function (contents: string, options?: ShowOptions) {
+  await _Notification.define();
+  const Notification = customElements.get('vaadin-notification') as unknown as NotificationShow;
+  return Notification.show(contents, options);
 };
 
 export { ForwardedNotification as Notification };

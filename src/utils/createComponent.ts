@@ -82,11 +82,19 @@ type AllWebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I 
 
 export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = Partial<AllWebComponentProps<I, E>>;
 
+export type ReactWebComponent<I extends HTMLElement, E extends EventNames> = (
+  props: WebComponentProps<I, E> & RefAttributes<I>,
+) => React.ReactElement | null;
+
+export type ComponentWithDefine<I extends HTMLElement, E extends EventNames> = ReactWebComponent<I, E> & {
+  define: () => Promise<void>;
+};
+
 // We need a separate declaration here; otherwise, the TypeScript fails into the
 // endless loop trying to resolve the typings.
 export function createComponent<I extends HTMLElement, E extends EventNames = {}>(
   options: Options<I, E>,
-): (props: WebComponentProps<I, E> & RefAttributes<I>) => React.ReactElement | null;
+): ComponentWithDefine<I, E>;
 
 export function createComponent<I extends HTMLElement, E extends EventNames = {}>(options: Options<I, E>): any {
   const { elementClass, importFunc } = options;
@@ -111,13 +119,25 @@ export function createComponent<I extends HTMLElement, E extends EventNames = {}
 
   const originalRenderFunc = (Component as any).render;
 
+  (Component as unknown as ComponentWithDefine<I, E>).define = () => {
+    return new Promise((resolve) => {
+      // Run dynamic import for the component
+      if (importFunc) {
+        if ('__called' in importFunc) {
+          resolve();
+        } else {
+          (importFunc as any).__called = true;
+          importFunc().then(() => {
+            resolve();
+          });
+        }
+      }
+    });
+  };
+
   (Component as any).render = (...args: any) => {
     React.useEffect(() => {
-      // Run dynamic import for the component
-      if (importFunc && !('__called' in importFunc)) {
-        (importFunc as any).__called = true;
-        importFunc();
-      }
+      (Component as unknown as ComponentWithDefine<I, E>).define();
     }, []);
 
     return originalRenderFunc(...args);
