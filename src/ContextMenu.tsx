@@ -1,4 +1,11 @@
-import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement } from 'react';
+import {
+  type ComponentType,
+  type ForwardedRef,
+  type ForwardRefExoticComponent,
+  forwardRef,
+  type ReactElement,
+  type RefAttributes,
+} from 'react';
 import {
   ContextMenu as _ContextMenu,
   type ContextMenuRendererContext,
@@ -63,6 +70,12 @@ function ContextMenu(props: ContextMenuProps, ref: ForwardedRef<ContextMenuEleme
   );
 }
 
-const ForwardedContextMenu = forwardRef(ContextMenu);
+const ForwardedContextMenu = forwardRef(ContextMenu) as ForwardRefExoticComponent<
+  ContextMenuProps & RefAttributes<ContextMenuElement>
+> & {
+  define(): Promise<void>;
+};
+
+Object.assign(ForwardedContextMenu, { define: _ContextMenu.define });
 
 export { ForwardedContextMenu as ContextMenu };
