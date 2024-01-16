@@ -19,6 +19,8 @@ export type ContextMenuItem = Omit<_ContextMenuItem, 'component' | 'children'> &
   children?: Array<ContextMenuItem>;
 };
 
+export type ContextMenuItemSelectedEvent = CustomEvent<{ value: ContextMenuItem }>;
+
 // The 'opened' property is omitted because it is readonly in the web component.
 // So you cannot set it up manually, only read from the component.
 // For changing the property, use specific methods of the component.
@@ -28,7 +30,7 @@ export type ContextMenuProps = Partial<Omit<_ContextMenuProps, 'opened' | 'rende
 
     items?: Array<ContextMenuItem>;
 
-    onItemSelected?: (event: CustomEvent<{ value: ContextMenuItem }>) => void;
+    onItemSelected?: (event: ContextMenuItemSelectedEvent) => void;
   }>;
 
 function ContextMenu(props: ContextMenuProps, ref: ForwardedRef<ContextMenuElement>): ReactElement | null {

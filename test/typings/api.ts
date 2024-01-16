@@ -26,8 +26,8 @@ import { TimePicker, type TimePickerChangeEvent } from '../../src/TimePicker.js'
 import { TextArea, TextAreaElement, type TextAreaChangeEvent } from '../../src/TextArea.js';
 import { MessageInput, MessageInputElement, type MessageInputSubmitEvent } from '../../src/MessageInput.js';
 import { ComboBox, type ComboBoxChangeEvent } from '../../src/ComboBox.js';
-import { ContextMenu, type ContextMenuItem } from '../../src/ContextMenu.js';
-import { MenuBar, type MenuBarItem } from '../../src/MenuBar.js';
+import { ContextMenu, type ContextMenuItem, type ContextMenuItemSelectedEvent } from '../../src/ContextMenu.js';
+import { MenuBar, type MenuBarItem, type MenuBarItemSelectedEvent } from '../../src/MenuBar.js';
 import type { SubMenuItem } from '../../src/MenuBar.js';
 import { TabSheet, TabSheetElement, TabSheetTab } from '../../src/TabSheet.js';
 import type { TabElement } from '../../src/Tab.js';
@@ -212,6 +212,7 @@ const contextMenuProps = React.createElement(ContextMenu, {}).props;
 assertType<ReactElement | string | undefined>(contextMenuProps.items![0].component);
 assertType<ContextMenuItem[]>(contextMenuProps.items!);
 const contextMenuOnItemSelected: typeof contextMenuProps.onItemSelected = (event) => {
+  assertType<ContextMenuItemSelectedEvent>(event);
   assertType<ContextMenuItem>(event.detail.value);
 };
 assertType<typeof contextMenuProps.onItemSelected>(contextMenuOnItemSelected);
@@ -223,6 +224,7 @@ assertType<boolean | undefined>(menuBarProps.items![0].children![0].checked);
 assertOmitted<SubMenuItem, MenuBarItem>('checked');
 assertType<SubMenuItem[] | undefined>(menuBarProps.items![0].children);
 const menuBarOnItemSelected: typeof menuBarProps.onItemSelected = (event) => {
+  assertType<MenuBarItemSelectedEvent>(event);
   assertType<MenuBarItem>(event.detail.value);
 };
 assertType<typeof menuBarProps.onItemSelected>(menuBarOnItemSelected);

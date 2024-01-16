@@ -57,6 +57,9 @@ export function mapItemsWithComponents<T>(
   return [itemPortals, webComponentItems];
 }
 
+/**
+ * Returns the original item related to the given mapped item.
+ */
 export function getOriginalItem<T>(mappedItem: ItemWithHTMLElementComponent<T>) {
   return mappedItem.__item;
 }

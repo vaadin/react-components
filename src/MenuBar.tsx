@@ -22,11 +22,13 @@ export type MenuBarItem = Omit<_MenuBarItem, 'component' | 'children'> & {
   children?: Array<SubMenuItem>;
 };
 
+export type MenuBarItemSelectedEvent = CustomEvent<{ value: MenuBarItem }>;
+
 export type MenuBarProps = Partial<Omit<_MenuBarProps, 'items' | 'onItemSelected'>> &
   Readonly<{
     items?: Array<MenuBarItem>;
 
-    onItemSelected?: (event: CustomEvent<{ value: MenuBarItem }>) => void;
+    onItemSelected?: (event: MenuBarItemSelectedEvent) => void;
   }>;
 
 function MenuBar(props: MenuBarProps, ref: ForwardedRef<MenuBarElement>): ReactElement | null {
