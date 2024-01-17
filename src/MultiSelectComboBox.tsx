@@ -29,8 +29,15 @@ function MultiSelectComboBox<TItem = ComboBoxDefaultItem>(
   );
 }
 
+function withDefine<T extends typeof MultiSelectComboBox>(component: T): T & { define: () => Promise<void> } {
+  Object.assign(component, { define: _MultiSelectComboBox.define });
+  return component as T & { define: () => Promise<void> };
+}
+
 const ForwardedMultiSelectComboBox = forwardRef(MultiSelectComboBox) as <TItem = ComboBoxDefaultItem>(
   props: MultiSelectComboBoxProps<TItem> & RefAttributes<MultiSelectComboBoxElement<TItem>>,
 ) => ReactElement | null;
 
-export { ForwardedMultiSelectComboBox as MultiSelectComboBox };
+const MultiSelectComboBoxWithDefine = withDefine(ForwardedMultiSelectComboBox);
+
+export { MultiSelectComboBoxWithDefine as MultiSelectComboBox };
