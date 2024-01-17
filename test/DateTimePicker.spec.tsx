@@ -5,7 +5,9 @@ import { DateTimePicker } from '../src/DateTimePicker.js';
 
 useChaiPlugin(chaiDom);
 
-describe('DatePicker', () => {
+describe('DateTimePicker', () => {
+  before(DateTimePicker.define);
+
   afterEach(cleanup);
 
   it('should apply "value" the last', () => {

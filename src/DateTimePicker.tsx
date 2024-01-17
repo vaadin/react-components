@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { type ForwardRefExoticComponent, forwardRef, type RefAttributes } from 'react';
 import {
   DateTimePicker as _DateTimePicker,
   type DateTimePickerElement,
@@ -8,6 +8,12 @@ import createComponentWithOrderedProps from './utils/createComponentWithOrderedP
 
 export * from './generated/DateTimePicker.js';
 
-export const DateTimePicker = forwardRef(
+const ForwardedDateTimePicker = forwardRef(
   createComponentWithOrderedProps<DateTimePickerProps, DateTimePickerElement>(_DateTimePicker, 'value'),
-);
+) as ForwardRefExoticComponent<DateTimePickerProps & RefAttributes<DateTimePickerElement>> & {
+  define(): Promise<void>;
+};
+
+Object.assign(ForwardedDateTimePicker, { define: _DateTimePicker.define });
+
+export { ForwardedDateTimePicker as DateTimePicker };
