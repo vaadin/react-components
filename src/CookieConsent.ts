@@ -14,6 +14,6 @@ type OmittedCookieConsentHTMLAttributes = Omit<
 
 export type CookieConsentProps = Partial<Omit<_CookieConsentProps, keyof OmittedCookieConsentHTMLAttributes>>;
 
-export const CookieConsent = _CookieConsent as (
+export const CookieConsent = _CookieConsent as ((
   props: CookieConsentProps & RefAttributes<CookieConsentElement>,
-) => ReactElement | null;
+) => ReactElement | null) & { define: () => Promise<void> };

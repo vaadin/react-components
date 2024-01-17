@@ -14,6 +14,6 @@ type OmittedLoginOverlayHTMLAttributes = Omit<
 
 export type LoginOverlayProps = Partial<Omit<_LoginOverlayProps, keyof OmittedLoginOverlayHTMLAttributes>>;
 
-export const LoginOverlay = _LoginOverlay as (
+export const LoginOverlay = _LoginOverlay as ((
   props: LoginOverlayProps & RefAttributes<LoginOverlayElement>,
-) => ReactElement | null;
+) => ReactElement | null) & { define: () => Promise<void> };

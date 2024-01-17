@@ -14,6 +14,6 @@ type OmittedConfirmDialogHTMLAttributes = Omit<
 
 export type ConfirmDialogProps = Partial<Omit<_ConfirmDialogProps, keyof OmittedConfirmDialogHTMLAttributes>>;
 
-export const ConfirmDialog = _ConfirmDialog as (
+export const ConfirmDialog = _ConfirmDialog as ((
   props: ConfirmDialogProps & RefAttributes<ConfirmDialogElement>,
-) => ReactElement | null;
+) => ReactElement | null) & { define: () => Promise<void> };

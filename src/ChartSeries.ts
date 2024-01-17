@@ -14,6 +14,6 @@ type OmittedChartSeriesHTMLAttributes = Omit<
 
 export type ChartSeriesProps = Partial<Omit<_ChartSeriesProps, keyof OmittedChartSeriesHTMLAttributes>>;
 
-export const ChartSeries = _ChartSeries as (
+export const ChartSeries = _ChartSeries as ((
   props: ChartSeriesProps & RefAttributes<ChartSeriesElement>,
-) => ReactElement | null;
+) => ReactElement | null) & { define: () => Promise<void> };
