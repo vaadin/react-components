@@ -6,6 +6,8 @@ import { TimePicker } from '../src/TimePicker.js';
 useChaiPlugin(chaiDom);
 
 describe('TimePicker', () => {
+  before(TimePicker.define);
+
   afterEach(cleanup);
 
   it('should apply "value" the last', () => {
