@@ -47,18 +47,18 @@ function Notification(
   );
 }
 
-type NotificationShow = {
+export type NotificationFunction = ForwardRefExoticComponent<NotificationProps & RefAttributes<NotificationElement>> & {
   show(contents: string, options?: ShowOptions): Promise<NotificationElement>;
+  define(): Promise<void>;
 };
-
-export type NotificationFunction = ForwardRefExoticComponent<NotificationProps & RefAttributes<NotificationElement>> &
-  NotificationShow;
 
 const ForwardedNotification = forwardRef(Notification) as NotificationFunction;
 
+Object.assign(ForwardedNotification, { define: _Notification.define });
+
 ForwardedNotification.show = async function (contents: string, options?: ShowOptions) {
-  await _Notification.define();
-  const Notification = customElements.get('vaadin-notification') as unknown as NotificationShow;
+  await ForwardedNotification.define();
+  const Notification = customElements.get('vaadin-notification') as typeof NotificationElement;
   return Notification.show(contents, options);
 };
 

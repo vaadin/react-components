@@ -15,43 +15,38 @@ describe('Notification', () => {
     return <>FooBar</>;
   }
 
-  async function until(predicate: () => boolean) {
-    while (!predicate()) {
-      await new Promise((r) => setTimeout(r, 10));
-    }
-  }
-
-  async function assert() {
-    await until(() => !!document.querySelector('vaadin-notification-card'));
+  function assert() {
     const card = document.querySelector('vaadin-notification-card');
     expect(card).to.exist;
     expect(card).to.have.text('FooBar');
   }
 
+  before(Notification.define);
+
   afterEach(cleanup);
   afterEach(catcher);
 
-  it('should use children if no renderer property set', async () => {
+  it('should use children if no renderer property set', () => {
     render(
       <Notification ref={ref} opened>
         FooBar
       </Notification>,
     );
-    await assert();
+    assert();
   });
 
-  it('should use renderer prop if it is set', async () => {
+  it('should use renderer prop if it is set', () => {
     render(<Notification ref={ref} opened renderer={Renderer} />);
-    await assert();
+    assert();
   });
 
-  it('should use children render function as a renderer prop', async () => {
+  it('should use children render function as a renderer prop', () => {
     render(
       <Notification ref={ref} opened>
         {Renderer}
       </Notification>,
     );
-    await assert();
+    assert();
   });
 
   describe('show()', () => {
