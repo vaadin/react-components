@@ -28,13 +28,6 @@ export const genericElements = new Map<string, GenericElementInfo>([
   ['VirtualList', { numberOfGenerics: 1, nonGenericInterfaces: [NonGenericInterface.EVENT_MAP] }],
 ]);
 
-export const elementsWithoutTheme = [
-  'vaadin-chart-series',
-  'vaadin-crud-edit-column',
-  'vaadin-crud-edit',
-  'vaadin-iconset',
-];
-
 export type EventSettings = Readonly<{
   remove?: readonly string[];
   makeUnknown?: readonly string[];

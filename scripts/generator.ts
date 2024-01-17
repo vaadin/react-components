@@ -25,7 +25,7 @@ import {
   transform,
   convertElementNameToClassName,
 } from './utils/misc.js';
-import { elementsWithoutTheme, eventSettings, genericElements, NonGenericInterface } from './utils/settings.js';
+import { eventSettings, genericElements, NonGenericInterface } from './utils/settings.js';
 
 // Placeholders
 const CALL_EXPRESSION = '$CALL_EXPRESSION$';
@@ -38,7 +38,6 @@ const EVENTS_DECLARATION = '$EVENTS_DECLARATION$';
 const PROPERTIES_DECLARATION = '$PROPERTIES_DECLARATION$';
 const LIT_REACT_PATH = '@lit/react';
 const MODULE_PATH = '$MODULE_PATH$';
-const THEME_PATH = '$THEME_PATH$';
 
 type ElementData = Readonly<{
   packageName: string;
@@ -324,10 +323,6 @@ function generateReactComponent({ name, js }: SchemaHTMLElement, { packageName, 
 
   const elementName = convertElementNameToClassName(name);
   const elementModulePath = createImportPath(relative(nodeModulesDir, path), false);
-  const themePath = elementsWithoutTheme.some((el) => path.includes(el))
-    ? path
-    : path.replace('/vaadin-', '/theme/lumo/vaadin-');
-  const elementThemePath = createImportPath(relative(nodeModulesDir, themePath), false);
   const eventMapId = ts.factory.createIdentifier(`${elementName}EventMap`);
   const elementClassNameId = ts.factory.createIdentifier(`${elementName}Element`);
   const componentTagLiteral = ts.factory.createStringLiteral(name);
@@ -352,7 +347,7 @@ import type {
 import * as React from "react";
 import { createComponent, type PolymerConstructor, type WebComponentProps } from "${CREATE_COMPONENT_PATH}";
 
-const importFunc = () => import("${THEME_PATH}");
+const importFunc = () => import("${MODULE_PATH}");
 
 export type * from "${MODULE_PATH}";
 
@@ -391,12 +386,6 @@ export const ${COMPONENT_NAME} = createComponent({
             return ts.factory.createStringLiteral(createComponentPath);
           case MODULE_PATH:
             return ts.factory.createStringLiteral(elementModulePath);
-          case THEME_PATH:
-            // TODO: remove after adding typings to WC theme folders
-            // https://github.com/vaadin/web-components/issues/7073
-            const literal = ts.factory.createStringLiteral(elementThemePath);
-            ts.addSyntheticLeadingComment(literal, ts.SyntaxKind.SingleLineCommentTrivia, '@ts-ignore');
-            return literal;
           default:
             // When createSourceFile hass setParentNodes flag, original string
             // literals are not emitted for some reason. Copy as a workaroud.
