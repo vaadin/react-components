@@ -54,8 +54,15 @@ function GridSortColumn<TItem = GridDefaultItem>(
   );
 }
 
+function withDefine<T extends typeof GridSortColumn>(component: T): T & { define: () => Promise<void> } {
+  Object.assign(component, { define: _GridSortColumn.define });
+  return component as T & { define: () => Promise<void> };
+}
+
 const ForwardedGridSortColumn = forwardRef(GridSortColumn) as <TItem = GridDefaultItem>(
   props: GridSortColumnProps<TItem> & RefAttributes<GridSortColumnElement<TItem>>,
 ) => ReactElement | null;
 
-export { ForwardedGridSortColumn as GridSortColumn };
+const GridSortColumnWithDefine = withDefine(ForwardedGridSortColumn);
+
+export { GridSortColumnWithDefine as GridSortColumn };

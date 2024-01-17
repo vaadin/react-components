@@ -144,8 +144,15 @@ function GridProEditColumn<TItem = GridDefaultItem>(
   );
 }
 
+function withDefine<T extends typeof GridProEditColumn>(component: T): T & { define: () => Promise<void> } {
+  Object.assign(component, { define: _GridProEditColumn.define });
+  return component as T & { define: () => Promise<void> };
+}
+
 const ForwardedGridProEditColumn = forwardRef(GridProEditColumn) as <TItem = GridDefaultItem>(
   props: GridProEditColumnProps<TItem> & RefAttributes<GridProEditColumnElement<TItem>>,
 ) => ReactElement | null;
 
-export { ForwardedGridProEditColumn as GridProEditColumn };
+const GridProEditColumnWithDefine = withDefine(ForwardedGridProEditColumn);
+
+export { GridProEditColumnWithDefine as GridProEditColumn };

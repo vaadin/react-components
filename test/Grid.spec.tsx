@@ -80,6 +80,18 @@ describe('Grid', () => {
     return [columns, cells] as const;
   }
 
+  before(async () => {
+    await Promise.all([
+      Grid.define,
+      GridColumn.define,
+      GridColumnGroup.define,
+      GridFilterColumn.define,
+      GridSelectionColumn.define,
+      GridSortColumn.define,
+      GridTreeColumn.define,
+    ]);
+  });
+
   afterEach(cleanup);
 
   describe('GridColumn', () => {
@@ -329,6 +341,10 @@ describe('Grid', () => {
   });
 
   describe('GridProEditColumn', () => {
+    before(async () => {
+      await Promise.all([GridPro.define, GridProEditColumn.define]);
+    });
+
     it('should render correctly', async () => {
       render(
         <GridPro<Item> items={items}>

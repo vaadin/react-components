@@ -73,8 +73,15 @@ function GridColumn<TItem = GridDefaultItem>(
   );
 }
 
+function withDefine<T extends typeof GridColumn>(component: T): T & { define: () => Promise<void> } {
+  Object.assign(component, { define: _GridColumn.define });
+  return component as T & { define: () => Promise<void> };
+}
+
 const ForwardedGridColumn = forwardRef(GridColumn) as <TItem = GridDefaultItem>(
   props: GridColumnProps<TItem> & RefAttributes<GridColumnElement<TItem>>,
 ) => ReactElement | null;
 
-export { ForwardedGridColumn as GridColumn };
+const GridColumnWithDefine = withDefine(ForwardedGridColumn);
+
+export { GridColumnWithDefine as GridColumn };

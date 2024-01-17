@@ -50,8 +50,15 @@ function GridColumnGroup(
   );
 }
 
+function withDefine<T extends typeof GridColumnGroup>(component: T): T & { define: () => Promise<void> } {
+  Object.assign(component, { define: _GridColumnGroup.define });
+  return component as T & { define: () => Promise<void> };
+}
+
 const ForwardedGridColumnGroup = forwardRef(GridColumnGroup) as (
   props: GridColumnGroupProps & RefAttributes<GridColumnGroupElement>,
 ) => ReactElement | null;
 
-export { ForwardedGridColumnGroup as GridColumnGroup };
+const GridColumnGroupWithDefine = withDefine(ForwardedGridColumnGroup);
+
+export { GridColumnGroupWithDefine as GridColumnGroup };

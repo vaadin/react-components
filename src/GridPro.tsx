@@ -25,8 +25,15 @@ function GridPro<TItem = GridDefaultItem>(
   );
 }
 
+function withDefine<T extends typeof GridPro>(component: T): T & { define: () => Promise<void> } {
+  Object.assign(component, { define: _GridPro.define });
+  return component as T & { define: () => Promise<void> };
+}
+
 const ForwardedGridPro = forwardRef(GridPro) as <TItem = GridDefaultItem>(
   props: GridProProps<TItem> & RefAttributes<GridProElement<TItem>>,
 ) => ReactElement | null;
 
-export { ForwardedGridPro as GridPro };
+const GridProWithDefine = withDefine(ForwardedGridPro);
+
+export { GridProWithDefine as GridPro };

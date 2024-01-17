@@ -55,8 +55,15 @@ function GridTreeColumn<TItem = GridDefaultItem>(
   );
 }
 
+function withDefine<T extends typeof GridTreeColumn>(component: T): T & { define: () => Promise<void> } {
+  Object.assign(component, { define: _GridTreeColumn.define });
+  return component as T & { define: () => Promise<void> };
+}
+
 const ForwardedGridTreeColumn = forwardRef(GridTreeColumn) as <TItem = GridDefaultItem>(
   props: GridTreeColumnProps<TItem> & RefAttributes<GridTreeColumnElement<TItem>>,
 ) => ReactElement | null;
 
-export { ForwardedGridTreeColumn as GridTreeColumn };
+const GridTreeColumnWithDefine = withDefine(ForwardedGridTreeColumn);
+
+export { GridTreeColumnWithDefine as GridTreeColumn };

@@ -35,8 +35,15 @@ function Grid<TItem = GridDefaultItem>(
   );
 }
 
+function withDefine<T extends typeof Grid>(component: T): T & { define: () => Promise<void> } {
+  Object.assign(component, { define: _Grid.define });
+  return component as T & { define: () => Promise<void> };
+}
+
 const ForwardedGrid = forwardRef(Grid) as <TItem = GridDefaultItem>(
   props: GridProps<TItem> & RefAttributes<GridElement<TItem>>,
 ) => ReactElement | null;
 
-export { ForwardedGrid as Grid };
+const GridWithDefine = withDefine(ForwardedGrid);
+
+export { GridWithDefine as Grid };

@@ -55,8 +55,15 @@ function GridFilterColumn<TItem = GridDefaultItem>(
   );
 }
 
+function withDefine<T extends typeof GridFilterColumn>(component: T): T & { define: () => Promise<void> } {
+  Object.assign(component, { define: _GridFilterColumn.define });
+  return component as T & { define: () => Promise<void> };
+}
+
 const ForwardedGridFilterColumn = forwardRef(GridFilterColumn) as <TItem = GridDefaultItem>(
   props: GridFilterColumnProps<TItem> & RefAttributes<GridFilterColumnElement<TItem>>,
 ) => ReactElement | null;
 
-export { ForwardedGridFilterColumn as GridFilterColumn };
+const GridFilterColumnWithDefine = withDefine(ForwardedGridFilterColumn);
+
+export { GridFilterColumnWithDefine as GridFilterColumn };
