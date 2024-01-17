@@ -29,8 +29,15 @@ function ComboBoxLight<TItem = ComboBoxDefaultItem>(
   );
 }
 
+function withDefine<T extends typeof ComboBoxLight>(component: T): T & { define: () => Promise<void> } {
+  Object.assign(component, { define: _ComboBoxLight.define });
+  return component as T & { define: () => Promise<void> };
+}
+
 const ForwardedComboBoxLight = forwardRef(ComboBoxLight) as <TItem = ComboBoxDefaultItem>(
   props: ComboBoxLightProps<TItem> & RefAttributes<ComboBoxLightElement<TItem>>,
 ) => ReactElement | null;
 
-export { ForwardedComboBoxLight as ComboBoxLight };
+const ComboBoxLightWithDefine = withDefine(ForwardedComboBoxLight);
+
+export { ComboBoxLightWithDefine as ComboBoxLight };
