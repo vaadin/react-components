@@ -1,4 +1,10 @@
-import React, { forwardRef, type ForwardedRef, type ReactNode } from 'react';
+import React, {
+  forwardRef,
+  type ForwardedRef,
+  type ForwardRefExoticComponent,
+  type ReactNode,
+  type RefAttributes,
+} from 'react';
 import { Tab, type TabProps } from './Tab.js';
 import {
   TabSheet as _TabSheet,
@@ -96,7 +102,13 @@ function TabSheet(props: TabSheetProps, ref: ForwardedRef<TabSheetElement>) {
   );
 }
 
-const ForwardedTabSheet = forwardRef(TabSheet);
+const ForwardedTabSheet = forwardRef(TabSheet) as ForwardRefExoticComponent<
+  TabSheetProps & RefAttributes<TabSheetElement>
+> & {
+  define(): Promise<void>;
+};
+
+Object.assign(ForwardedTabSheet, { define: _TabSheet.define });
 
 export { ForwardedTabSheet as TabSheet };
 

@@ -21,6 +21,8 @@ async function until(predicate: () => boolean) {
 }
 
 describe('TabSheet', () => {
+  before(TabSheet.define);
+
   afterEach(() => cleanup());
 
   it('should render two tabs', async () => {
