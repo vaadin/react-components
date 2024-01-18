@@ -8,13 +8,7 @@ import {
 import type { GridRowDetailsReactRendererProps } from './renderers/grid.js';
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 
-// "@vaadin/grid/vaadin-grid.js" has additional re-exports from "grid-column.js"
-// for historical reasons. This exports "GridColumn" web component, which gets
-// suggested in React context, see https://github.com/vaadin/react-components/issues/68
-// Fix: use re-exports from raw "src/vaadin-grid.js" as a workaround, until
-// the re-export is removed.
-export * from '@vaadin/grid/src/vaadin-grid.js';
-export { GridElement, type GridEventMap } from './generated/Grid.js';
+export * from './generated/Grid.js';
 
 export type GridProps<TItem> = Partial<Omit<_GridProps<TItem>, 'rowDetailsRenderer'>> &
   Readonly<{
@@ -40,3 +34,15 @@ const ForwardedGrid = forwardRef(Grid) as <TItem = GridDefaultItem>(
 ) => ReactElement | null;
 
 export { ForwardedGrid as Grid };
+
+customElements.whenDefined('vaadin-grid').then(() => {
+  const gridProto = customElements.get('vaadin-grid')?.prototype;
+  const originalRecalculateColumnWidths = gridProto?._recalculateColumnWidths;
+  gridProto._recalculateColumnWidths = function (...args: any[]) {
+    // Multiple synchronous calls to the renderers using flushSync cause
+    // some of the renderers to be called asynchronously (see useRenderer.ts).
+    // To make sure all the column cell content is rendered before recalculating
+    // the column widths, we need to make _recalculateColumnWidths asynchronous.
+    queueMicrotask(() => originalRecalculateColumnWidths.call(this, ...args));
+  };
+});
