@@ -1,12 +1,14 @@
-import { BoardRow } from '../../src/BoardRow.js';
-import { HorizontalLayout } from '../../src/HorizontalLayout.js';
-import { Icon } from '../../src/Icon.js';
-import { Iconset } from '../../src/Iconset.js';
-import { LoginForm } from '../../src/LoginForm.js';
-import { LoginOverlay } from '../../src/LoginOverlay.js';
-import { MenuBar } from '../../src/MenuBar.js';
-import { Scroller } from '../../src/Scroller.js';
-import { VerticalLayout } from '../../src/VerticalLayout.js';
+import {
+  HorizontalLayout,
+  Icon,
+  Iconset,
+  LoginForm,
+  LoginOverlay,
+  MenuBar,
+  Scroller,
+  VerticalLayout,
+} from '@vaadin/react-components';
+import { BoardRow } from '@vaadin/react-components-pro';
 
 export default function Row6() {
   return (

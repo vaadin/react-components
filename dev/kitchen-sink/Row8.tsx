@@ -1,11 +1,5 @@
-import { BoardRow } from '../../src/BoardRow.js';
-import { Item } from '../../src/Item.js';
-import { ListBox } from '../../src/ListBox.js';
-import { RadioButton } from '../../src/RadioButton.js';
-import { RadioGroup } from '../../src/RadioGroup.js';
-import { RichTextEditor } from '../../src/RichTextEditor.js';
-import { Select } from '../../src/Select.js';
-import { Tooltip } from '../../src/Tooltip.js';
+import { Item, ListBox, RadioButton, RadioGroup, Select, Tooltip } from '@vaadin/react-components';
+import { BoardRow, RichTextEditor } from '@vaadin/react-components-pro';
 
 function SelectListBox() {
   return (

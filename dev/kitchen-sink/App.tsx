@@ -1,14 +1,7 @@
 import { useState } from 'react';
-import '../../css/lumo/Typography.css';
-import { AppLayout } from '../../src/AppLayout.js';
-import { Avatar } from '../../src/Avatar.js';
-import { Board } from '../../src/Board.js';
-import { Button } from '../../src/Button.js';
-import { DrawerToggle } from '../../src/DrawerToggle.js';
-import { Notification } from '../../src/Notification.js';
-import { Tab } from '../../src/Tab.js';
-import { Tabs } from '../../src/Tabs.js';
-import { TabSheet } from '../../src/TabSheet.js';
+import '@vaadin/react-components/css/lumo/Typography.css';
+import { AppLayout, Avatar, Button, DrawerToggle, Notification, Tab, Tabs } from '@vaadin/react-components';
+import { Board } from '@vaadin/react-components-pro';
 import { DialogComponent } from './DialogComponent.js';
 import Row1 from './Row1.js';
 import Row2 from './Row2.js';

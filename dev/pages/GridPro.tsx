@@ -1,6 +1,5 @@
-import { GridPro } from '../../src/GridPro.js';
-import { GridProEditColumn } from '../../src/GridProEditColumn.js';
-import { TextField } from '../../src/TextField.js';
+import { GridPro, GridProEditColumn } from '@vaadin/react-components-pro';
+import { TextField } from '@vaadin/react-components';
 
 type Item = {
   firstName: string;

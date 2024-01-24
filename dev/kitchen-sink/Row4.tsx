@@ -1,16 +1,18 @@
-import { BoardRow } from '../../src/BoardRow.js';
-import { CustomField } from '../../src/CustomField.js';
-import { DatePicker } from '../../src/DatePicker.js';
-import { DateTimePicker } from '../../src/DateTimePicker.js';
-import { Details } from '../../src/Details.js';
-import { DetailsSummary } from '../../src/DetailsSummary.js';
-import { FormItem } from '../../src/FormItem.js';
-import { FormLayout } from '../../src/FormLayout.js';
-import { IntegerField } from '../../src/IntegerField.js';
-import { NumberField } from '../../src/NumberField.js';
-import { PasswordField } from '../../src/PasswordField.js';
-import { TextField } from '../../src/TextField.js';
-import { TimePicker } from '../../src/TimePicker.js';
+import {
+  CustomField,
+  DatePicker,
+  DateTimePicker,
+  Details,
+  DetailsSummary,
+  FormItem,
+  FormLayout,
+  IntegerField,
+  NumberField,
+  PasswordField,
+  TextField,
+  TimePicker,
+} from '@vaadin/react-components';
+import { BoardRow } from '@vaadin/react-components-pro';
 
 export default function Row4() {
   return (

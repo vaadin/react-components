@@ -1,7 +1,5 @@
-import { BoardRow } from '../../src/BoardRow.js';
-import { Tab } from '../../src/Tab.js';
-import { Tabs } from '../../src/Tabs.js';
-import { tab, TabSheet } from '../../src/TabSheet.js';
+import { Tab, Tabs, tab, TabSheet } from '@vaadin/react-components';
+import { BoardRow } from '@vaadin/react-components-pro';
 
 export default function Row10() {
   return (

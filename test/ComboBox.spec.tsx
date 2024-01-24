@@ -1,7 +1,7 @@
 import { expect, use as useChaiPlugin } from '@esm-bundle/chai';
 import { cleanup, render } from '@testing-library/react/pure.js';
 import chaiDom from 'chai-dom';
-import { ComboBox, type ComboBoxElement } from '../src/ComboBox.js';
+import { ComboBox, type ComboBoxElement } from '@vaadin/react-components';
 import createOverlayCloseCatcher from './utils/createOverlayCloseCatcher.js';
 
 useChaiPlugin(chaiDom);

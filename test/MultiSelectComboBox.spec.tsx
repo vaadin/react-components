@@ -1,7 +1,7 @@
 import { expect, use as useChaiPlugin } from '@esm-bundle/chai';
 import { cleanup, render } from '@testing-library/react/pure.js';
 import chaiDom from 'chai-dom';
-import { MultiSelectComboBox, type MultiSelectComboBoxElement } from '../src/MultiSelectComboBox.js';
+import { MultiSelectComboBox, type MultiSelectComboBoxElement } from '@vaadin/react-components';
 import createOverlayCloseCatcher from './utils/createOverlayCloseCatcher.js';
 
 useChaiPlugin(chaiDom);

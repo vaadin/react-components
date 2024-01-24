@@ -1,20 +1,25 @@
 import { expect, use as useChaiPlugin } from '@esm-bundle/chai';
 import chaiDom from 'chai-dom';
 import { cleanup, render } from '@testing-library/react/pure.js';
-import { Grid, type GridDataProvider } from '../src/Grid.js';
-import { GridColumn, GridColumnElement } from '../src/GridColumn.js';
-import { GridFilterColumn } from '../src/GridFilterColumn.js';
-import { GridProEditColumn } from '../src/GridProEditColumn.js';
-import { GridSelectionColumn } from '../src/GridSelectionColumn.js';
-import { GridSortColumn } from '../src/GridSortColumn.js';
-import { GridTreeColumn } from '../src/GridTreeColumn.js';
-import type { GridBodyReactRendererProps } from '../src/renderers/grid.js';
 import catchRender from './utils/catchRender.js';
-import { GridColumnGroup } from '../src/GridColumnGroup.js';
+import {
+  Grid,
+  GridColumn,
+  GridColumnGroup,
+  GridFilterColumn,
+  GridSelectionColumn,
+  GridSortColumn,
+  GridTreeColumn,
+  type GridDataProvider,
+  type GridColumnProps,
+  type GridColumnElement,
+} from '@vaadin/react-components';
+import { GridPro, GridProEditColumn } from '@vaadin/react-components-pro';
 import { findByQuerySelector } from './utils/findByQuerySelector.js';
-import { GridPro } from '../src/GridPro.js';
 import { useEffect, useState } from 'react';
 import sinon from 'sinon';
+
+type GridColumnRenderer<TItem> = GridColumnProps<TItem>['renderer'];
 
 useChaiPlugin(chaiDom);
 
@@ -51,9 +56,9 @@ describe('Grid', () => {
     return <>Name Footer</>;
   }
 
-  function DefaultBodyRenderer({ item }: GridBodyReactRendererProps<Item>) {
+  const DefaultBodyRenderer: GridColumnRenderer<Item> = ({ item }) => {
     return <>{item.name}</>;
-  }
+  };
 
   function isGridCellContentNodeRendered(node: Node) {
     return (

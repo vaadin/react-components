@@ -1,14 +1,14 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "packages/react-components",
+    "outDir": "packages/react-components-pro",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "noEmit": false,
     "emitDeclarationOnly": true
   },
   "include": [
-    "packages/react-components/src",
+    "packages/react-components-pro/src",
   ],
   "exclude": [
     "node_modules",

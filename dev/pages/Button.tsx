@@ -1,5 +1,4 @@
-import { Button } from '../../src/Button.js';
-import { Tooltip } from '../../src/Tooltip.js';
+import { Button, Tooltip } from '@vaadin/react-components';
 
 export default function () {
   return (

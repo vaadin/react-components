@@ -1,5 +1,4 @@
-import { ContextMenu } from '../../src/ContextMenu.js';
-import { Icon } from '../../src/Icon.js';
+import { ContextMenu, Icon } from '@vaadin/react-components';
 import '@vaadin/icons';
 
 const items = [

@@ -1,15 +1,18 @@
 import type { CSSProperties } from 'react';
-import { TextField } from '../../src/TextField.js';
-import { BoardRow } from '../../src/BoardRow.js';
-import { Grid, type GridDataProvider } from '../../src/Grid.js';
-import { GridColumn } from '../../src/GridColumn.js';
-import { GridColumnGroup } from '../../src/GridColumnGroup.js';
-import { GridFilterColumn } from '../../src/GridFilterColumn.js';
-import { GridPro } from '../../src/GridPro.js';
-import { GridProEditColumn } from '../../src/GridProEditColumn.js';
-import { GridSortColumn } from '../../src/GridSortColumn.js';
-import { GridTreeColumn } from '../../src/GridTreeColumn.js';
-import type { GridBodyReactRendererProps } from '../../src/renderers/grid.js';
+import {
+  TextField,
+  Grid,
+  GridColumn,
+  GridColumnGroup,
+  GridFilterColumn,
+  GridSortColumn,
+  GridTreeColumn,
+  type GridColumnProps,
+  type GridDataProvider,
+} from '@vaadin/react-components';
+import { BoardRow, GridPro, GridProEditColumn } from '@vaadin/react-components-pro';
+type GridColumnRenderer<TItem> = GridColumnProps<TItem>['renderer'];
+
 import { crudData, type CrudDataItem } from './data.js';
 
 type TreeGridDataItem = {
@@ -45,14 +48,14 @@ const treeGridData: TreeGridDataItem[] = [
   })),
 ];
 
-function NameRenderer({ item: { name } }: GridBodyReactRendererProps<TreeGridDataItem>) {
+const NameRenderer: GridColumnRenderer<TreeGridDataItem> = ({ item: { name } }) => {
   const [typePart, numberPart] = name.split(' ');
   return (
     <>
       <b>{typePart}</b>: {numberPart}
     </>
   );
-}
+};
 
 const TreeGridDataProvider: GridDataProvider<TreeGridDataItem> = (params, callback) => {
   const items = params.parentItem ? params.parentItem.children || [] : treeGridData;
@@ -62,9 +65,9 @@ const TreeGridDataProvider: GridDataProvider<TreeGridDataItem> = (params, callba
 
 const displayColor: CSSProperties = { color: 'blueviolet' };
 
-function Display({ item: { name } }: GridBodyReactRendererProps<CrudDataItem>) {
+const Display: GridColumnRenderer<CrudDataItem> = ({ item: { name } }) => {
   return <div style={displayColor}>{name}</div>;
-}
+};
 
 export default function Row5() {
   return (

@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
+import { packageURL } from './utils/config.js';
 
-const root = new URL('../', import.meta.url);
-const generated = new URL('generated/', root);
+const rootGeneratedURL = new URL('./generated/', packageURL);
 
 /**
  * This function validates that the generated TypeScript definition file for a component
@@ -15,7 +15,7 @@ const generated = new URL('generated/', root);
  * @throws {Error} If the generated file contains any of the inherited properties.
  */
 async function validateInheritedProperties() {
-  const typeDefinitionContent = await readFile(new URL('Checkbox.d.ts', generated), 'utf8');
+  const typeDefinitionContent = await readFile(new URL('Checkbox.d.ts', rootGeneratedURL), 'utf8');
 
   // Expect the generated file not to contain definitions for properties that are inherited.
   const inheritedProperties = [

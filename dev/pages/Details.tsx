@@ -1,4 +1,4 @@
-import { Details } from '../../src/Details.js';
+import { Details } from '@vaadin/react-components';
 
 export default function () {
   return (

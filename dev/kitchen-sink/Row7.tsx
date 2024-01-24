@@ -1,7 +1,5 @@
-import { BoardRow } from '../../src/BoardRow.js';
-import { Message } from '../../src/Message.js';
-import { MessageInput } from '../../src/MessageInput.js';
-import { MessageList } from '../../src/MessageList.js';
+import { Message, MessageInput, MessageList } from '@vaadin/react-components';
+import { BoardRow } from '@vaadin/react-components-pro';
 
 export default function Row7() {
   return (

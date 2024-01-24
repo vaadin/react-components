@@ -6,31 +6,59 @@ import React, {
   type ReactNode,
   type RefAttributes,
 } from 'react';
-import { TextField, TextFieldElement } from '../../src/TextField.js';
 import type { LitElement } from 'lit';
-import { GridColumn, GridColumnElement } from '../../src/GridColumn.js';
-import { GridTreeColumn } from '../../src/GridTreeColumn.js';
-import { GridSortColumn } from '../../src/GridSortColumn.js';
-import { GridFilterColumn } from '../../src/GridFilterColumn.js';
-import { GridSelectionColumn } from '../../src/GridSelectionColumn.js';
-import { GridProEditColumn } from '../../src/GridProEditColumn.js';
-import { GridColumnGroup, GridColumnGroupElement } from '../../src/GridColumnGroup.js';
-import { ChartSeries, ChartSeriesElement } from '../../src/ChartSeries.js';
-import { ConfirmDialog, ConfirmDialogElement } from '../../src/ConfirmDialog.js';
-import { CookieConsent, CookieConsentElement } from '../../src/CookieConsent.js';
-import { Dialog, DialogElement } from '../../src/Dialog.js';
-import { DatePicker, DatePickerElement } from '../../src/DatePicker.js';
-import { LoginOverlay, LoginOverlayElement } from '../../src/LoginOverlay.js';
-import { Notification, NotificationElement } from '../../src/Notification.js';
-import { TimePicker, type TimePickerChangeEvent } from '../../src/TimePicker.js';
-import { TextArea, TextAreaElement, type TextAreaChangeEvent } from '../../src/TextArea.js';
-import { MessageInput, MessageInputElement, type MessageInputSubmitEvent } from '../../src/MessageInput.js';
-import { ComboBox, type ComboBoxChangeEvent } from '../../src/ComboBox.js';
-import { ContextMenu, type ContextMenuItem, type ContextMenuItemSelectedEvent } from '../../src/ContextMenu.js';
-import { MenuBar, type MenuBarItem, type MenuBarItemSelectedEvent } from '../../src/MenuBar.js';
-import type { SubMenuItem } from '../../src/MenuBar.js';
-import { TabSheet, TabSheetElement, TabSheetTab } from '../../src/TabSheet.js';
-import type { TabElement } from '../../src/Tab.js';
+
+import {
+  TextField,
+  TextFieldElement,
+  GridColumn,
+  GridColumnElement,
+  GridTreeColumn,
+  GridSortColumn,
+  GridFilterColumn,
+  GridSelectionColumn,
+  GridColumnGroup,
+  GridColumnGroupElement,
+  ConfirmDialog,
+  ConfirmDialogElement,
+  Dialog,
+  DialogElement,
+  DatePicker,
+  DatePickerElement,
+  LoginOverlay,
+  LoginOverlayElement,
+  Notification,
+  NotificationElement,
+  TimePicker,
+  TextArea,
+  TextAreaElement,
+  MessageInput,
+  MessageInputElement,
+  ComboBox,
+  ContextMenu,
+  MenuBar,
+  TabSheet,
+  TabSheetElement,
+  TabSheetTab,
+  type ComboBoxChangeEvent,
+  type MessageInputSubmitEvent,
+  type TextAreaChangeEvent,
+  type TimePickerChangeEvent,
+  type ContextMenuItem,
+  type ContextMenuItemSelectedEvent,
+  type MenuBarItem,
+  type SubMenuItem,
+  type MenuBarItemSelectedEvent,
+  type TabElement,
+} from '@vaadin/react-components';
+
+import {
+  GridProEditColumn,
+  ChartSeries,
+  ChartSeriesElement,
+  CookieConsent,
+  CookieConsentElement,
+} from '@vaadin/react-components-pro';
 
 const assertType = <TExpected>(value: TExpected) => value;
 const assertOmitted = <C, T>(prop: keyof Omit<C, keyof T>) => prop;
