@@ -5,11 +5,9 @@
   "version": "24.4.0-alpha7",
   "private": true,
   "scripts": {
-    "build": "npm run build:react-components && npm run build:react-components-pro",
-    "build:react-components": "cross-env PACKAGE=react-components npm run build:all",
-    "build:react-components-pro": "cross-env PACKAGE=react-components-pro npm run build:pro",
+    "build": "cross-env PACKAGE=react-components npm run build:core && cross-env PACKAGE=react-components-pro npm run build:pro",
+    "build:core": "npm run build:dev && npm run build:code && npm run build:update-packagejson",
     "build:pro": "npm run build:generate && npm run build:code && npm run build:pro:dts && npm run build:update-packagejson",
-    "build:all": "npm run build:dev && npm run build:code && npm run build:update-packagejson",
     "build:dev": "npm run build:load-schema && npm run build:generate && npm run build:generate-css",
     "build:load-schema": "tsx scripts/schema-loader.ts",
     "build:generate": "tsx scripts/generator.ts",
