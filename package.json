@@ -2,6 +2,7 @@
   "name": "react-components-workspace",
   "description": "Workspace for React wrappers for Vaadin components",
   "type": "module",
+  "version": "24.4.0-alpha7",
   "private": true,
   "scripts": {
     "build": "npm run build:react-components && npm run build:react-components-pro",
