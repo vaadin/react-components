@@ -1,18 +1,15 @@
 import type { CSSProperties } from 'react';
-import {
-  TextField,
-  Grid,
-  GridColumn,
-  GridColumnGroup,
-  GridFilterColumn,
-  GridSortColumn,
-  GridTreeColumn,
-  type GridColumnProps,
-  type GridDataProvider,
-} from '@vaadin/react-components';
-import { BoardRow, GridPro, GridProEditColumn } from '@vaadin/react-components-pro';
-type GridColumnRenderer<TItem> = GridColumnProps<TItem>['renderer'];
-
+import { TextField } from '../../packages/react-components/src/TextField.js';
+import { BoardRow } from '../../packages/react-components-pro/src/BoardRow.js';
+import { Grid, type GridDataProvider } from '../../packages/react-components/src/Grid.js';
+import { GridColumn } from '../../packages/react-components/src/GridColumn.js';
+import { GridColumnGroup } from '../../packages/react-components/src/GridColumnGroup.js';
+import { GridFilterColumn } from '../../packages/react-components/src/GridFilterColumn.js';
+import { GridPro } from '../../packages/react-components-pro/src/GridPro.js';
+import { GridProEditColumn } from '../../packages/react-components-pro/src/GridProEditColumn.js';
+import { GridSortColumn } from '../../packages/react-components/src/GridSortColumn.js';
+import { GridTreeColumn } from '../../packages/react-components/src/GridTreeColumn.js';
+import type { GridBodyReactRendererProps } from '../../packages/react-components/src/renderers/grid.js';
 import { crudData, type CrudDataItem } from './data.js';
 
 type TreeGridDataItem = {
@@ -48,14 +45,14 @@ const treeGridData: TreeGridDataItem[] = [
   })),
 ];
 
-const NameRenderer: GridColumnRenderer<TreeGridDataItem> = ({ item: { name } }) => {
+function NameRenderer({ item: { name } }: GridBodyReactRendererProps<TreeGridDataItem>) {
   const [typePart, numberPart] = name.split(' ');
   return (
     <>
       <b>{typePart}</b>: {numberPart}
     </>
   );
-};
+}
 
 const TreeGridDataProvider: GridDataProvider<TreeGridDataItem> = (params, callback) => {
   const items = params.parentItem ? params.parentItem.children || [] : treeGridData;
@@ -65,9 +62,9 @@ const TreeGridDataProvider: GridDataProvider<TreeGridDataItem> = (params, callba
 
 const displayColor: CSSProperties = { color: 'blueviolet' };
 
-const Display: GridColumnRenderer<CrudDataItem> = ({ item: { name } }) => {
+function Display({ item: { name } }: GridBodyReactRendererProps<CrudDataItem>) {
   return <div style={displayColor}>{name}</div>;
-};
+}
 
 export default function Row5() {
   return (

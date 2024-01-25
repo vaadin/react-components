@@ -1,12 +1,12 @@
-import {
-  SideNav,
-  SideNavItem,
-  Accordion,
-  AccordionHeading,
-  AccordionPanel,
-  AvatarGroup,
-} from '@vaadin/react-components';
-import { Chart, ChartSeries, BoardRow } from '@vaadin/react-components-pro';
+import { SideNav } from '../../packages/react-components/src/SideNav.js';
+import { SideNavItem } from '../../packages/react-components/src/SideNavItem.js';
+import { Accordion } from '../../packages/react-components/src/Accordion.js';
+import { AccordionHeading } from '../../packages/react-components/src/AccordionHeading.js';
+import { AccordionPanel } from '../../packages/react-components/src/AccordionPanel.js';
+import { AvatarGroup } from '../../packages/react-components/src/AvatarGroup.js';
+import { BoardRow } from '../../packages/react-components-pro/src/BoardRow.js';
+import { Chart } from '../../packages/react-components-pro/src/Chart.js';
+import { ChartSeries } from '../../packages/react-components-pro/src/ChartSeries.js';
 
 export default function Row1() {
   return (

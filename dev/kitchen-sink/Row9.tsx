@@ -1,12 +1,9 @@
-import {
-  SplitLayout,
-  TextArea,
-  Tooltip,
-  Upload,
-  VirtualList,
-  type VirtualListReactRendererProps,
-} from '@vaadin/react-components';
-import { BoardRow } from '@vaadin/react-components-pro';
+import { BoardRow } from '../../packages/react-components-pro/src/BoardRow.js';
+import { SplitLayout } from '../../packages/react-components/src/SplitLayout.js';
+import { TextArea } from '../../packages/react-components/src/TextArea.js';
+import { Tooltip } from '../../packages/react-components/src/Tooltip.js';
+import { Upload } from '../../packages/react-components/src/Upload.js';
+import { VirtualList, type VirtualListReactRendererProps } from '../../packages/react-components/src/VirtualList.js';
 
 type Item = Readonly<{ value: string; index: number }>;
 

@@ -1,4 +1,5 @@
-import { Icon, TabSheet, TabSheetTab } from '@vaadin/react-components';
+import { Icon } from '../../packages/react-components/src/Icon.js';
+import { TabSheet, TabSheetTab } from '../../packages/react-components/src/TabSheet.js';
 import '@vaadin/icons';
 
 export default function () {

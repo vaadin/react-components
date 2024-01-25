@@ -3,12 +3,12 @@ import { cleanup, render } from '@testing-library/react/pure.js';
 import chaiDom from 'chai-dom';
 import {
   ContextMenu,
-  Item,
-  ListBox,
   type ContextMenuElement,
   type ContextMenuItem,
   type ContextMenuReactRendererProps,
-} from '@vaadin/react-components';
+} from '../packages/react-components/src/ContextMenu.js';
+import { Item } from '../packages/react-components/src/Item.js';
+import { ListBox } from '../packages/react-components/src/ListBox.js';
 import catchRender from './utils/catchRender.js';
 import createOverlayCloseCatcher from './utils/createOverlayCloseCatcher.js';
 import sinon from 'sinon';

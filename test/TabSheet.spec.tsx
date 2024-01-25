@@ -1,7 +1,8 @@
 import { expect } from '@esm-bundle/chai';
 import { cleanup, render } from '@testing-library/react/pure.js';
 
-import { TabSheet, TabSheetTab, tab, type TabElement } from '@vaadin/react-components';
+import { TabSheet, TabSheetTab, tab } from '../packages/react-components/src/TabSheet.js';
+import type { TabElement } from '../packages/react-components/src/Tab.js';
 import sinon from 'sinon';
 import { useState } from 'react';
 

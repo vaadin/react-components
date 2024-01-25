@@ -1,5 +1,13 @@
-import { Checkbox, ComboBox, ContextMenu, FormLayout, Item, ListBox, TextField } from '@vaadin/react-components';
-import { BoardRow, CookieConsent, Crud, crudPath } from '@vaadin/react-components-pro';
+import { BoardRow } from '../../packages/react-components-pro/src/BoardRow.js';
+import { Checkbox } from '../../packages/react-components/src/Checkbox.js';
+import { ComboBox } from '../../packages/react-components/src/ComboBox.js';
+import { ContextMenu } from '../../packages/react-components/src/ContextMenu.js';
+import { CookieConsent } from '../../packages/react-components-pro/src/CookieConsent.js';
+import { Crud, crudPath } from '../../packages/react-components-pro/src/Crud.js';
+import { FormLayout } from '../../packages/react-components/src/FormLayout.js';
+import { Item } from '../../packages/react-components/src/Item.js';
+import { ListBox } from '../../packages/react-components/src/ListBox.js';
+import { TextField } from '../../packages/react-components/src/TextField.js';
 import { CrudRole, crudData } from './data.js';
 
 const menuItems = [{ text: 'Edit' }, { text: 'Delete' }];

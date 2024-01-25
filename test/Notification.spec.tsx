@@ -1,7 +1,7 @@
 import { expect, use as useChaiPlugin } from '@esm-bundle/chai';
 import { cleanup, render } from '@testing-library/react/pure.js';
 import chaiDom from 'chai-dom';
-import { Notification, type NotificationElement } from '@vaadin/react-components';
+import { Notification, type NotificationElement } from '../packages/react-components/src/Notification.js';
 import createOverlayCloseCatcher from './utils/createOverlayCloseCatcher.js';
 
 useChaiPlugin(chaiDom);
