@@ -1,6 +1,9 @@
 {
   "name": "@vaadin/react-components-pro",
   "version": "24.4.0-alpha8",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "React wrappers for commercial Vaadin components",
   "type": "module",
   "module": "index.js",
