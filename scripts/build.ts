@@ -4,9 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { build, type Plugin } from 'esbuild';
 import { glob } from 'glob';
 import type { PackageJson } from 'type-fest';
-import { isPro, rootURL, packageURL, srcURL, generatedURL } from './utils/config.js';
-
-const tsconfigFile = isPro ? 'tsconfig-pro.build.json' : 'tsconfig.build.json';
+import { packageURL, srcURL, generatedURL } from './utils/config.js';
 
 const packageJson: PackageJson = await readFile(new URL('package.json', packageURL), 'utf8').then(JSON.parse);
 
@@ -67,7 +65,7 @@ const commonOptions = {
   sourcemap: 'linked',
   sourcesContent: true,
   target: 'es2021',
-  tsconfig: fileURLToPath(new URL(`./${tsconfigFile}`, rootURL)),
+  tsconfig: fileURLToPath(new URL('./tsconfig.build.json', packageURL)),
 } as const;
 
 const [componentEntryPoints, utilsEntryPoints] = await Promise.all([

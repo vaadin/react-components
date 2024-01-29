@@ -1,7 +1,8 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { basename, extname, relative, resolve, sep } from 'node:path';
+import { existsSync } from 'node:fs';
 import type { PackageJson } from 'type-fest';
-import { packageDir, srcDir, isPro } from './utils/config.js';
+import { packageDir, srcDir } from './utils/config.js';
 import fromAsync from './utils/fromAsync.js';
 import { fswalk } from './utils/fswalk.js';
 
@@ -56,10 +57,10 @@ Object.assign(
   ),
 );
 
-if (!isPro) {
-  // Add css file entries
-  const outCssDir = resolve(packageDir, 'css');
+// Add css file entries
 
+const outCssDir = resolve(packageDir, 'css');
+if (existsSync(outCssDir)) {
   Object.assign(
     exports,
     Object.fromEntries(
@@ -72,9 +73,11 @@ if (!isPro) {
       ).sort(compareExportsPaths),
     ),
   );
+}
 
-  // Add utils entries
-  const outUtilsDir = resolve(packageDir, 'utils');
+// Add utils entries
+const outUtilsDir = resolve(packageDir, 'utils');
+if (existsSync(outUtilsDir)) {
   Object.assign(
     exports,
     Object.fromEntries(
@@ -87,9 +90,11 @@ if (!isPro) {
       ).sort(compareExportsPaths),
     ),
   );
+}
 
-  // Add renderers entries
-  const outRenderersDir = resolve(packageDir, 'renderers');
+// Add renderers entries
+const outRenderersDir = resolve(packageDir, 'renderers');
+if (existsSync(outRenderersDir)) {
   Object.assign(
     exports,
     Object.fromEntries(

@@ -4,20 +4,8 @@
   "version": "24.4.0-alpha8",
   "private": true,
   "scripts": {
-    "build": "cross-env PACKAGE=react-components npm run build:core && cross-env PACKAGE=react-components-pro npm run build:pro",
-    "build:core": "npm run build:dev && npm run build:code && npm run build:update-packagejson",
-    "build:pro": "npm run build:generate && npm run build:code && npm run build:pro:dts && npm run build:update-packagejson",
-    "build:dev": "npm run build:load-schema && npm run build:generate && npm run build:generate-css",
+    "build": "npm run build:load-schema && npm run build -w packages/react-components && npm run build -w packages/react-components-pro",
     "build:load-schema": "tsx scripts/schema-loader.ts",
-    "build:generate": "tsx scripts/generator.ts",
-    "build:generate-css": "tsx --experimental-vm-modules scripts/css-generator.ts",
-    "build:generate-stubs": "tsx scripts/stub-generator.ts",
-    "build:update-packagejson": "tsx scripts/package-json-update.ts",
-    "build:code": "concurrently npm:build:code:*",
-    "build:code:ts": "tsx scripts/build.ts",
-    "build:code:dts": "tsc -p tsconfig.build.json",
-    "build:code:copy-dts": "tsx scripts/copy-dts.ts",
-    "build:pro:dts": "tsc -p tsconfig-pro.build.json",
     "clean": "git clean -dXf -e !.vscode -e !.vscode/** -e !.idea -e !.idea/** -e !node_modules -e !node_modules/**",
     "clean:dev": "git clean -dXf -e .vscode -e .vscode/** -e !.idea -e !.idea/** -e !node_modules -e !node_modules/** -e !src/generated -e !css",
     "start": "npm run dev",
@@ -31,7 +19,7 @@
     "validate:types": "tsc --noEmit",
     "validate:prettier": "prettier -c scripts packages/**/src/*.ts packages/**/src/{utils,renderers}/*.ts test types karma.config.cjs vite.config.ts",
     "validate:build": "tsx scripts/validate-build.ts",
-    "version": "tsx scripts/package-json-version.ts && npm install --package-lock-only --ignore-scripts"
+    "version": "npm run version -ws && npm install --package-lock-only --ignore-scripts"
   },
   "repository": {
     "type": "git",
@@ -57,7 +45,6 @@
     "chai-as-promised": "^7.1.1",
     "chai-dom": "^1.11.0",
     "concurrently": "^8.2.0",
-    "cross-env": "^7.0.3",
     "esbuild": "^0.18.2",
     "glob": "^10.2.7",
     "json-schema-to-typescript": "^13.0.2",

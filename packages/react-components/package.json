@@ -13,6 +13,18 @@
     "type": "git",
     "url": "github.com/vaadin/react-components"
   },
+  "scripts": {
+    "build": "npm run build:dev && npm run build:code && npm run build:update-packagejson",
+    "build:dev": "npm run build:generate && npm run build:generate-css",
+    "build:generate": "tsx ../../scripts/generator.ts",
+    "build:generate-css": "tsx --experimental-vm-modules ../../scripts/css-generator.ts",
+    "build:update-packagejson": "tsx ../../scripts/package-json-update.ts",
+    "build:code": "concurrently npm:build:code:*",
+    "build:code:ts": "tsx ../../scripts/build.ts",
+    "build:code:dts": "tsc -p tsconfig.build.json",
+    "build:code:copy-dts": "tsx ../../scripts/copy-dts.ts",
+    "version": "tsx ../../scripts/package-json-version.ts"
+  },
   "dependencies": {
     "@lit/react": "^1.0.0",
     "@vaadin/a11y-base": "24.4.0-alpha8",
