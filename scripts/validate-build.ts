@@ -41,7 +41,7 @@ async function validateInheritedProperties() {
 }
 
 /**
- * This function validates that the generated directory exists.
+ * Validates that the generated directory exists.
  */
 async function hasGeneratedDir() {
   [proPackage, corePackage].forEach((packageName) => {
@@ -52,12 +52,25 @@ async function hasGeneratedDir() {
 }
 
 /**
- * This function validates that the pro package does not have css dir.
+ * Validates that the pro package does not have css dir and the core package does.
  */
 async function hasNoCssDir() {
   if (existsSync(resolve(packagesDir, proPackage, 'css'))) {
-    throw new Error(`The pro package should not have css dir.`);
+    throw new Error(`The css directory should not exist in the pro package.`);
+  }
+
+  if (!existsSync(resolve(packagesDir, corePackage, 'css'))) {
+    throw new Error(`The css directory does not exist in the core package.`);
   }
 }
 
-await Promise.all([validateInheritedProperties(), hasGeneratedDir(), hasNoCssDir()]);
+/**
+ * Validates that TS definition files have been copied (build:code:copy-dts has been run)
+ */
+async function hasCopiedDts() {
+  if (!existsSync(resolve(packagesDir, corePackage, 'renderers', 'grid.d.ts'))) {
+    throw new Error(`The renderers/grid.d.ts file does not exist.`);
+  }
+}
+
+await Promise.all([validateInheritedProperties(), hasGeneratedDir(), hasNoCssDir(), hasCopiedDts()]);
