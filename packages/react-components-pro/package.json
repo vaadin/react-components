@@ -22,7 +22,6 @@
     "build:code:ts": "tsx ../../scripts/build.ts",
     "build:code:dts": "tsc -p tsconfig.build.json",
     "build:code:copy-dts": "tsx ../../scripts/copy-dts.ts",
-    "prepare": "npm run build",
     "version": "tsx ../../scripts/package-json-version.ts"
   },
   "dependencies": {
