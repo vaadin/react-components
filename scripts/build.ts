@@ -1,10 +1,11 @@
-import { basename, dirname, extname } from 'node:path';
-import { readFile } from 'node:fs/promises';
+import { basename, dirname, extname, resolve } from 'node:path';
+import { readFile, rename, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { build, type Plugin } from 'esbuild';
 import { glob } from 'glob';
 import type { PackageJson } from 'type-fest';
-import { packageURL, srcURL, generatedURL } from './utils/config.js';
+import { packageURL, srcURL, generatedURL, packageDir } from './utils/config.js';
+import { exists } from './utils/misc.js';
 
 const packageJson: PackageJson = await readFile(new URL('package.json', packageURL), 'utf8').then(JSON.parse);
 
@@ -86,3 +87,18 @@ await Promise.all([
     entryPoints: utilsEntryPoints,
   }),
 ]);
+
+// FIXME: For some reason, /src/utils gets generated on root level in react-components-pro!
+// As a workaround, manually move the files to the correct location.
+const utilsDir = resolve(packageDir, 'utils');
+if (!(await exists(utilsDir))) {
+  await mkdir(utilsDir);
+}
+// Find files under packageDir that are named createComponent.*
+const files = await glob('createComponent.*', { cwd: packageDir });
+// Move them to utilsDir
+await Promise.all(
+  files.map((file) => {
+    return rename(resolve(packageDir, file), resolve(utilsDir, file));
+  }),
+);
