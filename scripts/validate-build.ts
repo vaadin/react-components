@@ -73,4 +73,23 @@ async function hasCopiedDts() {
   }
 }
 
-await Promise.all([validateInheritedProperties(), hasGeneratedDir(), hasNoCssDir(), hasCopiedDts()]);
+/**
+ * Validates that the components have /utils/createComponent.js file
+ */
+async function hasCreateComponent() {
+  if (!existsSync(resolve(packagesDir, corePackage, 'utils', 'createComponent.js'))) {
+    throw new Error(`The utils/createComponent.js file does not exist in the core package.`);
+  }
+
+  if (!existsSync(resolve(packagesDir, proPackage, 'utils', 'createComponent.js'))) {
+    throw new Error(`The utils/createComponent.js file does not exist in the pro package.`);
+  }
+}
+
+await Promise.all([
+  validateInheritedProperties(),
+  hasGeneratedDir(),
+  hasNoCssDir(),
+  hasCopiedDts(),
+  hasCreateComponent(),
+]);
