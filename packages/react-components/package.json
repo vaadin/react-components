@@ -95,18 +95,8 @@
   "author": "Vaadin Ltd.",
   "license": "(Apache-2.0 OR SEE LICENSE IN https://vaadin.com/commercial-license-and-service-terms)",
   "peerDependencies": {
-    "@types/react": "^18.2.37",
-    "@types/react-dom": "^18.2.15",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
-  },
-  "peerDependenciesMeta": {
-    "@types/react": {
-      "optional": true
-    },
-    "@types/react-dom": {
-      "optional": true
-    }
   },
   "sideEffects": false,
   "files": [
