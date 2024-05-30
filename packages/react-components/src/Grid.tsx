@@ -1,4 +1,11 @@
-import { type ComponentType, type ForwardedRef, forwardRef, type ReactElement, type RefAttributes } from 'react';
+import {
+  type ComponentType,
+  type ForwardedRef,
+  forwardRef,
+  type ReactElement,
+  type RefAttributes,
+  type ReactNode,
+} from 'react';
 import {
   Grid as _Grid,
   type GridDefaultItem,
@@ -13,6 +20,7 @@ export * from './generated/Grid.js';
 export type GridProps<TItem> = Partial<Omit<_GridProps<TItem>, 'rowDetailsRenderer'>> &
   Readonly<{
     rowDetailsRenderer?: ComponentType<GridRowDetailsReactRendererProps<TItem>> | null;
+    emptyState?: ReactNode;
   }>;
 
 function Grid<TItem = GridDefaultItem>(
@@ -25,6 +33,8 @@ function Grid<TItem = GridDefaultItem>(
     <_Grid<TItem> {...props} ref={ref} rowDetailsRenderer={rowDetailsRenderer}>
       {props.children}
       {portals}
+
+      {props.emptyState && <div slot="empty-state">{props.emptyState}</div>}
     </_Grid>
   );
 }

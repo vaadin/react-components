@@ -615,4 +615,44 @@ describe('Grid', () => {
       expect(treeFooterCell).to.have.text('Name Footer');
     });
   });
+
+  describe('empty state', () => {
+    it('should not render empty state content by default', async () => {
+      render(
+        <Grid>
+          <GridColumn path="name"></GridColumn>
+        </Grid>,
+      );
+
+      const grid = await findByQuerySelector('vaadin-grid');
+      const emptyState = grid.querySelector('[slot="empty-state"]');
+      expect(emptyState).not.to.exist;
+    });
+
+    it('should render empty state content', async () => {
+      render(
+        <Grid emptyState="No items">
+          <GridColumn path="name"></GridColumn>
+        </Grid>,
+      );
+
+      const grid = await findByQuerySelector('vaadin-grid');
+      const emptyState = grid.querySelector('[slot="empty-state"]');
+      expect(emptyState).to.exist;
+      expect(emptyState).to.have.text('No items');
+    });
+
+    it('should render empty state component', async () => {
+      render(
+        <Grid emptyState={<div>No items</div>}>
+          <GridColumn path="name"></GridColumn>
+        </Grid>,
+      );
+
+      const grid = await findByQuerySelector('vaadin-grid');
+      const emptyState = grid.querySelector('[slot="empty-state"]');
+      expect(emptyState).to.exist;
+      expect(emptyState).to.have.text('No items');
+    });
+  });
 });
