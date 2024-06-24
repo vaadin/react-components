@@ -68,5 +68,8 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "react": "^19.0.0-rc-3563387fe3-20240621"
+  }
 }
