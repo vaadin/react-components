@@ -74,7 +74,7 @@ describe('MenuBar', () => {
     const menuBar = container.querySelector('vaadin-menu-bar')!;
     await until(() => !!menuBar.querySelector(`${menuButtonTag}:not([slot])`));
 
-    const rootItems:HTMLElement[] = Array.from(menuBar.querySelectorAll(menuButtonTag));
+    const rootItems: HTMLElement[] = Array.from(menuBar.querySelectorAll(menuButtonTag));
     rootItems[0].click();
     rootItems[1].click();
 
