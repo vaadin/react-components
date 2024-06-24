@@ -72,6 +72,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "@testing-library/dom": "^10.2.0",
     "react": "^19.0.0-rc-3563387fe3-20240621",
     "react-dom": "^19.0.0-rc-3563387fe3-20240621"
   }

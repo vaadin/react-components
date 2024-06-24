@@ -1,4 +1,4 @@
-import { waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/dom';
 
 export async function findByQuerySelector<K extends keyof HTMLElementTagNameMap>(
   query: K,
