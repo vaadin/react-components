@@ -77,7 +77,7 @@ describe('ContextMenu', () => {
       </ContextMenu>,
     );
 
-    await assert(container.querySelector<HTMLDivElement>('#actor')!);
+    await assert(container.querySelector('#actor')!);
   });
 
   it('should use renderer property if set', async () => {
@@ -87,7 +87,7 @@ describe('ContextMenu', () => {
       </ContextMenu>,
     );
 
-    await assert(container.querySelector<HTMLDivElement>('#actor')!);
+    await assert(container.querySelector('#actor')!);
   });
 
   it('should render the given text as an item', async () => {
@@ -97,7 +97,7 @@ describe('ContextMenu', () => {
       </ContextMenu>,
     );
 
-    const target = container.querySelector<HTMLDivElement>('#target')!;
+    const target = container.querySelector('#target')!;
     await openContextMenu(target);
 
     const item = document.querySelector(`${overlayTag} ${menuItemTag}`);
@@ -112,7 +112,7 @@ describe('ContextMenu', () => {
       </ContextMenu>,
     );
 
-    const target = container.querySelector<HTMLDivElement>('#target')!;
+    const target = container.querySelector('#target')!;
     await openContextMenu(target);
 
     const item = document.querySelector(`${overlayTag} ${menuItemTag} > span`);
@@ -126,7 +126,7 @@ describe('ContextMenu', () => {
       </ContextMenu>,
     );
 
-    const target = container.querySelector<HTMLDivElement>('#target')!;
+    const target = container.querySelector('#target')!;
     await openContextMenu(target);
 
     const rootItem = document.querySelector(`${overlayTag} ${menuItemTag}`)!;
@@ -147,7 +147,7 @@ describe('ContextMenu', () => {
       </ContextMenu>,
     );
 
-    const target = container.querySelector<HTMLDivElement>('#target')!;
+    const target = container.querySelector('#target')!;
     await openContextMenu(target);
 
     const rootItem = document.querySelector<HTMLElement>(`${overlayTag} ${menuItemTag}`)!;

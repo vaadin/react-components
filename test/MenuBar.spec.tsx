@@ -32,7 +32,7 @@ describe('MenuBar', () => {
   it('should render the given text as an item', async () => {
     const { container } = render(<MenuBar items={[{ text: 'foo' }]} />);
 
-    const menuBar = container.querySelector<HTMLDivElement>('vaadin-menu-bar')!;
+    const menuBar = container.querySelector('vaadin-menu-bar')!;
     await until(() => !!menuBar.querySelector(`${menuButtonTag}:not([slot])`));
 
     const item = menuBar.querySelector(menuButtonTag);
@@ -43,7 +43,7 @@ describe('MenuBar', () => {
   it('should render the given ReactElement as an item', async () => {
     const { container } = render(<MenuBar items={[{ component: <span>foo</span> }]} />);
 
-    const menuBar = container.querySelector<HTMLDivElement>('vaadin-menu-bar')!;
+    const menuBar = container.querySelector('vaadin-menu-bar')!;
     await until(() => !!menuBar.querySelector(`${menuButtonTag}:not([slot])`));
 
     const item = menuBar.querySelector(`${menuItemTag} > span`);
@@ -55,7 +55,7 @@ describe('MenuBar', () => {
       <MenuBar items={[{ text: 'parent', children: [{ component: <span>foo</span> }] }]}></MenuBar>,
     );
 
-    const menuBar = container.querySelector<HTMLDivElement>('vaadin-menu-bar')!;
+    const menuBar = container.querySelector('vaadin-menu-bar')!;
     await until(() => !!menuBar.querySelector(`${menuButtonTag}:not([slot])`));
 
     const rootItem = menuBar.querySelector(menuButtonTag)!;
@@ -71,10 +71,10 @@ describe('MenuBar', () => {
     const spy = sinon.spy();
     const { container } = render(<MenuBar items={items} onItemSelected={spy}></MenuBar>);
 
-    const menuBar = container.querySelector<MenuBarElement>('vaadin-menu-bar')!;
+    const menuBar = container.querySelector('vaadin-menu-bar')!;
     await until(() => !!menuBar.querySelector(`${menuButtonTag}:not([slot])`));
 
-    const rootItems = Array.from(menuBar.querySelectorAll<HTMLElement>(menuButtonTag));
+    const rootItems: HTMLElement[] = Array.from(menuBar.querySelectorAll(menuButtonTag));
     rootItems[0].click();
     rootItems[1].click();
 
