@@ -1,30 +1,45 @@
 import { DashboardLayout } from '../../packages/react-components-pro/src/DashboardLayout.js';
+import { DashboardWidget } from '../../packages/react-components-pro/src/DashboardWidget.js';
+import { DashboardSection } from '../../packages/react-components-pro/src/DashboardSection.js';
 import type { CSSProperties } from 'react';
+import './dashboard-styles.css';
 
-const dashboardLayoutItemStyle = {
-  backgroundColor: '#f5f5f5',
-  border: '1px solid #e0e0e0',
-  borderRadius: '4px',
-  padding: '1em',
-  textAlign: 'center',
-  margin: '0.5em',
-  boxSizing: 'border-box',
-  height: '100px',
+const colspan2 = {
+  '--vaadin-dashboard-item-colspan': '2',
 } as CSSProperties;
 
-const dashboardLayoutStyle = {
-  '--vaadin-dashboard-col-min-width': '200px',
-  '--vaadin-dashboard-col-max-width': '300px',
+const rowspan2 = {
+  '--vaadin-dashboard-item-rowspan': '2',
 } as CSSProperties;
 
 export default function () {
   return (
-    <DashboardLayout style={dashboardLayoutStyle}>
-      <div style={dashboardLayoutItemStyle}>Item 0</div>
-      <div style={dashboardLayoutItemStyle}>Item 1</div>
-      <div style={dashboardLayoutItemStyle}>Item 2</div>
-      <div style={dashboardLayoutItemStyle}>Item 3</div>
-      <div style={dashboardLayoutItemStyle}>Item 4</div>
+    <DashboardLayout>
+      <DashboardWidget widgetTitle="Total cost">
+        <span slot="header-content">2023-2024</span>
+        <div className="kpi-number">+203%</div>
+      </DashboardWidget>
+
+      <DashboardWidget style={colspan2} widgetTitle="Sales">
+        <span slot="header-content">2023-2024</span>
+        <div className="chart"></div>
+      </DashboardWidget>
+
+      <DashboardSection sectionTitle="Section">
+        <DashboardWidget style={rowspan2} widgetTitle="Sales closed this month">
+          <div className="kpi-number">54 000€</div>
+        </DashboardWidget>
+
+        <DashboardWidget widgetTitle="Just some number">
+          <span slot="header-content">2014-2024</span>
+          <div className="kpi-number">1234</div>
+        </DashboardWidget>
+      </DashboardSection>
+
+      <DashboardWidget>
+        <h2 slot="title">Activity since 2023</h2>
+        <div className="chart"></div>
+      </DashboardWidget>
     </DashboardLayout>
   );
 }
