@@ -108,6 +108,10 @@
       "types": "./DashboardLayout.d.ts",
       "default": "./DashboardLayout.js"
     },
+    "./DashboardSection.js": {
+      "types": "./DashboardSection.d.ts",
+      "default": "./DashboardSection.js"
+    },
     "./DashboardWidget.js": {
       "types": "./DashboardWidget.d.ts",
       "default": "./DashboardWidget.js"
@@ -138,6 +142,7 @@
     "./CrudEditColumn": "./CrudEditColumn.js",
     "./Dashboard": "./Dashboard.js",
     "./DashboardLayout": "./DashboardLayout.js",
+    "./DashboardSection": "./DashboardSection.js",
     "./DashboardWidget": "./DashboardWidget.js",
     "./GridPro": "./GridPro.js",
     "./GridProEditColumn": "./GridProEditColumn.js",

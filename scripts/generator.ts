@@ -82,6 +82,7 @@ const printer = ts.createPrinter({
 });
 
 function createGenericTypeNames(numberOfGenerics: number) {
+  // TODO: Might need to extend type
   return Array.from({ length: numberOfGenerics }, (_, i) => ts.factory.createIdentifier(`T${i + 1}`));
 }
 
