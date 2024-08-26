@@ -10,13 +10,14 @@ export enum NonGenericInterface {
 export type GenericElementInfo = Readonly<{
   numberOfGenerics: number;
   nonGenericInterfaces?: readonly NonGenericInterface[];
+  typeConstraints?: string[];
 }>;
 
 export const genericElements = new Map<string, GenericElementInfo>([
   ['ComboBox', { numberOfGenerics: 1 }],
   ['ComboBoxLight', { numberOfGenerics: 1 }],
   ['Crud', { numberOfGenerics: 1 }],
-  ['Dashboard', { numberOfGenerics: 1 }],
+  ['Dashboard', { numberOfGenerics: 1, typeConstraints: ['DashboardItem'] }],
   ['Grid', { numberOfGenerics: 1 }],
   ['GridColumn', { numberOfGenerics: 1, nonGenericInterfaces: [NonGenericInterface.EVENT_MAP] }],
   ['GridFilterColumn', { numberOfGenerics: 1, nonGenericInterfaces: [NonGenericInterface.EVENT_MAP] }],

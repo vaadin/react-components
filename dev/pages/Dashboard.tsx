@@ -1,24 +1,20 @@
-import { Dashboard } from '../../packages/react-components-pro/src/Dashboard.js';
+import {
+  Dashboard,
+  type DashboardItem,
+  type DashboardProps,
+} from '../../packages/react-components-pro/src/Dashboard.js';
 import { DashboardWidget } from '../../packages/react-components-pro/src/DashboardWidget.js';
 import './dashboard-styles.css';
 
-// TODO: import from Dashboard
-type DashboardItem = {
-  colspan?: number;
-  items?: Array<DashboardItem & CustomItem>;
-};
-
-type CustomItem = {
+type TestItem = DashboardItem & {
   title?: string;
   content?: string;
   type?: 'kpi' | 'chart';
   header?: string;
 };
 
-type TestItem = CustomItem & DashboardItem;
-
 export default function () {
-  const items: TestItem[] = [
+  const items: DashboardProps<TestItem>['items'] = [
     {
       title: 'Total cost',
       content: '+203%',
@@ -54,7 +50,7 @@ export default function () {
   ];
 
   return (
-    <Dashboard items={items}>
+    <Dashboard<TestItem> items={items}>
       {({ item }) => (
         <DashboardWidget widgetTitle={item.title}>
           <span slot="header">{item.header || ''}</span>
