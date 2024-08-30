@@ -1,6 +1,5 @@
 vaadin-dashboard-widget {
   background-color: #f5f5f5;
-  border: 1px solid #e0e0e0;
   border-radius: 4px;
   padding: 10px;
 }
@@ -10,6 +9,7 @@ html {
   --vaadin-dashboard-col-max-width: 500px;
   --vaadin-dashboard-gap: 20px;
   --vaadin-dashboard-col-max-count: 3;
+  --vaadin-dashboard-row-min-height: 400px;
 }
 
 .kpi-number {
@@ -23,6 +23,6 @@ html {
 }
 
 .chart {
-  height: 300px;
+  height: 100%;
   background: repeating-linear-gradient(45deg, #e0e0e0, #e0e0e0 10px, #f5f5f5 10px, #f5f5f5 20px);
 }

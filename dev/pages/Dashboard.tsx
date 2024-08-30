@@ -50,7 +50,28 @@ export default function () {
   ];
 
   return (
-    <Dashboard<TestItem> items={items}>
+    <Dashboard<TestItem>
+      editable
+      items={items}
+      onDashboardItemMoved={(e) => {
+        console.log('dashboard-item-moved', e.detail);
+      }}
+      onDashboardItemRemoved={(e) => {
+        console.log('dashboard-item-removed', e.detail);
+      }}
+      onDashboardItemResized={(e) => {
+        console.log('dashboard-item-resized', e.detail);
+      }}
+      onDashboardItemSelectedChanged={(e) => {
+        console.log('dashboard-item-selected-changed', e.detail);
+      }}
+      onDashboardItemMoveModeChanged={(e) => {
+        console.log('dashboard-item-move-mode-changed', e.detail);
+      }}
+      onDashboardItemResizeModeChanged={(e) => {
+        console.log('dashboard-item-resize-mode-changed', e.detail);
+      }}
+    >
       {({ item }) => (
         <DashboardWidget widgetTitle={item.title}>
           <span slot="header">{item.header || ''}</span>
