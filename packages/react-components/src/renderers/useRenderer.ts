@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { createPortal, flushSync } from 'react-dom';
 import type { Slice, WebComponentRenderer } from './renderer.js';
+import { createRoot, type Root } from 'react-dom/client';
 
 export type UseRendererResult<W extends WebComponentRenderer> = readonly [
   portals?: ReadonlyArray<ReactElement | null>,
@@ -28,6 +29,8 @@ export type RendererConfig = {
   renderSync?: boolean;
 };
 
+const rendererRootToReactRoot = new WeakMap<HTMLElement, Root>();
+
 export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   node: ReactNode,
   convert?: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
@@ -43,41 +46,50 @@ export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   convert?: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
   config?: RendererConfig,
 ): UseRendererResult<W> {
-  const [map, update] = useReducer<typeof rendererReducer<W>>(rendererReducer, initialState);
-  const renderer = useCallback(
-    ((...args: Parameters<W>) => {
-      if (config?.renderSync) {
-        // The web components may request multiple synchronous renderer calls that
-        // would result in flushSync logging a warning (and actually executing the
-        // overlapping flushSync in microtask timing). Suppress the warning and allow
-        // the resulting asynchronicity.
-        const console = globalThis.console as any;
-        const error = console.error;
-        console.error = (message: string) => {
-          if (message.includes('flushSync')) {
-            return;
-          }
-          error(message);
-        };
-        flushSync(() => update(args));
-        console.error = error;
-      } else {
-        update(args);
-      }
-    }) as W,
-    [],
-  );
+  // const [map, update] = useReducer<typeof rendererReducer<W>>(rendererReducer, initialState);
+
+  const renderer = useCallback(((root: HTMLElement, ...args) => {
+    const reactRoot = rendererRootToReactRoot.get(root) ?? createRoot(root);
+
+    reactRoot.render(
+      convert
+        ? createElement<P>(reactRendererOrNode as ComponentType<P>, convert(args as Slice<Parameters<W>, 1>))
+        : (reactRendererOrNode as ReactNode),
+    );
+
+    rendererRootToReactRoot.set(root, reactRoot);
+
+    // if (config?.renderSync) {
+    //   // The web components may request multiple synchronous renderer calls that
+    //   // would result in flushSync logging a warning (and actually executing the
+    //   // overlapping flushSync in microtask timing). Suppress the warning and allow
+    //   // the resulting asynchronicity.
+    //   const console = globalThis.console as any;
+    //   const error = console.error;
+    //   console.error = (message: string) => {
+    //     if (message.includes('flushSync')) {
+    //       return;
+    //     }
+    //     error(message);
+    //   };
+    //   flushSync(() => update(args));
+    //   console.error = error;
+    // } else {
+    //   update(args);
+    // }
+  }) as W, []);
 
   return reactRendererOrNode
     ? [
-        Array.from(map.entries()).map(([root, args]) =>
-          createPortal(
-            convert
-              ? createElement<P>(reactRendererOrNode as ComponentType<P>, convert(args))
-              : (reactRendererOrNode as ReactNode),
-            root,
-          ),
-        ),
+        // Array.from(map.entries()).map(([root, args]) =>
+        //   createPortal(
+        // convert
+        //   ? createElement<P>(reactRendererOrNode as ComponentType<P>, convert(args))
+        //   : (reactRendererOrNode as ReactNode),
+        //     root,
+        //   ),
+        // ),
+        [],
         renderer,
       ]
     : [];

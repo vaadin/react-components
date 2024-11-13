@@ -67,7 +67,9 @@ describe('Grid', () => {
     const grid = document.querySelector('vaadin-grid, vaadin-grid-pro')!;
     expect(grid).to.exist;
 
-    await catchRender(grid, isGridCellContentNodeRendered);
+    await new Promise(resolve => setTimeout(resolve, 1));
+
+    // catchRender(grid, isGridCellContentNodeRendered);
 
     const columns = document.querySelectorAll(columnElementName);
 
