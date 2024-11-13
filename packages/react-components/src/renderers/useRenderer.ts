@@ -47,42 +47,42 @@ export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   convert?: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
   config?: RendererConfig,
 ): UseRendererResult<W> {
-  const [map, update] = useReducer<typeof rendererReducer<W>>(rendererReducer, initialState);
+  // const [map, update] = useReducer<typeof rendererReducer<W>>(rendererReducer, initialState);
 
   // useEffect(() => {
   //   [...rendererRootToReactRoot.values()].forEach((reactRoot) => reactRoot.unmount());
   // }, [reactRendererOrNode]);
 
-  const renderer = useCallback(((...args: Parameters<W>) => {
-    update(args);
+  const renderer = useCallback(
+    ((root, ...args: Slice<Parameters<W>, 1>) => {
+      root._$reactRoot$ ??= createRoot(root);
+      root._$reactRoot$.render(
+        convert
+          ? createElement<P>(reactRendererOrNode as ComponentType<P>, convert(args))
+          : (reactRendererOrNode as ReactNode),
+      );
 
-    // rendererRootToReactRoot.set(root, reactRoot);
-
-    // if (config?.renderSync) {
-    //   // The web components may request multiple synchronous renderer calls that
-    //   // would result in flushSync logging a warning (and actually executing the
-    //   // overlapping flushSync in microtask timing). Suppress the warning and allow
-    //   // the resulting asynchronicity.
-    //   const console = globalThis.console as any;
-    //   const error = console.error;
-    //   console.error = (message: string) => {
-    //     if (message.includes('flushSync')) {
-    //       return;
-    //     }
-    //     error(message);
-    //   };
-    //   flushSync(() => update(args));
-    //   console.error = error;
-    // } else {
-    //   update(args);
-    // }
-  }) as W, []);
-
-  useEffect(() => {
-    return () => {
-      [...rendererRootToReactRoot.values()].forEach((reactRoot) => reactRoot.unmount());
-    };
-  }, [reactRendererOrNode]);
+      // if (config?.renderSync) {
+      //   // The web components may request multiple synchronous renderer calls that
+      //   // would result in flushSync logging a warning (and actually executing the
+      //   // overlapping flushSync in microtask timing). Suppress the warning and allow
+      //   // the resulting asynchronicity.
+      //   const console = globalThis.console as any;
+      //   const error = console.error;
+      //   console.error = (message: string) => {
+      //     if (message.includes('flushSync')) {
+      //       return;
+      //     }
+      //     error(message);
+      //   };
+      //   flushSync(() => update(args));
+      //   console.error = error;
+      // } else {
+      //   update(args);
+      // }
+    }) as W,
+    [convert, reactRendererOrNode],
+  );
 
   return reactRendererOrNode
     ? [
