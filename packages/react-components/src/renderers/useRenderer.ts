@@ -5,6 +5,7 @@ import {
   type ReactElement,
   type ReactNode,
   useCallback,
+  useEffect,
   useReducer,
 } from 'react';
 import { createPortal, flushSync } from 'react-dom';
@@ -29,7 +30,7 @@ export type RendererConfig = {
   renderSync?: boolean;
 };
 
-const rendererRootToReactRoot = new WeakMap<HTMLElement, Root>();
+const rendererRootToReactRoot = new Map<HTMLElement, Root>();
 
 export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   node: ReactNode,
@@ -46,18 +47,16 @@ export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   convert?: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
   config?: RendererConfig,
 ): UseRendererResult<W> {
-  // const [map, update] = useReducer<typeof rendererReducer<W>>(rendererReducer, initialState);
+  const [map, update] = useReducer<typeof rendererReducer<W>>(rendererReducer, initialState);
 
-  const renderer = useCallback(((root: HTMLElement, ...args) => {
-    const reactRoot = rendererRootToReactRoot.get(root) ?? createRoot(root);
+  // useEffect(() => {
+  //   [...rendererRootToReactRoot.values()].forEach((reactRoot) => reactRoot.unmount());
+  // }, [reactRendererOrNode]);
 
-    reactRoot.render(
-      convert
-        ? createElement<P>(reactRendererOrNode as ComponentType<P>, convert(args as Slice<Parameters<W>, 1>))
-        : (reactRendererOrNode as ReactNode),
-    );
+  const renderer = useCallback(((...args: Parameters<W>) => {
+    update(args);
 
-    rendererRootToReactRoot.set(root, reactRoot);
+    // rendererRootToReactRoot.set(root, reactRoot);
 
     // if (config?.renderSync) {
     //   // The web components may request multiple synchronous renderer calls that
@@ -78,6 +77,12 @@ export function useRenderer<P extends {}, W extends WebComponentRenderer>(
     //   update(args);
     // }
   }) as W, []);
+
+  useEffect(() => {
+    return () => {
+      [...rendererRootToReactRoot.values()].forEach((reactRoot) => reactRoot.unmount());
+    };
+  }, [reactRendererOrNode]);
 
   return reactRendererOrNode
     ? [
