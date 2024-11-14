@@ -1,6 +1,6 @@
 import type { ComponentType, ReactNode } from 'react';
 import { useRenderer } from './useRenderer.js';
-import type { RendererConfig, UseRendererResult } from './useRenderer.js';
+import type { UseRendererResult } from './useRenderer.js';
 import {
   type ReactSimpleRendererProps,
   useSimpleRenderer,
@@ -9,8 +9,7 @@ import {
 
 export function useSimpleOrChildrenRenderer<O extends HTMLElement>(
   fnRenderer?: ComponentType<ReactSimpleRendererProps<O>> | null,
-  children?: ReactNode | ComponentType<ReactSimpleRendererProps<O>>,
-  config?: RendererConfig,
+  children?: ReactNode | ComponentType<ReactSimpleRendererProps<O>>
 ): UseRendererResult<WebComponentSimpleRenderer<O>> {
   let _children: ReactNode | undefined;
   let _fnRenderer: ComponentType<ReactSimpleRendererProps<O>> | null | undefined;
@@ -26,8 +25,8 @@ export function useSimpleOrChildrenRenderer<O extends HTMLElement>(
     shouldUseSimpleRendererResult = !!_fnRenderer;
   }
 
-  const useChildrenRendererResult = useRenderer(_children, undefined, config);
-  const useSimpleRendererResult = useSimpleRenderer(_fnRenderer, config);
+  const useChildrenRendererResult = useRenderer(_children, undefined);
+  const useSimpleRendererResult = useSimpleRenderer(_fnRenderer);
 
   return shouldUseSimpleRendererResult ? useSimpleRendererResult : useChildrenRendererResult;
 }
