@@ -1,4 +1,14 @@
-import { type ComponentType, createContext, type ForwardedRef, forwardRef, type ReactElement, type RefAttributes, type RefObject, useEffect, useRef } from 'react';
+import {
+  type ComponentType,
+  createContext,
+  type ForwardedRef,
+  forwardRef,
+  type ReactElement,
+  type RefAttributes,
+  type RefObject,
+  useEffect,
+  useRef,
+} from 'react';
 import {
   Grid as _Grid,
   type GridDefaultItem,
@@ -17,8 +27,8 @@ export type GridProps<TItem> = Partial<Omit<_GridProps<TItem>, 'rowDetailsRender
   }>;
 
 type GridContext<TItem = GridDefaultItem> = {
-  gridRef: RefObject<GridElement<TItem>>
-}
+  gridRef: RefObject<GridElement<TItem>>;
+};
 
 export const GridContext = createContext<GridContext | null>(null);
 
@@ -32,15 +42,16 @@ function Grid<TItem = GridDefaultItem>(
   const finalRef = useMergedRefs(innerRef, ref);
 
   return (
-    <GridContext.Provider value={{
-      gridRef: innerRef
-    }}>
+    <GridContext.Provider
+      value={{
+        gridRef: innerRef,
+      }}
+    >
       <_Grid<TItem> {...props} ref={finalRef} rowDetailsRenderer={rowDetailsRenderer}>
         {props.children}
         {portals}
       </_Grid>
     </GridContext.Provider>
-
   );
 }
 
