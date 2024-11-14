@@ -133,18 +133,10 @@ function GridProEditColumn<TItem = GridDefaultItem>(
   { children, footer, header, ...props }: GridProEditColumnProps<TItem>,
   ref: ForwardedRef<GridProEditColumnElement<TItem>>,
 ): ReactElement | null {
-  const [editModePortals, editModeRenderer] = useModelRenderer(editColumnReactRenderer(props.editModeRenderer), {
-    renderSync: true,
-  });
-  const [headerPortals, headerRenderer] = useSimpleOrChildrenRenderer(props.headerRenderer, header, {
-    renderSync: true,
-  });
-  const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer, {
-    renderSync: true,
-  });
-  const [bodyPortals, bodyRenderer] = useModelRenderer(editColumnReactRenderer(props.renderer ?? children), {
-    renderSync: true,
-  });
+  const [editModePortals, editModeRenderer] = useModelRenderer(editColumnReactRenderer(props.editModeRenderer));
+  const [headerPortals, headerRenderer] = useSimpleOrChildrenRenderer(props.headerRenderer, header);
+  const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
+  const [bodyPortals, bodyRenderer] = useModelRenderer(editColumnReactRenderer(props.renderer ?? children));
 
   return (
     <_GridProEditColumn<TItem>

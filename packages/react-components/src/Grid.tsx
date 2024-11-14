@@ -19,7 +19,7 @@ function Grid<TItem = GridDefaultItem>(
   props: GridProps<TItem>,
   ref: ForwardedRef<GridElement<TItem>>,
 ): ReactElement | null {
-  const [portals, rowDetailsRenderer] = useModelRenderer(props.rowDetailsRenderer, { renderSync: true });
+  const [portals, rowDetailsRenderer] = useModelRenderer(props.rowDetailsRenderer);
 
   return (
     <_Grid<TItem> {...props} ref={ref} rowDetailsRenderer={rowDetailsRenderer}>

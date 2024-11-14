@@ -7,7 +7,7 @@ import {
   useCallback,
   useReducer,
 } from 'react';
-import { createPortal, flushSync } from 'react-dom';
+import { createPortal } from 'react-dom';
 import type { Slice, WebComponentRenderer } from './renderer.js';
 
 export type UseRendererResult<W extends WebComponentRenderer> = readonly [
@@ -24,49 +24,20 @@ function rendererReducer<W extends WebComponentRenderer>(
   return new Map(state).set(root, args as Slice<Parameters<W>, 1>);
 }
 
-export type RendererConfig = {
-  renderSync?: boolean;
-};
-
 export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   node: ReactNode,
   convert?: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
-  config?: RendererConfig,
 ): UseRendererResult<W>;
 export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   reactRenderer: ComponentType<P> | null | undefined,
   convert: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
-  config?: RendererConfig,
 ): UseRendererResult<W>;
 export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   reactRendererOrNode: ReactNode | ComponentType<P> | null | undefined,
   convert?: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
-  config?: RendererConfig,
 ): UseRendererResult<W> {
   const [map, update] = useReducer<typeof rendererReducer<W>>(rendererReducer, initialState);
-  const renderer = useCallback(
-    ((...args: Parameters<W>) => {
-      if (config?.renderSync) {
-        // The web components may request multiple synchronous renderer calls that
-        // would result in flushSync logging a warning (and actually executing the
-        // overlapping flushSync in microtask timing). Suppress the warning and allow
-        // the resulting asynchronicity.
-        const console = globalThis.console as any;
-        const error = console.error;
-        console.error = (message: string) => {
-          if (message.includes('flushSync')) {
-            return;
-          }
-          error(message);
-        };
-        flushSync(() => update(args));
-        console.error = error;
-      } else {
-        update(args);
-      }
-    }) as W,
-    [],
-  );
+  const renderer = useCallback(((...args: Parameters<W>) => update(args)) as W, []);
 
   return reactRendererOrNode
     ? [
