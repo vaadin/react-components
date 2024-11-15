@@ -5,7 +5,6 @@ import {
   type ReactElement,
   type ReactNode,
   type RefAttributes,
-  useRef,
 } from 'react';
 import type { GridDefaultItem } from './generated/Grid.js';
 import {
@@ -16,8 +15,6 @@ import {
 import type { GridBodyReactRendererProps, GridEdgeReactRendererProps } from './renderers/grid.js';
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
-import useMergedRefs from './utils/useMergedRefs.js';
-import { useGridColumn } from './Grid.js';
 
 export * from './generated/GridColumn.js';
 
@@ -61,21 +58,12 @@ function GridColumn<TItem = GridDefaultItem>(
   const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
   const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? children);
 
-  const innerRef = useRef<GridColumnElement<TItem>>(null);
-  const finalRef = useMergedRefs(innerRef, ref);
-
-  const isRendered =
-    (!headerRenderer || headerPortals!.length > 0) &&
-    (!footerRenderer || footerPortals!.length > 0) &&
-    (!bodyRenderer || bodyPortals!.length > 0);
-  useGridColumn(innerRef, isRendered);
-
   return (
     <_GridColumn<TItem>
       {...props}
       footerRenderer={footerRenderer}
       headerRenderer={headerRenderer}
-      ref={finalRef}
+      ref={ref}
       renderer={bodyRenderer}
     >
       {headerPortals}

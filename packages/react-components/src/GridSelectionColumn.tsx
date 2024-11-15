@@ -5,7 +5,6 @@ import {
   type ReactElement,
   type ReactNode,
   type RefAttributes,
-  useRef,
 } from 'react';
 import type { GridDefaultItem } from './generated/Grid.js';
 import {
@@ -17,8 +16,6 @@ import type { GridBodyReactRendererProps, GridEdgeReactRendererProps } from './r
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
 import type { OmittedGridColumnHTMLAttributes } from './GridColumn.js';
-import { useGridColumn } from './Grid.js';
-import useMergedRefs from './utils/useMergedRefs.js';
 
 export * from './generated/GridSelectionColumn.js';
 
@@ -56,21 +53,11 @@ function GridSelectionColumn<TItem = GridDefaultItem>(
   const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
   const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children);
 
-  const innerRef = useRef<GridSelectionColumnElement<TItem>>(null);
-  const finalRef = useMergedRefs(innerRef, ref);
-
-  const isRendered =
-    (!headerRenderer || headerPortals!.length > 0) &&
-    (!footerRenderer || footerPortals!.length > 0) &&
-    (!bodyRenderer || bodyPortals!.length > 0);
-  useGridColumn(innerRef, isRendered);
-
   return (
     <_GridSelectionColumn<TItem>
       {...props}
       footerRenderer={footerRenderer}
       headerRenderer={headerRenderer}
-      ref={finalRef}
       renderer={bodyRenderer}
     >
       {headerPortals}

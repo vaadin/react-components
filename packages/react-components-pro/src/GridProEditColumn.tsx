@@ -136,12 +136,8 @@ function GridProEditColumn<TItem = GridDefaultItem>(
   const [editModePortals, editModeRenderer] = useModelRenderer(editColumnReactRenderer(props.editModeRenderer), {
     renderSync: true,
   });
-  const [headerPortals, headerRenderer] = useSimpleOrChildrenRenderer(props.headerRenderer, header, {
-    renderSync: true,
-  });
-  const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer, {
-    renderSync: true,
-  });
+  const [headerPortals, headerRenderer] = useSimpleOrChildrenRenderer(props.headerRenderer, header);
+  const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
   const [bodyPortals, bodyRenderer] = useModelRenderer(editColumnReactRenderer(props.renderer ?? children), {
     renderSync: true,
   });
