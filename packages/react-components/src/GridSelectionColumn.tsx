@@ -58,6 +58,7 @@ function GridSelectionColumn<TItem = GridDefaultItem>(
       {...props}
       footerRenderer={footerRenderer}
       headerRenderer={headerRenderer}
+      ref={ref}
       renderer={bodyRenderer}
     >
       {headerPortals}
