@@ -5,11 +5,10 @@ import {
   type ReactElement,
   type ReactNode,
   type RefAttributes,
-  useContext,
   useEffect,
   useRef,
 } from 'react';
-import type { GridDefaultItem, GridElement } from './generated/Grid.js';
+import type { GridDefaultItem } from './generated/Grid.js';
 import {
   GridColumn as _GridColumn,
   type GridColumnElement,
@@ -19,7 +18,7 @@ import type { GridBodyReactRendererProps, GridEdgeReactRendererProps } from './r
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
 import useMergedRefs from './utils/useMergedRefs.js';
-import { GridContext } from './Grid.js';
+import { markElementAsRendered } from './utils/markElementAsRendered.js';
 
 export * from './generated/GridColumn.js';
 
@@ -59,29 +58,19 @@ function GridColumn<TItem = GridDefaultItem>(
   { children, footer, header, ...props }: GridColumnProps<TItem>,
   ref: ForwardedRef<GridColumnElement<TItem>>,
 ): ReactElement | null {
-  const { gridRef } = useContext(GridContext)!;
-
-  const [headerPortals, headerRenderer] = useSimpleOrChildrenRenderer(props.headerRenderer, header);
-  const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
-  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? children);
+  const [headerPortals, headerRenderer, isHeaderRendered] = useSimpleOrChildrenRenderer(props.headerRenderer, header);
+  const [footerPortals, footerRenderer, isFooterRendered] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
+  const [bodyPortals, bodyRenderer, isBodyRendered] = useModelRenderer(props.renderer ?? children);
+  const isRendered = !!(isHeaderRendered && isFooterRendered && isBodyRendered);
 
   const innerRef = useRef<GridColumnElement<TItem>>(null);
+  const finalRef = useMergedRefs(innerRef, ref);
 
   useEffect(() => {
-    const gridElement = gridRef.current;
-    const columnElement = innerRef.current;
-    if (!props.autoWidth || !gridElement || !columnElement || !bodyPortals) {
-      return;
+    if (innerRef.current && isRendered) {
+      markElementAsRendered(innerRef.current);
     }
-
-    if (!columnElement.hidden && bodyPortals.length > 0) {
-      // @ts-ignore
-      gridElement._recalculateColumnWidths([columnElement]);
-      // @TODO set a flag to recalculate width only once
-    }
-  }, [bodyPortals]);
-
-  const finalRef = useMergedRefs(innerRef, ref);
+  }, [innerRef.current, isRendered]);
 
   return (
     <_GridColumn<TItem>

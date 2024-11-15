@@ -1,6 +1,5 @@
 import {
   type ComponentType,
-  createContext,
   type ForwardedRef,
   forwardRef,
   type ReactElement,
@@ -18,6 +17,7 @@ import {
 import type { GridRowDetailsReactRendererProps } from './renderers/grid.js';
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 import useMergedRefs from './utils/useMergedRefs.js';
+import { isElementMarkedAsRendered } from './utils/markElementAsRendered.js';
 
 export * from './generated/Grid.js';
 
@@ -26,32 +26,39 @@ export type GridProps<TItem> = Partial<Omit<_GridProps<TItem>, 'rowDetailsRender
     rowDetailsRenderer?: ComponentType<GridRowDetailsReactRendererProps<TItem>> | null;
   }>;
 
-type GridContext<TItem = GridDefaultItem> = {
-  gridRef: RefObject<GridElement<TItem>>;
-};
+function overrideRecalculateColumnWidths(grid: GridElement) {
+  const originalRecalculateColumnWidths = grid.recalculateColumnWidths;
+  grid.recalculateColumnWidths = function (...args) {
+    originalRecalculateColumnWidths.apply(this, args);
 
-export const GridContext = createContext<GridContext | null>(null);
+    // @ts-ignore
+    if (this._getColumns().some((column) => !column.hidden && !isElementMarkedAsRendered(column))) {
+      // @ts-ignore
+      this.__pendingRecalculateColumnWidths = true;
+    }
+  };
+}
 
 function Grid<TItem = GridDefaultItem>(
   props: GridProps<TItem>,
   ref: ForwardedRef<GridElement<TItem>>,
 ): ReactElement | null {
-  const [portals, rowDetailsRenderer] = useModelRenderer(props.rowDetailsRenderer, { renderSync: true });
+  const [portals, rowDetailsRenderer] = useModelRenderer(props.rowDetailsRenderer);
 
   const innerRef = useRef<GridElement>(null);
   const finalRef = useMergedRefs(innerRef, ref);
 
+  useEffect(() => {
+    if (innerRef.current) {
+      overrideRecalculateColumnWidths(innerRef.current);
+    }
+  }, [innerRef.current]);
+
   return (
-    <GridContext.Provider
-      value={{
-        gridRef: innerRef,
-      }}
-    >
-      <_Grid<TItem> {...props} ref={finalRef} rowDetailsRenderer={rowDetailsRenderer}>
-        {props.children}
-        {portals}
-      </_Grid>
-    </GridContext.Provider>
+    <_Grid<TItem> {...props} ref={finalRef} rowDetailsRenderer={rowDetailsRenderer}>
+      {props.children}
+      {portals}
+    </_Grid>
   );
 }
 
@@ -60,15 +67,3 @@ const ForwardedGrid = forwardRef(Grid) as <TItem = GridDefaultItem>(
 ) => ReactElement | null;
 
 export { ForwardedGrid as Grid };
-
-// customElements.whenDefined('vaadin-grid').then(() => {
-//   const gridProto = customElements.get('vaadin-grid')?.prototype;
-//   const originalRecalculateColumnWidths = gridProto?._recalculateColumnWidths;
-//   gridProto._recalculateColumnWidths = function (...args: any[]) {
-//     // Multiple synchronous calls to the renderers using flushSync cause
-//     // some of the renderers to be called asynchronously (see useRenderer.ts).
-//     // To make sure all the column cell content is rendered before recalculating
-//     // the column widths, we need to make _recalculateColumnWidths asynchronous.
-//     queueMicrotask(() => originalRecalculateColumnWidths.call(this, ...args));
-//   };
-// });

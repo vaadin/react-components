@@ -13,6 +13,7 @@ import type { Slice, WebComponentRenderer } from './renderer.js';
 export type UseRendererResult<W extends WebComponentRenderer> = readonly [
   portals?: ReadonlyArray<ReactElement | null>,
   renderer?: W,
+  isRendered?: boolean,
 ];
 
 const initialState = new Map();
@@ -79,6 +80,7 @@ export function useRenderer<P extends {}, W extends WebComponentRenderer>(
           ),
         ),
         renderer,
+        map.size > 0
       ]
     : [];
 }
