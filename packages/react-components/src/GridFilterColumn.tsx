@@ -5,8 +5,6 @@ import {
   type ReactElement,
   type ReactNode,
   type RefAttributes,
-  useContext,
-  useEffect,
   useRef,
 } from 'react';
 import type { GridDefaultItem } from './generated/Grid.js';
@@ -19,8 +17,8 @@ import type { GridBodyReactRendererProps, GridEdgeReactRendererProps } from './r
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
 import type { OmittedGridColumnHTMLAttributes } from './GridColumn.js';
-import { GridContext } from './Grid.js';
 import useMergedRefs from './utils/useMergedRefs.js';
+import { useGridColumn } from './Grid.js';
 
 export * from './generated/GridFilterColumn.js';
 
@@ -48,20 +46,14 @@ function GridFilterColumn<TItem = GridDefaultItem>(
   { footer, ...props }: GridFilterColumnProps<TItem>,
   ref: ForwardedRef<GridFilterColumnElement<TItem>>,
 ): ReactElement | null {
-  const gridContext = useContext(GridContext)!;
-
-  const [footerPortals, footerRenderer, isFooterRendered] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
-  const [bodyPortals, bodyRenderer, isBodyRendered] = useModelRenderer(props.renderer ?? props.children);
-  const isRendered = (!footerRenderer || isFooterRendered) && (!bodyRenderer || isBodyRendered);
+  const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
+  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children);
 
   const innerRef = useRef<GridFilterColumnElement<TItem>>(null);
   const finalRef = useMergedRefs(innerRef, ref);
 
-  useEffect(() => {
-    if (isRendered) {
-      gridContext.onColumnRendered(innerRef.current!);
-    }
-  }, [isRendered]);
+  const isRendered = (!footerRenderer || footerPortals!.length > 0) && (!bodyRenderer || bodyPortals!.length > 0);
+  useGridColumn(innerRef, isRendered);
 
   return (
     <_GridFilterColumn<TItem> {...props} footerRenderer={footerRenderer} ref={finalRef} renderer={bodyRenderer}>

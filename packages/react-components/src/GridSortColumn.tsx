@@ -5,6 +5,7 @@ import {
   type ReactElement,
   type ReactNode,
   type RefAttributes,
+  useRef,
 } from 'react';
 import type { GridDefaultItem } from './generated/Grid.js';
 import {
@@ -16,6 +17,8 @@ import type { GridBodyReactRendererProps, GridEdgeReactRendererProps } from './r
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
 import type { OmittedGridColumnHTMLAttributes } from './GridColumn.js';
+import useMergedRefs from './utils/useMergedRefs.js';
+import { useGridColumn } from './Grid.js';
 
 export * from './generated/GridSortColumn.js';
 
@@ -45,8 +48,14 @@ function GridSortColumn<TItem = GridDefaultItem>(
   const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
   const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children);
 
+  const innerRef = useRef<GridSortColumnElement<TItem>>(null);
+  const finalRef = useMergedRefs(innerRef, ref);
+
+  const isRendered = (!footerRenderer || footerPortals!.length > 0) && (!bodyRenderer || bodyPortals!.length > 0);
+  useGridColumn(innerRef, isRendered);
+
   return (
-    <_GridSortColumn<TItem> {...props} footerRenderer={footerRenderer} ref={ref} renderer={bodyRenderer}>
+    <_GridSortColumn<TItem> {...props} footerRenderer={footerRenderer} ref={finalRef} renderer={bodyRenderer}>
       {footerPortals}
       {bodyPortals}
     </_GridSortColumn>

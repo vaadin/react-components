@@ -7,8 +7,10 @@ import {
   type RefAttributes,
   type RefObject,
   useCallback,
+  useContext,
   useEffect,
   useRef,
+  useState,
 } from 'react';
 import {
   Grid as _Grid,
@@ -19,7 +21,12 @@ import {
 import type { GridRowDetailsReactRendererProps } from './renderers/grid.js';
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 import useMergedRefs from './utils/useMergedRefs.js';
-import { isElementMarkedAsRendered, markElementAsRendered } from './utils/markElementAsRendered.js';
+import type { GridColumnElement } from './GridColumn.js';
+import type { GridSelectionColumnElement } from './GridSelectionColumn.js';
+import type { GridFilterColumnElement } from './GridFilterColumn.js';
+import type { GridSortColumnElement } from './GridSortColumn.js';
+import type { GridTreeColumnElement } from './GridTreeColumn.js';
+import { GridColumnGroupElement } from './GridColumnGroup.js';
 
 export * from './generated/Grid.js';
 
@@ -28,11 +35,39 @@ export type GridProps<TItem> = Partial<Omit<_GridProps<TItem>, 'rowDetailsRender
     rowDetailsRenderer?: ComponentType<GridRowDetailsReactRendererProps<TItem>> | null;
   }>;
 
+type AnyGridColumnElement =
+  | GridColumnElement
+  | GridSelectionColumnElement
+  | GridFilterColumnElement
+  | GridSortColumnElement
+  | GridTreeColumnElement
+  | GridColumnGroupElement;
+
 type GridContext = {
-  onColumnRendered(column: HTMLElement): void;
+  onColumnAdded(column: AnyGridColumnElement): void;
+  onColumnRemoved(column: AnyGridColumnElement): void;
+  onColumnRendered(column: AnyGridColumnElement): void;
 };
 
-export const GridContext = createContext<GridContext | null>(null);
+const GridContext = createContext<GridContext | null>(null);
+
+export function useGridColumn(columnRef: RefObject<AnyGridColumnElement>, isRendered: boolean) {
+  const gridContext = useContext(GridContext)!;
+
+  useEffect(() => {
+    gridContext.onColumnAdded(columnRef.current!);
+
+    return () => {
+      gridContext.onColumnRemoved(columnRef.current!);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isRendered) {
+      gridContext.onColumnRendered(columnRef.current!);
+    }
+  }, [isRendered]);
+}
 
 function Grid<TItem = GridDefaultItem>(
   props: GridProps<TItem>,
@@ -43,30 +78,43 @@ function Grid<TItem = GridDefaultItem>(
   const innerRef = useRef<GridElement>(null);
   const finalRef = useMergedRefs(innerRef, ref);
 
+  const columnsRef = useRef<Set<AnyGridColumnElement>>(new Set());
+  const [renderedColumns, setRenderedColumns] = useState<Set<AnyGridColumnElement>>(new Set());
+  const [isColumnsWidthRecalculationPending, setColumnsWidthRecalculationPending] = useState(true);
+
+  const onColumnAdded = useCallback((column: AnyGridColumnElement) => {
+    columnsRef.current.add(column);
+  }, []);
+
+  const onColumnRemoved = useCallback((column: AnyGridColumnElement) => {
+    columnsRef.current.delete(column);
+
+    setRenderedColumns((columns) => {
+      columns.delete(column);
+      return new Set(columns);
+    });
+  }, []);
+
+  const onColumnRendered = useCallback((column: AnyGridColumnElement) => {
+    setRenderedColumns((columns) => {
+      columns.add(column);
+      return new Set(columns);
+    });
+  }, []);
+
   useEffect(() => {
-    innerRef.current!.recalculateColumnWidths = function (...args) {
-      // @ts-ignore
-      const autoWidthColumns: HTMLElement[] = this._getColumns().filter((col) => col.autoWidth && !col.hidden);
-      if (autoWidthColumns.some((col) => !isElementMarkedAsRendered(col))) {
-        // @ts-ignore
-        this.__pendingRecalculateColumnWidths = true;
-        return;
-      }
+    if (!isColumnsWidthRecalculationPending || columnsRef.current.size === 0) {
+      return;
+    }
 
-      // console.log('rendered');
-
-      Object.getPrototypeOf(this).recalculateColumnWidths.apply(this, args);
-    };
-  }, []);
-
-  const onColumnRendered = useCallback((column: HTMLElement) => {
-    markElementAsRendered(column);
-    // @ts-ignore
-    innerRef.current!.__tryToRecalculateColumnWidthsIfPending();
-  }, []);
+    if ([...columnsRef.current].every((col) => col.hidden || renderedColumns.has(col))) {
+      innerRef.current!.recalculateColumnWidths();
+      setColumnsWidthRecalculationPending(false);
+    }
+  }, [renderedColumns, isColumnsWidthRecalculationPending]);
 
   return (
-    <GridContext.Provider value={{ onColumnRendered }}>
+    <GridContext.Provider value={{ onColumnAdded, onColumnRemoved, onColumnRendered }}>
       <_Grid<TItem> {...props} ref={finalRef} rowDetailsRenderer={rowDetailsRenderer}>
         {props.children}
         {portals}

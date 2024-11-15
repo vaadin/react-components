@@ -5,8 +5,6 @@ import {
   type ReactElement,
   type ReactNode,
   type RefAttributes,
-  useContext,
-  useEffect,
   useRef,
 } from 'react';
 import type { GridDefaultItem } from './generated/Grid.js';
@@ -19,7 +17,7 @@ import type { GridBodyReactRendererProps, GridEdgeReactRendererProps } from './r
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
 import useMergedRefs from './utils/useMergedRefs.js';
-import { GridContext } from './Grid.js';
+import { useGridColumn } from './Grid.js';
 
 export * from './generated/GridColumn.js';
 
@@ -59,22 +57,18 @@ function GridColumn<TItem = GridDefaultItem>(
   { children, footer, header, ...props }: GridColumnProps<TItem>,
   ref: ForwardedRef<GridColumnElement<TItem>>,
 ): ReactElement | null {
-  const gridContext = useContext(GridContext)!;
-
-  const [headerPortals, headerRenderer, isHeaderRendered] = useSimpleOrChildrenRenderer(props.headerRenderer, header);
-  const [footerPortals, footerRenderer, isFooterRendered] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
-  const [bodyPortals, bodyRenderer, isBodyRendered] = useModelRenderer(props.renderer ?? children);
-  const isRendered =
-    (!headerRenderer || isHeaderRendered) && (!footerRenderer || isFooterRendered) && (!bodyRenderer || isBodyRendered);
+  const [headerPortals, headerRenderer] = useSimpleOrChildrenRenderer(props.headerRenderer, header);
+  const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
+  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? children);
 
   const innerRef = useRef<GridColumnElement<TItem>>(null);
   const finalRef = useMergedRefs(innerRef, ref);
 
-  useEffect(() => {
-    if (isRendered) {
-      gridContext.onColumnRendered(innerRef.current!);
-    }
-  }, [isRendered]);
+  const isRendered =
+    (!headerRenderer || headerPortals!.length > 0) &&
+    (!footerRenderer || footerPortals!.length > 0) &&
+    (!bodyRenderer || bodyPortals!.length > 0);
+  useGridColumn(innerRef, isRendered);
 
   return (
     <_GridColumn<TItem>
