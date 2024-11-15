@@ -26,7 +26,7 @@ import type { GridSelectionColumnElement } from './GridSelectionColumn.js';
 import type { GridFilterColumnElement } from './GridFilterColumn.js';
 import type { GridSortColumnElement } from './GridSortColumn.js';
 import type { GridTreeColumnElement } from './GridTreeColumn.js';
-import { GridColumnGroupElement } from './GridColumnGroup.js';
+import type { GridColumnGroupElement } from './GridColumnGroup.js';
 
 export * from './generated/Grid.js';
 
