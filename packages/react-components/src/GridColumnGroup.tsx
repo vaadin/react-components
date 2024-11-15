@@ -1,5 +1,6 @@
 import {
   forwardRef,
+  useContext,
   useEffect,
   useRef,
   type ComponentType,
@@ -18,6 +19,7 @@ import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRend
 import type { OmittedGridColumnHTMLAttributes } from './GridColumn.js';
 import useMergedRefs from './utils/useMergedRefs.js';
 import { markElementAsRendered } from './utils/markElementAsRendered.js';
+import { GridContext } from './Grid.js';
 
 export * from './generated/GridColumnGroup.js';
 
@@ -44,18 +46,20 @@ function GridColumnGroup(
   { children, footer, header, ...props }: GridColumnGroupProps,
   ref: ForwardedRef<GridColumnGroupElement>,
 ): ReactElement | null {
+  const gridContext = useContext(GridContext)!;
+
   const [headerPortals, headerRenderer, isHeaderRendered] = useSimpleOrChildrenRenderer(props.headerRenderer, header);
   const [footerPortals, footerRenderer, isFooterRendered] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
-  const isRendered = !!(isHeaderRendered && isFooterRendered);
+  const isRendered = (!headerRenderer || isHeaderRendered) && (!footerRenderer || isFooterRendered);
 
   const innerRef = useRef<GridColumnGroupElement>(null);
   const finalRef = useMergedRefs(innerRef, ref);
 
   useEffect(() => {
-    if (innerRef.current && isRendered) {
-      markElementAsRendered(innerRef.current);
+    if (isRendered) {
+      gridContext.onColumnRendered(innerRef.current!);
     }
-  }, [innerRef.current, isRendered]);
+  }, [isRendered]);
 
   return (
     <_GridColumnGroup {...props} footerRenderer={footerRenderer} headerRenderer={headerRenderer} ref={finalRef}>

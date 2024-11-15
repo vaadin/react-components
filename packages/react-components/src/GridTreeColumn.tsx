@@ -46,12 +46,8 @@ function GridTreeColumn<TItem = GridDefaultItem>(
   { footer, header, ...props }: GridTreeColumnProps<TItem>,
   ref: ForwardedRef<GridTreeColumnElement<TItem>>,
 ): ReactElement | null {
-  const [headerPortals, headerRenderer] = useSimpleOrChildrenRenderer(props.headerRenderer, header, {
-    renderSync: true,
-  });
-  const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer, {
-    renderSync: true,
-  });
+  const [headerPortals, headerRenderer] = useSimpleOrChildrenRenderer(props.headerRenderer, header);
+  const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
 
   return (
     <_GridTreeColumn<TItem> {...props} headerRenderer={headerRenderer} footerRenderer={footerRenderer} ref={ref}>

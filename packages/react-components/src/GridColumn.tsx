@@ -5,6 +5,7 @@ import {
   type ReactElement,
   type ReactNode,
   type RefAttributes,
+  useContext,
   useEffect,
   useRef,
 } from 'react';
@@ -18,7 +19,7 @@ import type { GridBodyReactRendererProps, GridEdgeReactRendererProps } from './r
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
 import useMergedRefs from './utils/useMergedRefs.js';
-import { markElementAsRendered } from './utils/markElementAsRendered.js';
+import { GridContext } from './Grid.js';
 
 export * from './generated/GridColumn.js';
 
@@ -58,19 +59,22 @@ function GridColumn<TItem = GridDefaultItem>(
   { children, footer, header, ...props }: GridColumnProps<TItem>,
   ref: ForwardedRef<GridColumnElement<TItem>>,
 ): ReactElement | null {
+  const gridContext = useContext(GridContext)!;
+
   const [headerPortals, headerRenderer, isHeaderRendered] = useSimpleOrChildrenRenderer(props.headerRenderer, header);
   const [footerPortals, footerRenderer, isFooterRendered] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
   const [bodyPortals, bodyRenderer, isBodyRendered] = useModelRenderer(props.renderer ?? children);
-  const isRendered = !!(isHeaderRendered && isFooterRendered && isBodyRendered);
+  const isRendered =
+    (!headerRenderer || isHeaderRendered) && (!footerRenderer || isFooterRendered) && (!bodyRenderer || isBodyRendered);
 
   const innerRef = useRef<GridColumnElement<TItem>>(null);
   const finalRef = useMergedRefs(innerRef, ref);
 
   useEffect(() => {
-    if (innerRef.current && isRendered) {
-      markElementAsRendered(innerRef.current);
+    if (isRendered) {
+      gridContext.onColumnRendered(innerRef.current!);
     }
-  }, [innerRef.current, isRendered]);
+  }, [isRendered]);
 
   return (
     <_GridColumn<TItem>

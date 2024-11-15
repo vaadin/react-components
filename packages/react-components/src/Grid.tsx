@@ -1,10 +1,12 @@
 import {
   type ComponentType,
+  createContext,
   type ForwardedRef,
   forwardRef,
   type ReactElement,
   type RefAttributes,
   type RefObject,
+  useCallback,
   useEffect,
   useRef,
 } from 'react';
@@ -17,7 +19,7 @@ import {
 import type { GridRowDetailsReactRendererProps } from './renderers/grid.js';
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 import useMergedRefs from './utils/useMergedRefs.js';
-import { isElementMarkedAsRendered } from './utils/markElementAsRendered.js';
+import { isElementMarkedAsRendered, markElementAsRendered } from './utils/markElementAsRendered.js';
 
 export * from './generated/Grid.js';
 
@@ -26,18 +28,11 @@ export type GridProps<TItem> = Partial<Omit<_GridProps<TItem>, 'rowDetailsRender
     rowDetailsRenderer?: ComponentType<GridRowDetailsReactRendererProps<TItem>> | null;
   }>;
 
-function overrideRecalculateColumnWidths(grid: GridElement) {
-  const originalRecalculateColumnWidths = grid.recalculateColumnWidths;
-  grid.recalculateColumnWidths = function (...args) {
-    originalRecalculateColumnWidths.apply(this, args);
+type GridContext = {
+  onColumnRendered(column: HTMLElement): void;
+};
 
-    // @ts-ignore
-    if (this._getColumns().some((column) => !column.hidden && !isElementMarkedAsRendered(column))) {
-      // @ts-ignore
-      this.__pendingRecalculateColumnWidths = true;
-    }
-  };
-}
+export const GridContext = createContext<GridContext | null>(null);
 
 function Grid<TItem = GridDefaultItem>(
   props: GridProps<TItem>,
@@ -49,16 +44,34 @@ function Grid<TItem = GridDefaultItem>(
   const finalRef = useMergedRefs(innerRef, ref);
 
   useEffect(() => {
-    if (innerRef.current) {
-      overrideRecalculateColumnWidths(innerRef.current);
-    }
-  }, [innerRef.current]);
+    innerRef.current!.recalculateColumnWidths = function (...args) {
+      // @ts-ignore
+      const autoWidthColumns: HTMLElement[] = this._getColumns().filter((col) => col.autoWidth && !col.hidden);
+      if (autoWidthColumns.some((col) => !isElementMarkedAsRendered(col))) {
+        // @ts-ignore
+        this.__pendingRecalculateColumnWidths = true;
+        return;
+      }
+
+      // console.log('rendered');
+
+      Object.getPrototypeOf(this).recalculateColumnWidths.apply(this, args);
+    };
+  }, []);
+
+  const onColumnRendered = useCallback((column: HTMLElement) => {
+    markElementAsRendered(column);
+    // @ts-ignore
+    innerRef.current!.__tryToRecalculateColumnWidthsIfPending();
+  }, []);
 
   return (
-    <_Grid<TItem> {...props} ref={finalRef} rowDetailsRenderer={rowDetailsRenderer}>
-      {props.children}
-      {portals}
-    </_Grid>
+    <GridContext.Provider value={{ onColumnRendered }}>
+      <_Grid<TItem> {...props} ref={finalRef} rowDetailsRenderer={rowDetailsRenderer}>
+        {props.children}
+        {portals}
+      </_Grid>
+    </GridContext.Provider>
   );
 }
 
