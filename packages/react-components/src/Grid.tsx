@@ -5,6 +5,7 @@ import {
   type ReactElement,
   type RefAttributes,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react';
@@ -36,7 +37,7 @@ function Grid<TItem = GridDefaultItem>(
 
   const [pendingRecalculateColumnWidthsCall, setPendingRecalculateColumnWidthsCall] = useState<any[] | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     innerRef.current!._recalculateColumnWidths = function (...args) {
       setPendingRecalculateColumnWidthsCall(args);
     };
