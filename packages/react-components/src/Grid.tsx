@@ -4,10 +4,8 @@ import {
   forwardRef,
   type ReactElement,
   type RefAttributes,
-  useEffect,
   useLayoutEffect,
   useRef,
-  useState,
 } from 'react';
 import {
   Grid as _Grid,
@@ -30,27 +28,20 @@ function Grid<TItem = GridDefaultItem>(
   props: GridProps<TItem>,
   ref: ForwardedRef<GridElement<TItem>>,
 ): ReactElement | null {
-  const [portals, rowDetailsRenderer] = useModelRenderer(props.rowDetailsRenderer);
+  const [portals, rowDetailsRenderer] = useModelRenderer(props.rowDetailsRenderer, {
+    renderMode: 'microtask'
+  });
 
-  const innerRef = useRef<GridElement & { _recalculateColumnWidths?(...args: any[]): void }>(null);
+  const innerRef = useRef<GridElement>(null);
   const finalRef = useMergedRefs(innerRef, ref);
 
-  const [pendingRecalculateColumnWidthsCall, setPendingRecalculateColumnWidthsCall] = useState<any[] | null>(null);
-
   useLayoutEffect(() => {
-    innerRef.current!._recalculateColumnWidths = function (...args) {
-      setPendingRecalculateColumnWidthsCall(args);
+    innerRef.current!.recalculateColumnWidths = function (...args) {
+      queueMicrotask(() => {
+        Object.getPrototypeOf(this).recalculateColumnWidths.call(this, ...args);
+      });
     };
   }, []);
-
-  useLayoutEffect(() => {
-    if (pendingRecalculateColumnWidthsCall) {
-      const gridElement = innerRef.current!;
-      const gridProto = Object.getPrototypeOf(gridElement);
-      gridProto._recalculateColumnWidths.call(gridElement, ...pendingRecalculateColumnWidthsCall);
-      setPendingRecalculateColumnWidthsCall(null);
-    }
-  }, [pendingRecalculateColumnWidthsCall]);
 
   return (
     <_Grid<TItem> {...props} ref={finalRef} rowDetailsRenderer={rowDetailsRenderer}>

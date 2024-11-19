@@ -43,8 +43,12 @@ function GridFilterColumn<TItem = GridDefaultItem>(
   { footer, ...props }: GridFilterColumnProps<TItem>,
   ref: ForwardedRef<GridFilterColumnElement<TItem>>,
 ): ReactElement | null {
-  const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
-  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children);
+  const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer, {
+    renderMode: 'microtask',
+  });
+  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children, {
+    renderMode: 'microtask',
+  });
 
   return (
     <_GridFilterColumn<TItem> {...props} footerRenderer={footerRenderer} ref={ref} renderer={bodyRenderer}>

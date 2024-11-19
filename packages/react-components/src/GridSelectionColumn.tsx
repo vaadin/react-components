@@ -49,9 +49,15 @@ function GridSelectionColumn<TItem = GridDefaultItem>(
   { footer, header, ...props }: GridSelectionColumnProps<TItem>,
   ref: ForwardedRef<GridSelectionColumnElement<TItem>>,
 ): ReactElement | null {
-  const [headerPortals, headerRenderer] = useSimpleOrChildrenRenderer(props.headerRenderer, header);
-  const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer);
-  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children);
+  const [headerPortals, headerRenderer] = useSimpleOrChildrenRenderer(props.headerRenderer, header, {
+    renderMode: 'microtask',
+  });
+  const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer, {
+    renderMode: 'microtask',
+  });
+  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? props.children, {
+    renderMode: 'microtask',
+  });
 
   return (
     <_GridSelectionColumn<TItem>
