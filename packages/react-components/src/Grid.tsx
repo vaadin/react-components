@@ -43,7 +43,7 @@ function Grid<TItem = GridDefaultItem>(
     };
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (pendingRecalculateColumnWidthsCall) {
       const gridElement = innerRef.current!;
       const gridProto = Object.getPrototypeOf(gridElement);
