@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { createPortal, flushSync } from 'react-dom';
 import type { Slice, WebComponentRenderer } from './renderer.js';
+import { flushMicrotask } from '../utils/flushMicrotask.js';
 
 export type UseRendererResult<W extends WebComponentRenderer> = readonly [
   portals?: ReadonlyArray<ReactElement | null>,
@@ -27,22 +28,6 @@ function rendererReducer<W extends WebComponentRenderer>(
 export type RendererConfig = {
   renderMode?: 'default' | 'sync' | 'microtask';
 };
-
-const renderQueue: Array<(...args: any[]) => any> = [];
-
-function flushMicrotask(callback: (...args: any[]) => any) {
-  renderQueue.push(callback);
-
-  if (renderQueue.length === 1) {
-    queueMicrotask(() => {
-      flushSync(() => {
-        while (renderQueue.length) {
-          renderQueue.shift()!();
-        }
-      });
-    });
-  }
-}
 
 export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   node: ReactNode,
