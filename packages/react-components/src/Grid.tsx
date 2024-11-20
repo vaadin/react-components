@@ -29,7 +29,7 @@ function Grid<TItem = GridDefaultItem>(
   ref: ForwardedRef<GridElement<TItem>>,
 ): ReactElement | null {
   const [portals, rowDetailsRenderer] = useModelRenderer(props.rowDetailsRenderer, {
-    renderMode: 'microtask'
+    renderMode: 'microtask',
   });
 
   const innerRef = useRef<GridElement>(null);
