@@ -442,7 +442,7 @@ describe('Grid', () => {
         items = Array.from(new Array(1)).map((_, i) => ({ name: `name-${i}` }));
       });
 
-      it.only('should update the content', async () => {
+      it('should update the content', async () => {
         render(
           <GridPro<GridProItem> items={items}>
             <GridProEditColumn<Item> path="name" />
