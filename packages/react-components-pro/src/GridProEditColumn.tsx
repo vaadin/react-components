@@ -8,17 +8,10 @@
  * See https://vaadin.com/commercial-license-and-service-terms for the full
  * license.
  */
-import React from 'react';
-import {
-  type ForwardedRef,
-  forwardRef,
-  type ReactElement,
-  type ReactNode,
-  type RefAttributes,
-  createElement,
-} from 'react';
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { type ForwardedRef, forwardRef, type ReactElement, type ReactNode, type RefAttributes } from 'react';
 import type { GridBodyRenderer, GridDefaultItem } from '@vaadin/react-components/Grid.js';
-import type { GridColumnElement, GridColumnProps } from '@vaadin/react-components/GridColumn.js';
+import type { GridColumnProps } from '@vaadin/react-components/GridColumn.js';
 import {
   GridProEditColumn as _GridProEditColumn,
   type GridProEditColumnElement,
@@ -27,6 +20,8 @@ import {
 import { useModelRenderer } from '@vaadin/react-components/renderers/useModelRenderer.js';
 import { useSimpleOrChildrenRenderer } from '@vaadin/react-components/renderers/useSimpleOrChildrenRenderer.js';
 import type { OmittedGridColumnHTMLAttributes } from '@vaadin/react-components/GridColumn.js';
+import useMergedRefs from '../../react-components/src/utils/useMergedRefs.js';
+import { flushSync } from 'react-dom';
 
 export * from './generated/GridProEditColumn.js';
 
@@ -61,80 +56,23 @@ export type GridProEditColumnProps<TItem> = Partial<
     renderer?: GridColumnRenderer<TItem>;
   }>;
 
-type ReactBodyRenderer<TItem> = GridColumnRenderer<TItem> & {
-  __wrapperRenderer?: ReactBodyRenderer<TItem>;
+type GridProEditColumnElementInternals<TItem> = {
+  _renderEditor(cell: HTMLElement & { [SKIP_CLEARING_CELL_CONTENT]?: boolean }, model: { item: TItem }): void;
+  _removeEditor(cell: HTMLElement & { [SKIP_CLEARING_CELL_CONTENT]?: boolean }, model: { item: TItem }): void;
+  _clearCellContent(cell: HTMLElement & { [SKIP_CLEARING_CELL_CONTENT]?: boolean }): void;
 };
 
-type EditColumnRendererRoot = HTMLElement & { __editColumnRenderer?: GridBodyRenderer };
-
-type ClearFunction = (arg0: HTMLElement & { _content: EditColumnRendererRoot }) => void;
-
-/**
- * Wraps a React renderer function to render empty when requested
- *
- * @returns
- */
-function editColumnReactRenderer<TItem>(reactBodyRenderer?: ReactBodyRenderer<TItem> | null) {
-  if (!reactBodyRenderer) {
-    return undefined;
-  }
-
-  reactBodyRenderer.__wrapperRenderer ||= function GridProEditColumnRenderer(props) {
-    // If the model has __renderEmpty set, return null, otherwise call the original renderer
-    return '__renderEmpty' in props.model ? null : createElement(reactBodyRenderer, props);
-  };
-
-  return reactBodyRenderer.__wrapperRenderer;
-}
-
-/**
- * Wraps a Grid body renderer function to make it request empty render before
- * the GridPro edit column clears cell content.
- */
-function editColumnRenderer(bodyRenderer?: (GridBodyRenderer & { __wrapperRenderer?: GridBodyRenderer }) | null) {
-  if (!bodyRenderer) {
-    return undefined;
-  }
-
-  bodyRenderer.__wrapperRenderer ||= (
-    root: EditColumnRendererRoot,
-    column: GridColumnElement & {
-      __originalClearCellContent?: ClearFunction;
-      _clearCellContent?: ClearFunction;
-    },
-    model,
-  ) => {
-    // Patch the column's _clearCellContent function which is called internally by grid-pro
-    // when switching from edit mode to view mode and vice versa
-    if (!column.__originalClearCellContent) {
-      column.__originalClearCellContent = column._clearCellContent;
-
-      column._clearCellContent = (cell) => {
-        const cellRoot = cell._content;
-        // Call the original renderer with __renderEmpty set to true to clear the content it manages
-        cellRoot.__editColumnRenderer?.(cellRoot, column, Object.assign({}, model, { __renderEmpty: true }));
-        // Call the original clearCellContent function to manually clear the cell content
-        column.__originalClearCellContent?.(cell);
-      };
-    }
-
-    // Update the cell content's renderer reference so that the correct one is used
-    // to render empty when the cell is cleared
-    root.__editColumnRenderer = bodyRenderer;
-
-    // Call the original renderer
-    bodyRenderer(root, column, model);
-  };
-
-  return bodyRenderer.__wrapperRenderer;
-}
+const SKIP_CLEARING_CELL_CONTENT = Symbol();
 
 function GridProEditColumn<TItem = GridDefaultItem>(
   { children, footer, header, ...props }: GridProEditColumnProps<TItem>,
   ref: ForwardedRef<GridProEditColumnElement<TItem>>,
 ): ReactElement | null {
-  const [editModePortals, editModeRenderer] = useModelRenderer(editColumnReactRenderer(props.editModeRenderer), {
+  const [editedItem, setEditedItem] = useState<TItem | null>(null);
+
+  const [editModePortals, editModeRenderer] = useModelRenderer(props.editModeRenderer, {
     renderMode: 'sync',
+    shouldRenderPortal: (_root, _column, model) => editedItem === model.item,
   });
   const [headerPortals, headerRenderer] = useSimpleOrChildrenRenderer(props.headerRenderer, header, {
     renderMode: 'microtask',
@@ -142,18 +80,64 @@ function GridProEditColumn<TItem = GridDefaultItem>(
   const [footerPortals, footerRenderer] = useSimpleOrChildrenRenderer(props.footerRenderer, footer, {
     renderMode: 'microtask',
   });
-  const [bodyPortals, bodyRenderer] = useModelRenderer(editColumnReactRenderer(props.renderer ?? children), {
-    renderMode: 'sync',
+  const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? children, {
+    renderMode: 'microtask',
+    shouldRenderPortal: (_root, _column, model) => editedItem !== model.item,
   });
+
+  const innerRef = useRef<GridProEditColumnElement<TItem> & GridProEditColumnElementInternals<TItem>>(null);
+  const finalRef = useMergedRefs(innerRef, ref);
+
+  useLayoutEffect(() => {
+    innerRef.current!._clearCellContent = function (cell) {
+      if (!cell[SKIP_CLEARING_CELL_CONTENT]) {
+        Object.getPrototypeOf(this)._clearCellContent.call(this, cell);
+      }
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    innerRef.current!._renderEditor = function (cell, model) {
+      flushSync(() => {
+        setEditedItem(model.item);
+      });
+
+      if (!bodyRenderer) {
+        this._clearCellContent(cell);
+      }
+
+      cell[SKIP_CLEARING_CELL_CONTENT] = true;
+      Object.getPrototypeOf(this)._renderEditor.call(this, cell, model);
+      cell[SKIP_CLEARING_CELL_CONTENT] = false;
+    };
+  }, [bodyRenderer]);
+
+  useLayoutEffect(() => {
+    innerRef.current!._removeEditor = function (cell, model) {
+      if (!editModeRenderer) {
+        this._clearCellContent(cell);
+      }
+
+      flushSync(() => {
+        setEditedItem((editedItem) => {
+          return editedItem === model.item ? null : editedItem;
+        });
+      });
+
+      cell[SKIP_CLEARING_CELL_CONTENT] = true;
+      Object.getPrototypeOf(this)._removeEditor.call(this, cell, model);
+      cell[SKIP_CLEARING_CELL_CONTENT] = false;
+    };
+  }, [editModeRenderer]);
 
   return (
     <_GridProEditColumn<TItem>
       {...props}
-      editModeRenderer={editColumnRenderer(editModeRenderer)}
+      editModeRenderer={editModeRenderer}
       footerRenderer={footerRenderer}
       headerRenderer={headerRenderer}
-      ref={ref}
-      renderer={editColumnRenderer(bodyRenderer)}
+      ref={finalRef}
+      renderer={bodyRenderer}
     >
       {editModePortals}
       {headerPortals}

@@ -25,24 +25,25 @@ function rendererReducer<W extends WebComponentRenderer>(
   return new Map(state).set(root, args as Slice<Parameters<W>, 1>);
 }
 
-export type RendererConfig = {
+export type RendererConfig<W extends WebComponentRenderer> = {
   renderMode?: 'default' | 'sync' | 'microtask';
+  shouldRenderPortal?(root: HTMLElement, ...args: Slice<Parameters<W>, 1>): boolean;
 };
 
 export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   node: ReactNode,
   convert?: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
-  config?: RendererConfig,
+  config?: RendererConfig<W>,
 ): UseRendererResult<W>;
 export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   reactRenderer: ComponentType<P> | null | undefined,
   convert: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
-  config?: RendererConfig,
+  config?: RendererConfig<W>,
 ): UseRendererResult<W>;
 export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   reactRendererOrNode: ReactNode | ComponentType<P> | null | undefined,
   convert?: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
-  config?: RendererConfig,
+  config?: RendererConfig<W>,
 ): UseRendererResult<W> {
   const [map, update] = useReducer<typeof rendererReducer<W>>(rendererReducer, initialState);
   const renderer = useCallback(
@@ -60,14 +61,18 @@ export function useRenderer<P extends {}, W extends WebComponentRenderer>(
 
   return reactRendererOrNode
     ? [
-        Array.from(map.entries()).map(([root, args]) =>
-          createPortal(
-            convert
-              ? createElement<P>(reactRendererOrNode as ComponentType<P>, convert(args))
-              : (reactRendererOrNode as ReactNode),
-            root,
+        Array.from(map.entries())
+          .filter(([root, args]) => {
+            return config?.shouldRenderPortal?.(root, ...args) ?? true;
+          })
+          .map(([root, args]) =>
+            createPortal(
+              convert
+                ? createElement<P>(reactRendererOrNode as ComponentType<P>, convert(args))
+                : (reactRendererOrNode as ReactNode),
+              root,
+            ),
           ),
-        ),
         renderer,
       ]
     : [];
