@@ -456,7 +456,9 @@ describe('Grid', () => {
           );
         });
         doubleClick(cellContent);
-        const cellEditor = await until(() => document.querySelector<HTMLInputElement>('vaadin-grid-pro-edit-text-field'));
+        const cellEditor = await until(() =>
+          document.querySelector<HTMLInputElement>('vaadin-grid-pro-edit-text-field'),
+        );
         // Set a new value
         cellEditor.value = 'foo';
         // Exit edit mode
