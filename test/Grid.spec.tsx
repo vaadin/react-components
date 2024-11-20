@@ -429,6 +429,50 @@ describe('Grid', () => {
       expect(footerCell).to.have.text('Name Footer');
     });
 
+    describe('default renderers', () => {
+      type GridProItem = { name: string };
+
+      let items: GridProItem[];
+
+      function doubleClick(element: Element) {
+        element.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+      }
+
+      beforeEach(() => {
+        items = Array.from(new Array(1)).map((_, i) => ({ name: `name-${i}` }));
+      });
+
+      it.only('should update the content', async () => {
+        render(
+          <GridPro<GridProItem> items={items}>
+            <GridProEditColumn<Item> path="name" />
+          </GridPro>,
+        );
+
+        // Get the cell content
+        let cellContent = await until(() => {
+          return Array.from(document.querySelectorAll('vaadin-grid-cell-content')).find(
+            (cellContent) => cellContent.textContent === 'name-0',
+          );
+        });
+        doubleClick(cellContent);
+        const cellEditor = await until(() => document.querySelector<HTMLInputElement>('vaadin-grid-pro-edit-text-field'));
+        // Set a new value
+        cellEditor.value = 'foo';
+        // Exit edit mode
+        cellEditor.blur();
+        // Wait for the editor to close
+        await until(() => !document.querySelector('vaadin-grid-pro-edit-text-field'));
+        // Expect the cell content to be connected and have the new value
+        cellContent = await until(() => {
+          return Array.from(document.querySelectorAll('vaadin-grid-cell-content')).find(
+            (cellContent) => cellContent.textContent === 'foo',
+          );
+        });
+        expect(cellContent).to.have.text('foo');
+      });
+    });
+
     describe('custom renderers', () => {
       type GridProItem = { name: string };
 
