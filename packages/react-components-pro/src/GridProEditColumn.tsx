@@ -8,9 +8,10 @@
  * See https://vaadin.com/commercial-license-and-service-terms for the full
  * license.
  */
-import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { type ForwardedRef, forwardRef, type ReactElement, type ReactNode, type RefAttributes } from 'react';
-import type { GridBodyRenderer, GridDefaultItem } from '@vaadin/react-components/Grid.js';
+import { flushSync } from 'react-dom';
+import type { GridDefaultItem } from '@vaadin/react-components/Grid.js';
 import type { GridColumnProps } from '@vaadin/react-components/GridColumn.js';
 import {
   GridProEditColumn as _GridProEditColumn,
@@ -20,8 +21,7 @@ import {
 import { useModelRenderer } from '@vaadin/react-components/renderers/useModelRenderer.js';
 import { useSimpleOrChildrenRenderer } from '@vaadin/react-components/renderers/useSimpleOrChildrenRenderer.js';
 import type { OmittedGridColumnHTMLAttributes } from '@vaadin/react-components/GridColumn.js';
-import useMergedRefs from '../../react-components/src/utils/useMergedRefs.js';
-import { flushSync } from 'react-dom';
+import useMergedRefs from '@vaadin/react-components/utils/useMergedRefs.js';
 
 export * from './generated/GridProEditColumn.js';
 
