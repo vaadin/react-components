@@ -581,7 +581,7 @@ describe('Grid', () => {
         expect(cellContent).to.have.text('foo');
       });
 
-      it('should toggle edit mode on double click without a custom renderer', async () => {
+      it('should toggle edit mode on double click without a custom editor', async () => {
         render(
           <GridPro<GridProItem> items={items}>
             <GridProEditColumn<Item>
