@@ -57,9 +57,9 @@ export type GridProEditColumnProps<TItem> = Partial<
   }>;
 
 type GridProEditColumnElementInternals<TItem> = {
+  _clearCellContent(cell: HTMLElement & { [SKIP_CLEARING_CELL_CONTENT]?: boolean }): void;
   _renderEditor(cell: HTMLElement & { [SKIP_CLEARING_CELL_CONTENT]?: boolean }, model: { item: TItem }): void;
   _removeEditor(cell: HTMLElement & { [SKIP_CLEARING_CELL_CONTENT]?: boolean }, model: { item: TItem }): void;
-  _clearCellContent(cell: HTMLElement & { [SKIP_CLEARING_CELL_CONTENT]?: boolean }): void;
 };
 
 const SKIP_CLEARING_CELL_CONTENT = Symbol();
@@ -71,6 +71,7 @@ function GridProEditColumn<TItem = GridDefaultItem>(
   const [editedItem, setEditedItem] = useState<TItem | null>(null);
 
   const [editModePortals, editModeRenderer] = useModelRenderer(props.editModeRenderer, {
+    // The web component implementation currently requires the editor to be rendered synchronously.
     renderMode: 'sync',
     shouldRenderPortal: (_root, _column, model) => editedItem === model.item,
   });
@@ -90,6 +91,8 @@ function GridProEditColumn<TItem = GridDefaultItem>(
 
   useLayoutEffect(() => {
     innerRef.current!._clearCellContent = function (cell) {
+      // Clearing cell content in _renderEditor and _removeEditor is decided
+      // based on whether the content was rendered by a React renderer or not.
       if (!cell[SKIP_CLEARING_CELL_CONTENT]) {
         Object.getPrototypeOf(this)._clearCellContent.call(this, cell);
       }
@@ -98,10 +101,14 @@ function GridProEditColumn<TItem = GridDefaultItem>(
 
   useLayoutEffect(() => {
     innerRef.current!._renderEditor = function (cell, model) {
+      // Ensure the corresponding bodyRenderer portal is removed and the editModeRenderer portal
+      // is added instead.
       flushSync(() => {
         setEditedItem(model.item);
       });
 
+      // Manually clear the cell content only if it was rendered by the default grid renderer.
+      // For content rendered by a React renderer, clearing is handled by removing the portal.
       if (!bodyRenderer) {
         this._clearCellContent(cell);
       }
@@ -114,10 +121,16 @@ function GridProEditColumn<TItem = GridDefaultItem>(
 
   useLayoutEffect(() => {
     innerRef.current!._removeEditor = function (cell, model) {
+      // Manually clear the cell content only if it was rendered by the default grid renderer.
+      // For content rendered by a React renderer, clearing is handled by removing the portal.
       if (!editModeRenderer) {
         this._clearCellContent(cell);
       }
 
+      // Ensure the editModeRenderer portal is removed and the corresponding bodyRenderer portal
+      // is added again. Please note the bodyRenderer portal will be added synchronously even though
+      // the renderer has renderMode set to microtask. It's because the portal already has content
+      // from the previous render cycle and we just show it again.
       flushSync(() => {
         setEditedItem((editedItem) => {
           return editedItem === model.item ? null : editedItem;
