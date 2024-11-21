@@ -54,27 +54,28 @@ describe('Grid', () => {
     return <>{item.name}</>;
   }
 
-  function isGridCellContentNodeRendered(node: Node) {
-    return (
-      node instanceof Text &&
-      node.parentNode instanceof HTMLElement &&
-      node.parentNode.localName === 'vaadin-grid-cell-content'
-    );
-  }
+  function getGridMeaningfulParts(
+    columnElementName: string,
+    assertions: { expectedColumnCount: number; expectedCellCount: number },
+  ) {
+    return waitFor(async () => {
+      const grid = document.querySelector('vaadin-grid, vaadin-grid-pro')!;
+      expect(grid).to.exist;
 
-  function getGridMeaningfulParts(columnElementName: string) {
-    const grid = document.querySelector('vaadin-grid, vaadin-grid-pro')!;
-    expect(grid).to.exist;
+      const columns = document.querySelectorAll(columnElementName);
 
-    const columns = document.querySelectorAll(columnElementName);
+      // Filter cells that don't have any textContent. Grid creates empty cells for some calculations,
+      // but we don't need them.
+      const cells = Array.from(grid!.querySelectorAll('vaadin-grid-cell-content')).filter(
+        ({ textContent }) => textContent,
+      );
 
-    // Filter cells that don't have any textContent. Grid creates empty cells for some calculations,
-    // but we don't need them.
-    const cells = Array.from(grid!.querySelectorAll('vaadin-grid-cell-content')).filter(
-      ({ textContent }) => textContent,
-    );
+      const { expectedColumnCount, expectedCellCount } = assertions;
+      expect(columns).to.have.lengthOf(expectedColumnCount);
+      expect(cells).to.have.lengthOf(expectedCellCount);
 
-    return [columns, cells] as const;
+      return [columns, cells] as const;
+    });
   }
 
   afterEach(cleanup);
@@ -99,13 +100,9 @@ describe('Grid', () => {
         </Grid>,
       );
 
-      const [_columns, cells] = await waitFor(async () => {
-        const [columns, cells] = getGridMeaningfulParts('vaadin-grid-column');
-
-        expect(columns).to.have.length(3);
-        expect(cells).to.have.length(15);
-
-        return [columns, cells];
+      const [columns, cells] = await getGridMeaningfulParts('vaadin-grid-column', {
+        expectedColumnCount: 3,
+        expectedCellCount: 15,
       });
 
       const [headerRendererCell, headerInlineCell, nameHeaderCell, surnameHeaderCell, roleHeaderCell] = cells.slice(
@@ -218,13 +215,9 @@ describe('Grid', () => {
         </Grid>,
       );
 
-      const [_columns, cells] = await waitFor(async () => {
-        const [columns, cells] = getGridMeaningfulParts('vaadin-grid-column');
-
-        expect(columns).to.have.length(1);
-        expect(cells).to.have.length(6);
-
-        return [columns, cells];
+      const [columns, cells] = await getGridMeaningfulParts('vaadin-grid-column', {
+        expectedColumnCount: 1,
+        expectedCellCount: 6,
       });
 
       const [groupHeaderCell, nameHeaderCell, nameFooterCell, groupFooterCell] = cells;
@@ -244,13 +237,9 @@ describe('Grid', () => {
         </Grid>,
       );
 
-      const [_columns, cells] = await waitFor(async () => {
-        const [columns, cells] = getGridMeaningfulParts('vaadin-grid-filter-column');
-
-        expect(columns).to.have.length(1);
-        expect(cells).to.have.length(3);
-
-        return [columns, cells];
+      const [columns, cells] = await getGridMeaningfulParts('vaadin-grid-filter-column', {
+        expectedColumnCount: 1,
+        expectedCellCount: 3,
       });
 
       const [footerCell, bodyCell1, bodyCell2] = cells;
@@ -267,13 +256,9 @@ describe('Grid', () => {
         </Grid>,
       );
 
-      const [_columns, cells] = await waitFor(async () => {
-        const [columns, cells] = getGridMeaningfulParts('vaadin-grid-filter-column');
-
-        expect(columns).to.have.length(1);
-        expect(cells).to.have.length(4);
-
-        return [columns, cells];
+      const [columns, cells] = await getGridMeaningfulParts('vaadin-grid-filter-column', {
+        expectedColumnCount: 1,
+        expectedCellCount: 4,
       });
 
       const footerCell = cells[1];
@@ -292,13 +277,9 @@ describe('Grid', () => {
         </Grid>,
       );
 
-      const [_columns, cells] = await waitFor(async () => {
-        const [columns, cells] = getGridMeaningfulParts('vaadin-grid-selection-column');
-
-        expect(columns).to.have.length(1);
-        expect(cells).to.have.length(4);
-
-        return [columns, cells];
+      const [columns, cells] = await getGridMeaningfulParts('vaadin-grid-selection-column', {
+        expectedColumnCount: 1,
+        expectedCellCount: 4,
       });
 
       const [headerCell, footerCell, bodyCell1, bodyCell2] = cells;
@@ -318,13 +299,9 @@ describe('Grid', () => {
         </Grid>,
       );
 
-      const [_columns, cells] = await waitFor(async () => {
-        const [columns, cells] = getGridMeaningfulParts('vaadin-grid-selection-column');
-
-        expect(columns).to.have.length(1);
-        expect(cells).to.have.length(4);
-
-        return [columns, cells];
+      const [columns, cells] = await getGridMeaningfulParts('vaadin-grid-selection-column', {
+        expectedColumnCount: 1,
+        expectedCellCount: 4,
       });
 
       const [headerCell, footerCell] = cells;
@@ -342,13 +319,9 @@ describe('Grid', () => {
         </Grid>,
       );
 
-      const [_columns, cells] = await waitFor(async () => {
-        const [columns, cells] = getGridMeaningfulParts('vaadin-grid-sort-column');
-
-        expect(columns).to.have.length(1);
-        expect(cells).to.have.length(3);
-
-        return [columns, cells];
+      const [columns, cells] = await getGridMeaningfulParts('vaadin-grid-sort-column', {
+        expectedColumnCount: 1,
+        expectedCellCount: 3,
       });
 
       const [footerCell, bodyCell1, bodyCell2] = cells;
@@ -365,13 +338,9 @@ describe('Grid', () => {
         </Grid>,
       );
 
-      const [_columns, cells] = await waitFor(async () => {
-        const [columns, cells] = getGridMeaningfulParts('vaadin-grid-sort-column');
-
-        expect(columns).to.have.length(1);
-        expect(cells).to.have.length(4);
-
-        return [columns, cells];
+      const [columns, cells] = await getGridMeaningfulParts('vaadin-grid-sort-column', {
+        expectedColumnCount: 1,
+        expectedCellCount: 4,
       });
 
       const footerCell = cells[1];
@@ -390,13 +359,9 @@ describe('Grid', () => {
         </GridPro>,
       );
 
-      const [_columns, cells] = await waitFor(async () => {
-        const [columns, cells] = getGridMeaningfulParts('vaadin-grid-pro-edit-column');
-
-        expect(columns).to.have.length(1);
-        expect(cells).to.have.length(4);
-
-        return [columns, cells];
+      const [columns, cells] = await getGridMeaningfulParts('vaadin-grid-pro-edit-column', {
+        expectedColumnCount: 1,
+        expectedCellCount: 4,
       });
 
       const [headerCell, footerCell, bodyCell1, bodyCell2] = cells;
@@ -414,13 +379,9 @@ describe('Grid', () => {
         </GridPro>,
       );
 
-      const [_columns, cells] = await waitFor(async () => {
-        const [columns, cells] = getGridMeaningfulParts('vaadin-grid-pro-edit-column');
-
-        expect(columns).to.have.length(1);
-        expect(cells).to.have.length(4);
-
-        return [columns, cells];
+      const [columns, cells] = await getGridMeaningfulParts('vaadin-grid-pro-edit-column', {
+        expectedColumnCount: 1,
+        expectedCellCount: 4,
       });
 
       const [headerCell, footerCell] = cells;
@@ -780,13 +741,9 @@ describe('Grid', () => {
         </Grid>,
       );
 
-      const [_columns, cells] = await waitFor(async () => {
-        const [columns, cells] = getGridMeaningfulParts('vaadin-grid-tree-column');
-
-        expect(columns).to.have.length(1);
-        expect(cells).to.have.length(7);
-
-        return [columns, cells];
+      const [columns, cells] = await getGridMeaningfulParts('vaadin-grid-tree-column', {
+        expectedColumnCount: 1,
+        expectedCellCount: 7,
       });
 
       const [treeHeaderCell, nameHeaderCell, treeFooterCell] = cells;
@@ -804,13 +761,9 @@ describe('Grid', () => {
         </Grid>,
       );
 
-      const [_columns, cells] = await waitFor(async () => {
-        const [columns, cells] = getGridMeaningfulParts('vaadin-grid-tree-column');
-
-        expect(columns).to.have.length(1);
-        expect(cells).to.have.length(7);
-
-        return [columns, cells];
+      const [columns, cells] = await getGridMeaningfulParts('vaadin-grid-tree-column', {
+        expectedColumnCount: 1,
+        expectedCellCount: 7,
       });
 
       const [treeHeaderCell, nameHeaderCell, treeFooterCell] = cells;
