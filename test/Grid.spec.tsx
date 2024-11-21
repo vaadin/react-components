@@ -536,6 +536,26 @@ describe('Grid', () => {
         expect(cellContent.isConnected).to.be.false;
       });
 
+      it('should toggle edit mode on double click', async () => {
+        render(
+          <GridPro<GridProItem> items={items}>
+            <GridProEditColumn<Item> path="name" editModeRenderer={() => <input className="editor" />}>
+              {({ item }) => <span className="content">{item.name}</span>}
+            </GridProEditColumn>
+          </GridPro>,
+        );
+
+        for (let i = 0; i < 2; i++) {
+          const cellContent = await until(() => document.querySelector('.content'));
+          doubleClick(cellContent);
+
+          const cellEditor = await until(() => document.querySelector<HTMLInputElement>('.editor'));
+          focusOut(cellEditor);
+
+          await until(() => !document.querySelector('.editor'));
+        }
+      });
+
       it('should have updated content', async () => {
         render(
           <GridPro<GridProItem> items={items}>
@@ -561,6 +581,29 @@ describe('Grid', () => {
         expect(cellContent).to.have.text('foo');
       });
 
+      it('should toggle edit mode on double click without a custom renderer', async () => {
+        render(
+          <GridPro<GridProItem> items={items}>
+            <GridProEditColumn<Item>
+              path="name"
+              renderer={({ item }) => <span className="content">{item.name}</span>}
+            />
+          </GridPro>,
+        );
+
+        for (let i = 0; i < 2; i++) {
+          const cellContent = await until(() => document.querySelector('.content'));
+          doubleClick(cellContent);
+
+          const cellEditor = await until(() =>
+            document.querySelector<HTMLInputElement>('vaadin-grid-pro-edit-text-field'),
+          );
+          focusOut(cellEditor);
+
+          await until(() => !document.querySelector('input'));
+        }
+      });
+
       it('should update the content without a custom editor', async () => {
         render(
           <GridPro<GridProItem> items={items}>
@@ -584,6 +627,26 @@ describe('Grid', () => {
         cellContent = await until(() => document.querySelector('.content'));
 
         expect(cellContent).to.have.text('foo');
+      });
+
+      it('should toggle edit mode on double click without a custom renderer', async () => {
+        render(
+          <GridPro<GridProItem> items={items}>
+            <GridProEditColumn<Item> path="name" editModeRenderer={() => <input className="editor" />} />
+          </GridPro>,
+        );
+
+        for (let i = 0; i < 2; i++) {
+          const cellContent = await until(() =>
+            Array.from(document.querySelectorAll('vaadin-grid-cell-content')).find((c) => c.textContent === 'name-0'),
+          );
+          doubleClick(cellContent!);
+
+          const cellEditor = await until(() => document.querySelector<HTMLInputElement>('.editor'));
+          focusOut(cellEditor);
+
+          await until(() => !document.querySelector('.editor'));
+        }
       });
 
       it('should update the content without a custom renderer', async () => {
