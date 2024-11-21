@@ -37,6 +37,7 @@ function Grid<TItem = GridDefaultItem>(
 
   useLayoutEffect(() => {
     innerRef.current!.recalculateColumnWidths = function (...args) {
+      // Wait for column content to finish rendering before recalculating widths.
       queueMicrotask(() => {
         Object.getPrototypeOf(this).recalculateColumnWidths.call(this, ...args);
       });
