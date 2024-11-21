@@ -439,7 +439,34 @@ describe('Grid', () => {
       }
 
       beforeEach(() => {
-        items = Array.from(new Array(1)).map((_, i) => ({ name: `name-${i}` }));
+        items = [{ name: 'name-0' }];
+      });
+
+      it('should toggle edit mode on double click', async () => {
+        render(
+          <GridPro<GridProItem> items={items}>
+            <GridProEditColumn<Item> path="name" />
+          </GridPro>,
+        );
+
+        const cellContent = await until(() =>
+          Array.from(document.querySelectorAll('vaadin-grid-cell-content')).find(
+            (cellContent) => cellContent.textContent === 'name-0',
+          ),
+        );
+
+        for (let i = 0; i < 2; i++) {
+          expect(cellContent.textContent?.trim()).to.equal('name-0');
+          doubleClick(cellContent);
+
+          const cellEditor = await until(() =>
+            cellContent.querySelector<HTMLInputElement>('vaadin-grid-pro-edit-text-field'),
+          );
+          expect(cellContent.textContent?.trim()).to.be.empty;
+          cellEditor.blur();
+
+          await until(() => !cellContent.contains(cellEditor));
+        }
       });
 
       it('should update the content', async () => {
@@ -450,28 +477,23 @@ describe('Grid', () => {
         );
 
         // Get the cell content
-        let cellContent = await until(() => {
-          return Array.from(document.querySelectorAll('vaadin-grid-cell-content')).find(
+        const cellContent = await until(() =>
+          Array.from(document.querySelectorAll('vaadin-grid-cell-content')).find(
             (cellContent) => cellContent.textContent === 'name-0',
-          );
-        });
+          ),
+        );
         doubleClick(cellContent);
         const cellEditor = await until(() =>
-          document.querySelector<HTMLInputElement>('vaadin-grid-pro-edit-text-field'),
+          cellContent.querySelector<HTMLInputElement>('vaadin-grid-pro-edit-text-field'),
         );
         // Set a new value
         cellEditor.value = 'foo';
         // Exit edit mode
         cellEditor.blur();
         // Wait for the editor to close
-        await until(() => !document.querySelector('vaadin-grid-pro-edit-text-field'));
+        await until(() => !cellContent.contains(cellEditor));
         // Expect the cell content to be connected and have the new value
-        cellContent = await until(() => {
-          return Array.from(document.querySelectorAll('vaadin-grid-cell-content')).find(
-            (cellContent) => cellContent.textContent === 'foo',
-          );
-        });
-        expect(cellContent).to.have.text('foo');
+        await until(() => cellContent.textContent === 'foo');
       });
     });
 
@@ -545,14 +567,21 @@ describe('Grid', () => {
           </GridPro>,
         );
 
+        const cellContent = await until(() =>
+          Array.from(document.querySelectorAll('vaadin-grid-cell-content')).find((cellContent) =>
+            cellContent.querySelector('.content'),
+          ),
+        );
+
         for (let i = 0; i < 2; i++) {
-          const cellContent = await until(() => document.querySelector('.content'));
+          expect(cellContent.textContent?.trim()).to.equal('name-0');
           doubleClick(cellContent);
 
-          const cellEditor = await until(() => document.querySelector<HTMLInputElement>('.editor'));
-          focusOut(cellEditor);
+          const cellEditor = await until(() => cellContent.querySelector<HTMLInputElement>('.editor'));
+          expect(cellContent.textContent?.trim()).to.be.empty;
+          cellEditor.blur();
 
-          await until(() => !document.querySelector('.editor'));
+          await until(() => !cellContent.contains(cellEditor));
         }
       });
 
@@ -591,16 +620,23 @@ describe('Grid', () => {
           </GridPro>,
         );
 
+        const cellContent = await until(() =>
+          Array.from(document.querySelectorAll('vaadin-grid-cell-content')).find((cellContent) =>
+            cellContent.querySelector('.content'),
+          ),
+        );
+
         for (let i = 0; i < 2; i++) {
-          const cellContent = await until(() => document.querySelector('.content'));
+          expect(cellContent.textContent?.trim()).to.equal('name-0');
           doubleClick(cellContent);
 
           const cellEditor = await until(() =>
-            document.querySelector<HTMLInputElement>('vaadin-grid-pro-edit-text-field'),
+            cellContent.querySelector<HTMLInputElement>('vaadin-grid-pro-edit-text-field'),
           );
-          focusOut(cellEditor);
+          expect(cellContent.textContent?.trim()).to.be.empty;
+          cellEditor.blur();
 
-          await until(() => !document.querySelector('input'));
+          await until(() => !cellContent.contains(cellEditor));
         }
       });
 
@@ -636,16 +672,21 @@ describe('Grid', () => {
           </GridPro>,
         );
 
+        const cellContent = await until(() =>
+          Array.from(document.querySelectorAll('vaadin-grid-cell-content')).find(
+            (cellContent) => cellContent.textContent === 'name-0',
+          ),
+        );
+
         for (let i = 0; i < 2; i++) {
-          const cellContent = await until(() =>
-            Array.from(document.querySelectorAll('vaadin-grid-cell-content')).find((c) => c.textContent === 'name-0'),
-          );
-          doubleClick(cellContent!);
+          expect(cellContent.textContent?.trim()).to.equal('name-0');
+          doubleClick(cellContent);
 
-          const cellEditor = await until(() => document.querySelector<HTMLInputElement>('.editor'));
-          focusOut(cellEditor);
+          const cellEditor = await until(() => cellContent.querySelector<HTMLInputElement>('.editor'));
+          expect(cellContent.textContent?.trim()).to.equal('');
+          cellEditor.blur();
 
-          await until(() => !document.querySelector('.editor'));
+          await until(() => !cellContent.contains(cellEditor));
         }
       });
 
