@@ -39,7 +39,7 @@
   "author": "Vaadin Ltd.",
   "license": "SEE LICENSE IN LICENSE",
   "peerDependencies": {
-    "react": "18.x || 19.x",
+    "react": "^18.0.0 || ^19.0.0",
     "react-dom": "18.x || 19.x"
   },
   "sideEffects": false,
