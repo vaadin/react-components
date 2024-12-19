@@ -1,6 +1,7 @@
 import {
   type ComponentType,
   createElement,
+  type FunctionComponent,
   type PropsWithChildren,
   type ReactElement,
   type ReactNode,
@@ -68,7 +69,7 @@ export function useRenderer<P extends {}, W extends WebComponentRenderer>(
           .map(([root, args]) =>
             createPortal(
               convert
-                ? createElement<P>(reactRendererOrNode as ComponentType<P>, convert(args))
+                ? (reactRendererOrNode as FunctionComponent<P>)(convert(args))
                 : (reactRendererOrNode as ReactNode),
               root,
             ),
