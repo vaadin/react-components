@@ -35,7 +35,6 @@ const CREATE_COMPONENT_PATH = '$CREATE_COMPONENT_PATH$';
 const EVENT_MAP = '$EVENT_MAP$';
 const EVENT_MAP_REF_IN_EVENTS = '$EVENT_MAP_REF_IN_EVENTS$';
 const EVENTS_DECLARATION = '$EVENTS_DECLARATION$';
-const LIT_REACT_PATH = '@lit/react';
 const MODULE_PATH = '$MODULE_PATH$';
 
 type ElementData = Readonly<{
@@ -321,14 +320,13 @@ function generateReactComponent({ name, js }: SchemaHTMLElement, { packageName, 
 
   const ast = template(
     `
-import type { EventName } from "${LIT_REACT_PATH}";
 import {
   ${COMPONENT_NAME} as ${COMPONENT_NAME}Element
   type ${COMPONENT_NAME}EventMap as _${COMPONENT_NAME}EventMap,
   ${[...new Set(genericElementInfo?.typeConstraints || [])].map((constraint) => `type ${constraint}`)}
 } from "${MODULE_PATH}";
 import * as React from "react";
-import { createComponent, type WebComponentProps } from "${CREATE_COMPONENT_PATH}";
+import { createComponent, type WebComponentProps, type EventName } from "${CREATE_COMPONENT_PATH}";
 
 export * from "${MODULE_PATH}";
 

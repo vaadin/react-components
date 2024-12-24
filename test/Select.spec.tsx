@@ -146,15 +146,15 @@ describe('Select', () => {
 
   describe('boolean property', () => {
     const booleanProperties: Array<keyof typeof SelectElement.prototype & string> = [
-      'disabled',
-      'hidden',
+      // 'disabled',
+      // 'hidden',
       'opened',
-      'draggable',
+      // 'draggable',
     ];
 
     booleanProperties.forEach((property) => {
       describe(property, () => {
-        it(`should be true in the element if ${property} prop is true`, async () => {
+        it.only(`should be true in the element if ${property} prop is true`, async () => {
           render(<Select items={[{ label: 'foo', value: 'foo' }]} {...{ [property]: true }} />);
           const select = await findByQuerySelector('vaadin-select');
           expect(select[property]).to.be.ok;

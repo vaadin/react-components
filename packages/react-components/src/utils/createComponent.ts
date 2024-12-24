@@ -1,7 +1,12 @@
-import { createComponent as _createComponent, type EventName } from '@lit/react';
 import type { ThemePropertyMixinClass } from '@vaadin/vaadin-themable-mixin/vaadin-theme-property-mixin.js';
 import type React from 'react';
-import type { RefAttributes } from 'react';
+import {
+  createElement,
+  useLayoutEffect,
+  useRef,
+  type RefAttributes,
+} from 'react';
+import useMergedRefs from './useMergedRefs.js';
 
 declare const __VERSION__: string;
 
@@ -28,8 +33,11 @@ window.Vaadin.registrations.push({
   version: __VERSION__,
 });
 
-// TODO: Remove when types from @lit-labs/react are exported
-export type EventNames = Record<string, EventName | string>;
+export type EventName<T extends Event = Event> = string & {
+  __eventType: T;
+};
+
+export type EventNames = Record<string, EventName>;
 type Constructor<T> = { new (): T; name: string };
 type PolymerConstructor<T> = Constructor<T> & { _properties: Record<string, unknown> };
 type Options<I extends HTMLElement, E extends EventNames = {}> = Readonly<{
@@ -79,30 +87,86 @@ type AllWebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I 
 
 export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = Partial<AllWebComponentProps<I, E>>;
 
-// We need a separate declaration here; otherwise, the TypeScript fails into the
-// endless loop trying to resolve the typings.
+const listenedEvents = new WeakMap<Element, Map<string, EventListenerObject>>();
+
+function addOrUpdateEventListener(node: Element, event: string, listener: ((event: Event) => void) | undefined) {
+  let events = listenedEvents.get(node);
+  if (events === undefined) {
+    listenedEvents.set(node, (events = new Map()));
+  }
+  let handler = events.get(event);
+  if (listener !== undefined) {
+    // If necessary, add listener and track handler
+    if (handler === undefined) {
+      events.set(event, (handler = { handleEvent: listener }));
+      node.addEventListener(event, handler);
+      // Otherwise just update the listener with new value
+    } else {
+      handler.handleEvent = listener;
+    }
+    // Remove listener if one exists and value is undefined
+  } else if (handler !== undefined) {
+    events.delete(event);
+    node.removeEventListener(event, handler);
+  }
+}
+
 export function createComponent<I extends HTMLElement, E extends EventNames = {}>(
   options: Options<I, E>,
-): (props: WebComponentProps<I, E> & RefAttributes<I>) => React.ReactElement | null;
+): (props: WebComponentProps<I, E> & RefAttributes<I>) => React.ReactElement {
+  const { tagName, events: eventsMap, elementClass } = options;
 
-export function createComponent<I extends HTMLElement, E extends EventNames = {}>(options: Options<I, E>): any {
-  const { elementClass } = options;
+  return (props) => {
+    const innerRef = useRef<I>(null);
+    const finalRef = useMergedRefs(innerRef, props.ref);
+    const prevEventsRef = useRef(new Set<string>());
 
-  return _createComponent(
-    '_properties' in elementClass
-      ? {
-          ...options,
-          // TODO: improve or remove the Polymer workaround
-          // 'createComponent' relies on key presence on the custom element class,
-          // but Polymer defines properties on the prototype when the first element
-          // is created. Workaround: pass a mock object with properties in
-          // the prototype.
-          elementClass: {
-            // @ts-expect-error: it is a specific workaround for Polymer classes.
-            name: elementClass.name,
-            prototype: { ...elementClass._properties, hidden: Boolean },
-          },
+    // Option 1 (Lit React's approach – no initial property events):
+    useLayoutEffect(() => {
+      if (eventsMap) {
+        const events = new Set(Object.keys(props).filter((event) => eventsMap[event]));
+        events.forEach((event) => {
+          addOrUpdateEventListener(innerRef.current!, eventsMap[event], props[event]);
+        });
+
+        prevEventsRef.current.forEach((event) => {
+          if (!events.has(event)) {
+            addOrUpdateEventListener(innerRef.current!, eventsMap[event], undefined);
+          }
+        });
+
+        prevEventsRef.current = events;
+      }
+    });
+
+    useLayoutEffect(() => {
+      return () => {
+        if (eventsMap) {
+          prevEventsRef.current.forEach((event) => {
+            addOrUpdateEventListener(innerRef.current!, eventsMap[event], undefined);
+          });
         }
-      : options,
-  );
+      }
+    }, []);
+
+    const elementProps = Object.entries(props).reduce((acc, [key, value]) => {
+      // Filter out event handlers from the props
+      if (eventsMap?.[key]) {
+        return acc;
+      }
+
+      return { ...acc, [key]: value };
+    }, {} as typeof props);
+
+    // Option 2 (React's approach – initial property events are fired):
+    // props = Object.entries(props).reduce((acc, [key, value]) => {
+    //   if (eventsMap?.[key]) {
+    //     key = `on${eventsMap[key]}`;
+    //   }
+
+    //   return { ...acc, [key]: value };
+    // }, {});
+
+    return createElement(tagName, { ...elementProps, ref: finalRef });
+  };
 }

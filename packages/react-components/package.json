@@ -26,7 +26,6 @@
     "version": "tsx ../../scripts/package-json-version.ts"
   },
   "dependencies": {
-    "@lit/react": "^1.0.6",
     "@vaadin/a11y-base": "24.7.0-alpha2",
     "@vaadin/accordion": "24.7.0-alpha2",
     "@vaadin/app-layout": "24.7.0-alpha2",
@@ -90,10 +89,10 @@
   "author": "Vaadin Ltd.",
   "license": "Apache-2.0",
   "peerDependencies": {
-    "@types/react": "^18.2.37 || ^19",
-    "@types/react-dom": "^18.2.15 || ^19",
-    "react": "^18.2.0 || ^19",
-    "react-dom": "^18.2.0 || ^19"
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "react": "^19",
+    "react-dom": "^19"
   },
   "peerDependenciesMeta": {
     "@types/react": {
@@ -501,6 +500,10 @@
     "./utils/createComponentWithOrderedProps.d.ts.map": "./utils/createComponentWithOrderedProps.d.ts.map",
     "./utils/createComponentWithOrderedProps.js": "./utils/createComponentWithOrderedProps.js",
     "./utils/createComponentWithOrderedProps.js.map": "./utils/createComponentWithOrderedProps.js.map",
+    "./utils/flushInMicrotask.d.ts": "./utils/flushInMicrotask.d.ts",
+    "./utils/flushInMicrotask.d.ts.map": "./utils/flushInMicrotask.d.ts.map",
+    "./utils/flushInMicrotask.js": "./utils/flushInMicrotask.js",
+    "./utils/flushInMicrotask.js.map": "./utils/flushInMicrotask.js.map",
     "./utils/flushMicrotask.d.ts": "./utils/flushMicrotask.d.ts",
     "./utils/flushMicrotask.d.ts.map": "./utils/flushMicrotask.d.ts.map",
     "./utils/flushMicrotask.js": "./utils/flushMicrotask.js",
