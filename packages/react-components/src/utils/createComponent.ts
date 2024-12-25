@@ -114,7 +114,7 @@ function addOrUpdateEventListener(node: Element, event: string, listener: ((even
 export function createComponent<I extends HTMLElement, E extends EventNames = {}>(
   options: Options<I, E>,
 ): (props: WebComponentProps<I, E> & RefAttributes<I>) => React.ReactElement {
-  const { tagName, events: eventsMap, elementClass } = options;
+  const { tagName, events: eventsMap } = options;
 
   return (props) => {
     const innerRef = useRef<I>(null);
