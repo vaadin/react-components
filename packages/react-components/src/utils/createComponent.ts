@@ -2,6 +2,7 @@ import type { ThemePropertyMixinClass } from '@vaadin/vaadin-themable-mixin/vaad
 import type React from 'react';
 import { createElement, useLayoutEffect, useRef, type RefAttributes } from 'react';
 import useMergedRefs from './useMergedRefs.js';
+import addOrUpdateEventListener from './addOrUpdateEventListener.js';
 
 declare const __VERSION__: string;
 
@@ -82,30 +83,6 @@ type AllWebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I 
 
 export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = Partial<AllWebComponentProps<I, E>>;
 
-const listenedEvents = new WeakMap<Element, Map<string, EventListenerObject>>();
-
-function addOrUpdateEventListener(node: Element, event: string, listener: ((event: Event) => void) | undefined) {
-  let events = listenedEvents.get(node);
-  if (events === undefined) {
-    listenedEvents.set(node, (events = new Map()));
-  }
-  let handler = events.get(event);
-  if (listener !== undefined) {
-    // If necessary, add listener and track handler
-    if (handler === undefined) {
-      events.set(event, (handler = { handleEvent: listener }));
-      node.addEventListener(event, handler);
-      // Otherwise just update the listener with new value
-    } else {
-      handler.handleEvent = listener;
-    }
-    // Remove listener if one exists and value is undefined
-  } else if (handler !== undefined) {
-    events.delete(event);
-    node.removeEventListener(event, handler);
-  }
-}
-
 export function createComponent<I extends HTMLElement, E extends EventNames = {}>(
   options: Options<I, E>,
 ): (props: WebComponentProps<I, E> & RefAttributes<I>) => React.ReactElement {
@@ -144,9 +121,7 @@ export function createComponent<I extends HTMLElement, E extends EventNames = {}
       };
     }, []);
 
-    const finalProps = Object.fromEntries(
-      Object.entries(props).filter(([key]) => !eventsMap?.[key])
-    );
+    const finalProps = Object.fromEntries(Object.entries(props).filter(([key]) => !eventsMap?.[key]));
 
     // Option 2 (initial property events are fired):
     // const finalProps = Object.fromEntries(
