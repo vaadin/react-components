@@ -1,11 +1,6 @@
 import type { ThemePropertyMixinClass } from '@vaadin/vaadin-themable-mixin/vaadin-theme-property-mixin.js';
 import type React from 'react';
-import {
-  createElement,
-  useLayoutEffect,
-  useRef,
-  type RefAttributes,
-} from 'react';
+import { createElement, useLayoutEffect, useRef, type RefAttributes } from 'react';
 import useMergedRefs from './useMergedRefs.js';
 
 declare const __VERSION__: string;
@@ -121,7 +116,7 @@ export function createComponent<I extends HTMLElement, E extends EventNames = {}
     const finalRef = useMergedRefs(innerRef, props.ref);
     const prevEventsRef = useRef(new Set<string>());
 
-    // Option 1 (Lit React's approach – no initial property events):
+    // Option 1 (no initial property events):
     useLayoutEffect(() => {
       if (eventsMap) {
         const events = new Set(Object.keys(props).filter((event) => eventsMap[event]));
@@ -146,27 +141,23 @@ export function createComponent<I extends HTMLElement, E extends EventNames = {}
             addOrUpdateEventListener(innerRef.current!, eventsMap[event], undefined);
           });
         }
-      }
+      };
     }, []);
 
-    const elementProps = Object.entries(props).reduce((acc, [key, value]) => {
-      // Filter out event handlers from the props
-      if (eventsMap?.[key]) {
-        return acc;
-      }
+    const finalProps = Object.fromEntries(
+      Object.entries(props).filter(([key]) => !eventsMap?.[key])
+    );
 
-      return { ...acc, [key]: value };
-    }, {} as typeof props);
+    // Option 2 (initial property events are fired):
+    // const finalProps = Object.fromEntries(
+    //   Object.entries(props).map(([key, value]) => {
+    //     if (eventsMap?.[key]) {
+    //       return [`on${eventsMap[key]}`, value];
+    //     }
+    //     return [key, value];
+    //   })
+    // );
 
-    // Option 2 (React's approach – initial property events are fired):
-    // props = Object.entries(props).reduce((acc, [key, value]) => {
-    //   if (eventsMap?.[key]) {
-    //     key = `on${eventsMap[key]}`;
-    //   }
-
-    //   return { ...acc, [key]: value };
-    // }, {});
-
-    return createElement(tagName, { ...elementProps, ref: finalRef });
+    return createElement(tagName, { ...finalProps, ref: finalRef });
   };
 }
