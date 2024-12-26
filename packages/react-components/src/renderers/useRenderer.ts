@@ -1,5 +1,4 @@
 import {
-  type ComponentClass,
   type ComponentType,
   createElement,
   type PropsWithChildren,
@@ -9,17 +8,13 @@ import {
   useReducer,
 } from 'react';
 import { createPortal, flushSync } from 'react-dom';
-import type { ReactRenderer, Slice, WebComponentRenderer } from './renderer.js';
+import { isRendererCallback, type Slice, type WebComponentRenderer } from './renderer.js';
 import { flushMicrotask } from '../utils/flushMicrotask.js';
 
 export type UseRendererResult<W extends WebComponentRenderer> = readonly [
   portals?: ReadonlyArray<ReactElement | null>,
   renderer?: W,
 ];
-
-// function isReactComponent<P>(Component: ComponentType<P>): Component is ComponentClass<P> {
-//   return Component.prototype.isReactComponent;
-// }
 
 const initialState = new Map();
 
@@ -42,12 +37,12 @@ export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   config?: RendererConfig<W>,
 ): UseRendererResult<W>;
 export function useRenderer<P extends {}, W extends WebComponentRenderer>(
-  reactRenderer: ReactRenderer<P> | null | undefined,
+  reactRenderer: ComponentType<P> | null | undefined,
   convert: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
   config?: RendererConfig<W>,
 ): UseRendererResult<W>;
 export function useRenderer<P extends {}, W extends WebComponentRenderer>(
-  reactRendererOrNode: ReactNode | ReactRenderer<P> | null | undefined,
+  reactRendererOrNode: ReactNode | ComponentType<P> | null | undefined,
   convert?: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
   config?: RendererConfig<W>,
 ): UseRendererResult<W> {
@@ -73,8 +68,10 @@ export function useRenderer<P extends {}, W extends WebComponentRenderer>(
           })
           .map(([root, args]) => {
             let children: ReactNode;
-            if (typeof reactRendererOrNode === 'function') {
+            if (isRendererCallback(reactRendererOrNode)) {
               children = reactRendererOrNode(convert!(args));
+            } else if (typeof reactRendererOrNode === 'function') {
+              children = createElement(reactRendererOrNode, convert!(args));
             } else {
               children = reactRendererOrNode;
             }
