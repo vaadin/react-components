@@ -1,5 +1,5 @@
 import type { ComponentType, PropsWithChildren } from 'react';
-import type { Slice } from './renderer.js';
+import type { ReactRenderer, Slice } from './renderer.js';
 import { useRenderer, type RendererConfig, type UseRendererResult } from './useRenderer.js';
 
 export type ReactSimpleRendererProps<O extends HTMLElement> = Readonly<{
@@ -15,7 +15,7 @@ function convertSimpleRendererArgs<O extends HTMLElement>([original]: Slice<
 }
 
 export function useSimpleRenderer<O extends HTMLElement>(
-  reactRenderer?: ComponentType<ReactSimpleRendererProps<O>> | null,
+  reactRenderer?: ReactRenderer<ReactSimpleRendererProps<O>> | null,
   config?: RendererConfig<WebComponentSimpleRenderer<O>>,
 ): UseRendererResult<WebComponentSimpleRenderer<O>> {
   return useRenderer(reactRenderer, convertSimpleRendererArgs, config);

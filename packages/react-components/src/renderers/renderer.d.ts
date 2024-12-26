@@ -5,3 +5,5 @@ type Slice<T, N extends number, O extends any[] = []> = O['length'] extends N
   : never;
 
 export type WebComponentRenderer = (root: HTMLElement, ...args: any[]) => void;
+
+export type ReactRenderer<P> = (props: P) => ReactNode;

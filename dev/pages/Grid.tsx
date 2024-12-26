@@ -1,45 +1,34 @@
-import { Grid, type GridDataProvider } from '../../packages/react-components/src/Grid.js';
+import { Grid, GridElement, type GridDataProvider } from '../../packages/react-components/src/Grid.js';
 import { GridSelectionColumn } from '../../packages/react-components/src/GridSelectionColumn.js';
 import { GridTreeColumn } from '../../packages/react-components/src/GridTreeColumn.js';
 import { GridColumn, GridColumnElement } from '../../packages/react-components/src/GridColumn.js';
 import { Tooltip } from '../../packages/react-components/src/Tooltip.js';
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import type { GridBodyReactRendererProps } from '@vaadin/react-components/renderers/grid.d.ts';
 
-type Item = {
-  name: string;
-  children: boolean;
-};
+type Item = { name: string };
 
-const dataProvider: GridDataProvider<Item> = ({ parentItem, page, pageSize }, cb) => {
-  const levelSize = parentItem ? 5 : 100;
+const items: Item[] = Array.from({ length: 100 }, (_, i) => ({ name: `Item ${i}` }));
 
-  const pageItems = [...Array(Math.min(levelSize, pageSize))].map((_, i) => {
-    const indexInLevel = page * pageSize + i;
+const GridContext = createContext<{ title: string } | null>(null);
 
-    return {
-      name: `${parentItem ? parentItem.name + '-' : ''}${indexInLevel}`,
-      children: true,
-    };
-  });
-
-  cb(pageItems, levelSize);
-};
-
-const tooltipGenerator = ({ column, item }: Record<string, unknown>) => {
-  const columnPath = (column as GridColumnElement)?.path;
-  const itemName = (item as Item)?.name;
-  return columnPath && itemName ? `Tooltip ${columnPath} ${itemName}` : '';
-};
+function GridColumnContent({ item }: GridBodyReactRendererProps<Item>) {
+  const gridContext = useContext(GridContext)!;
+  return <>{gridContext.title}: {item.name}</>;
+}
 
 export default function () {
-  return (
-    <Grid itemIdPath="name" dataProvider={dataProvider}>
-      <GridSelectionColumn frozen autoSelect dragSelect />
-      <GridTreeColumn frozen path="name" width="200px" />
-      <GridColumn path="name" width="200px" />
-      <GridColumn path="name" width="200px" />
-      <GridColumn path="name" width="200px" />
+  const [count, setCount] = useState(0);
 
-      <Tooltip slot="tooltip" hoverDelay={500} hideDelay={500} generator={tooltipGenerator} />
-    </Grid>
-  );
+  return <>
+    <GridContext.Provider value={{ title: 'Grid' }}>
+      <Grid<Item> items={items}>
+        <GridColumn>
+          {({ item }) => <input />}
+        </GridColumn>
+      </Grid>
+    </GridContext.Provider>
+
+    <button onClick={() => setCount(count + 1)}>Update</button>
+  </>;
 }

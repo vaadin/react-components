@@ -16,12 +16,13 @@ import {
 import type { GridRowDetailsReactRendererProps } from './renderers/grid.js';
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 import useMergedRefs from './utils/useMergedRefs.js';
+import type { ReactRenderer } from './renderers/renderer.js';
 
 export * from './generated/Grid.js';
 
 export type GridProps<TItem> = Partial<Omit<_GridProps<TItem>, 'rowDetailsRenderer'>> &
   Readonly<{
-    rowDetailsRenderer?: ComponentType<GridRowDetailsReactRendererProps<TItem>> | null;
+    rowDetailsRenderer?: ReactRenderer<GridRowDetailsReactRendererProps<TItem>> | null;
   }>;
 
 function Grid<TItem = GridDefaultItem>(

@@ -15,6 +15,7 @@ import {
 import type { GridBodyReactRendererProps, GridEdgeReactRendererProps } from './renderers/grid.js';
 import { useModelRenderer } from './renderers/useModelRenderer.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
+import type { ReactRenderer } from './renderers/renderer.js';
 
 export * from './generated/GridColumn.js';
 
@@ -36,18 +37,18 @@ export type GridColumnProps<TItem> = Partial<
   >
 > &
   Readonly<{
-    children?: ComponentType<GridBodyReactRendererProps<TItem>> | null;
+    children?: ReactRenderer<GridBodyReactRendererProps<TItem>> | null;
     footer?: ReactNode;
     /**
      * @deprecated Use `footer` instead.
      */
-    footerRenderer?: ComponentType<GridEdgeReactRendererProps<TItem>> | null;
+    footerRenderer?: ReactRenderer<GridEdgeReactRendererProps<TItem>> | null;
     header?: ReactNode;
     /**
      * @deprecated Use `header` instead.
      */
-    headerRenderer?: ComponentType<GridEdgeReactRendererProps<TItem>> | null;
-    renderer?: ComponentType<GridBodyReactRendererProps<TItem>> | null;
+    headerRenderer?: ReactRenderer<GridEdgeReactRendererProps<TItem>> | null;
+    renderer?: ReactRenderer<GridBodyReactRendererProps<TItem>> | null;
   }>;
 
 function GridColumn<TItem = GridDefaultItem>(
@@ -62,6 +63,7 @@ function GridColumn<TItem = GridDefaultItem>(
   });
   const [bodyPortals, bodyRenderer] = useModelRenderer(props.renderer ?? children, {
     renderMode: 'microtask',
+    portalKey: (_root, _column, model) => `${model.index}`,
   });
 
   return (

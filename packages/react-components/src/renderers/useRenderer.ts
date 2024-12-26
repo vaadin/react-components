@@ -1,4 +1,5 @@
 import {
+  type ComponentClass,
   type ComponentType,
   createElement,
   type PropsWithChildren,
@@ -8,13 +9,17 @@ import {
   useReducer,
 } from 'react';
 import { createPortal, flushSync } from 'react-dom';
-import type { Slice, WebComponentRenderer } from './renderer.js';
+import type { ReactRenderer, Slice, WebComponentRenderer } from './renderer.js';
 import { flushMicrotask } from '../utils/flushMicrotask.js';
 
 export type UseRendererResult<W extends WebComponentRenderer> = readonly [
   portals?: ReadonlyArray<ReactElement | null>,
   renderer?: W,
 ];
+
+// function isReactComponent<P>(Component: ComponentType<P>): Component is ComponentClass<P> {
+//   return Component.prototype.isReactComponent;
+// }
 
 const initialState = new Map();
 
@@ -27,6 +32,7 @@ function rendererReducer<W extends WebComponentRenderer>(
 
 export type RendererConfig<W extends WebComponentRenderer> = {
   renderMode?: 'default' | 'sync' | 'microtask';
+  portalKey?(root: HTMLElement, ...args: Slice<Parameters<W>, 1>): string;
   shouldRenderPortal?(root: HTMLElement, ...args: Slice<Parameters<W>, 1>): boolean;
 };
 
@@ -36,12 +42,12 @@ export function useRenderer<P extends {}, W extends WebComponentRenderer>(
   config?: RendererConfig<W>,
 ): UseRendererResult<W>;
 export function useRenderer<P extends {}, W extends WebComponentRenderer>(
-  reactRenderer: ComponentType<P> | null | undefined,
+  reactRenderer: ReactRenderer<P> | null | undefined,
   convert: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
   config?: RendererConfig<W>,
 ): UseRendererResult<W>;
 export function useRenderer<P extends {}, W extends WebComponentRenderer>(
-  reactRendererOrNode: ReactNode | ComponentType<P> | null | undefined,
+  reactRendererOrNode: ReactNode | ReactRenderer<P> | null | undefined,
   convert?: (props: Slice<Parameters<W>, 1>) => PropsWithChildren<P>,
   config?: RendererConfig<W>,
 ): UseRendererResult<W> {
@@ -65,14 +71,17 @@ export function useRenderer<P extends {}, W extends WebComponentRenderer>(
           .filter(([root, args]) => {
             return config?.shouldRenderPortal?.(root, ...args) ?? true;
           })
-          .map(([root, args]) =>
-            createPortal(
-              convert
-                ? createElement<P>(reactRendererOrNode as ComponentType<P>, convert(args))
-                : (reactRendererOrNode as ReactNode),
-              root,
-            ),
-          ),
+          .map(([root, args]) => {
+            let children: ReactNode;
+            if (typeof reactRendererOrNode === 'function') {
+              children = reactRendererOrNode(convert!(args));
+            } else {
+              children = reactRendererOrNode;
+            }
+
+            const key = config?.portalKey?.(root, ...args);
+            return createPortal(children, root, key);
+          }),
         renderer,
       ]
     : [];

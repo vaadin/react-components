@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import type { Slice } from './renderer.js';
+import type { ReactRenderer, Slice } from './renderer.js';
 import { useRenderer, type RendererConfig, type UseRendererResult } from './useRenderer.js';
 
 export type Model<I> = Readonly<{
@@ -26,7 +26,7 @@ export function convertModelRendererArgs<I, M extends Model<I>, O extends HTMLEl
 }
 
 export function useModelRenderer<I, M extends Model<I>, O extends HTMLElement>(
-  reactRenderer?: ComponentType<ReactModelRendererProps<I, M, O>> | null,
+  reactRenderer?: ReactRenderer<ReactModelRendererProps<I, M, O>> | null,
   config?: RendererConfig<WebComponentModelRenderer<I, M, O>>,
 ): UseRendererResult<WebComponentModelRenderer<I, M, O>> {
   return useRenderer(reactRenderer, convertModelRendererArgs, config);
