@@ -157,13 +157,13 @@ describe('Select', () => {
         it(`should be true in the element if ${property} prop is true`, async () => {
           render(<Select items={[{ label: 'foo', value: 'foo' }]} {...{ [property]: true }} />);
           const select = await findByQuerySelector('vaadin-select');
-          expect(select[property]).to.be.ok;
+          expect(select[property]).to.be.true;
         });
 
         it(`should be false in the element if ${property} prop is false`, async () => {
           render(<Select items={[{ label: 'foo', value: 'foo' }]} {...{ [property]: false }} />);
           const select = await findByQuerySelector('vaadin-select');
-          expect(select[property]).not.to.be.ok;
+          expect(select[property]).to.be.false;
         });
       });
     });

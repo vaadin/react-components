@@ -1,7 +1,8 @@
-import { createComponent as _createComponent, type EventName } from '@lit/react';
 import type { ThemePropertyMixinClass } from '@vaadin/vaadin-themable-mixin/vaadin-theme-property-mixin.js';
 import type React from 'react';
-import type { RefAttributes } from 'react';
+import { createElement, useLayoutEffect, useRef, type RefAttributes } from 'react';
+import useMergedRefs from './useMergedRefs.js';
+import addOrUpdateEventListener from './addOrUpdateEventListener.js';
 
 declare const __VERSION__: string;
 
@@ -28,8 +29,11 @@ window.Vaadin.registrations.push({
   version: __VERSION__,
 });
 
-// TODO: Remove when types from @lit-labs/react are exported
-export type EventNames = Record<string, EventName | string>;
+export type EventName<T extends Event = Event> = string & {
+  __eventType: T;
+};
+
+export type EventNames = Record<string, EventName>;
 type Constructor<T> = { new (): T; name: string };
 type PolymerConstructor<T> = Constructor<T> & { _properties: Record<string, unknown> };
 type Options<I extends HTMLElement, E extends EventNames = {}> = Readonly<{
@@ -79,30 +83,56 @@ type AllWebComponentProps<I extends HTMLElement, E extends EventNames = {}> = I 
 
 export type WebComponentProps<I extends HTMLElement, E extends EventNames = {}> = Partial<AllWebComponentProps<I, E>>;
 
-// We need a separate declaration here; otherwise, the TypeScript fails into the
-// endless loop trying to resolve the typings.
 export function createComponent<I extends HTMLElement, E extends EventNames = {}>(
   options: Options<I, E>,
-): (props: WebComponentProps<I, E> & RefAttributes<I>) => React.ReactElement | null;
+): (props: WebComponentProps<I, E> & RefAttributes<I>) => React.ReactElement {
+  const { tagName, events: eventsMap } = options;
 
-export function createComponent<I extends HTMLElement, E extends EventNames = {}>(options: Options<I, E>): any {
-  const { elementClass } = options;
+  return (props) => {
+    const innerRef = useRef<I>(null);
+    const finalRef = useMergedRefs(innerRef, props.ref);
+    const prevEventsRef = useRef(new Set<string>());
 
-  return _createComponent(
-    '_properties' in elementClass
-      ? {
-          ...options,
-          // TODO: improve or remove the Polymer workaround
-          // 'createComponent' relies on key presence on the custom element class,
-          // but Polymer defines properties on the prototype when the first element
-          // is created. Workaround: pass a mock object with properties in
-          // the prototype.
-          elementClass: {
-            // @ts-expect-error: it is a specific workaround for Polymer classes.
-            name: elementClass.name,
-            prototype: { ...elementClass._properties, hidden: Boolean },
-          },
+    // Option 1 (no initial property events):
+    useLayoutEffect(() => {
+      if (eventsMap) {
+        const events = new Set(Object.keys(props).filter((event) => eventsMap[event]));
+        events.forEach((event) => {
+          addOrUpdateEventListener(innerRef.current!, eventsMap[event], props[event]);
+        });
+
+        prevEventsRef.current.forEach((event) => {
+          if (!events.has(event)) {
+            addOrUpdateEventListener(innerRef.current!, eventsMap[event], undefined);
+          }
+        });
+
+        prevEventsRef.current = events;
+      }
+    });
+
+    useLayoutEffect(() => {
+      return () => {
+        if (eventsMap) {
+          prevEventsRef.current.forEach((event) => {
+            addOrUpdateEventListener(innerRef.current!, eventsMap[event], undefined);
+          });
         }
-      : options,
-  );
+      };
+    }, []);
+
+    const finalProps = Object.fromEntries(Object.entries(props).filter(([key]) => !eventsMap?.[key]));
+
+    // Option 2 (initial property events are fired):
+    // const finalProps = Object.fromEntries(
+    //   Object.entries(props).map(([key, value]) => {
+    //     if (eventsMap?.[key]) {
+    //       return [`on${eventsMap[key]}`, value];
+    //     }
+    //     return [key, value];
+    //   })
+    // );
+
+    return createElement(tagName, { ...finalProps, ref: finalRef });
+  };
 }
