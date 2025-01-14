@@ -1,10 +1,12 @@
 import {
   type ComponentType,
   type ForwardedRef,
+  type ForwardRefExoticComponent,
   forwardRef,
   isValidElement,
   type ReactElement,
   type ReactNode,
+  type RefAttributes,
   useEffect,
   useRef,
 } from 'react';
@@ -62,6 +64,6 @@ function Select(props: SelectProps, ref: ForwardedRef<SelectElement>): ReactElem
   );
 }
 
-const ForwardedSelect = forwardRef(Select);
+const ForwardedSelect = forwardRef(Select) as ForwardRefExoticComponent<SelectProps & RefAttributes<SelectElement>>;
 
 export { ForwardedSelect as Select };

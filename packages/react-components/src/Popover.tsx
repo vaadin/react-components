@@ -1,10 +1,12 @@
 import {
   type ComponentType,
   type ForwardedRef,
+  type ForwardRefExoticComponent,
   type HTMLAttributes,
   forwardRef,
   type ReactElement,
   type ReactNode,
+  type RefAttributes,
 } from 'react';
 import { Popover as _Popover, type PopoverElement, type PopoverProps as _PopoverProps } from './generated/Popover.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
@@ -35,6 +37,6 @@ function Popover({ children, ...props }: PopoverProps, ref: ForwardedRef<Popover
   );
 }
 
-const ForwardedPopover = forwardRef(Popover);
+const ForwardedPopover = forwardRef(Popover) as ForwardRefExoticComponent<PopoverProps & RefAttributes<PopoverElement>>;
 
 export { ForwardedPopover as Popover };

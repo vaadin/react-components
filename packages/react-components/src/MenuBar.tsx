@@ -1,4 +1,10 @@
-import { type ForwardedRef, forwardRef, type ReactElement } from 'react';
+import {
+  type ForwardedRef,
+  type ForwardRefExoticComponent,
+  forwardRef,
+  type ReactElement,
+  type RefAttributes,
+} from 'react';
 import {
   MenuBar as _MenuBar,
   type MenuBarElement,
@@ -54,6 +60,6 @@ function MenuBar(props: MenuBarProps, ref: ForwardedRef<MenuBarElement>): ReactE
   );
 }
 
-const ForwardedMenuBar = forwardRef(MenuBar);
+const ForwardedMenuBar = forwardRef(MenuBar) as ForwardRefExoticComponent<MenuBarProps & RefAttributes<MenuBarElement>>;
 
 export { ForwardedMenuBar as MenuBar };
