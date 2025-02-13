@@ -27,7 +27,7 @@ export const genericElements = new Map<string, GenericElementInfo>([
   ['GridSortColumn', { numberOfGenerics: 1, nonGenericInterfaces: [NonGenericInterface.EVENT_MAP] }],
   ['GridTreeColumn', { numberOfGenerics: 1, nonGenericInterfaces: [NonGenericInterface.EVENT_MAP] }],
   ['MultiSelectComboBox', { numberOfGenerics: 1 }],
-  ['VirtualList', { numberOfGenerics: 1, nonGenericInterfaces: [NonGenericInterface.EVENT_MAP] }],
+  ['VirtualList', { numberOfGenerics: 1 }],
 ]);
 
 export type EventSettings = Readonly<{
