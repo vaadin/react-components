@@ -1,42 +1,12 @@
-import { unlink, writeFile, readFile } from 'node:fs/promises';
+import { unlink, writeFile, readFile, glob } from 'node:fs/promises';
 import { relative, resolve, basename } from 'node:path';
-import ts, {
-  type ExpressionStatement,
-  type Identifier,
-  type Node,
-  type SourceFile,
-  type TypeAliasDeclaration,
-  type VariableDeclaration,
-} from 'typescript';
+import { createPrinter, createSourceFile, NewLineKind, ScriptKind, ScriptTarget, type SourceFile } from 'typescript';
 import type { HtmlElement as SchemaHTMLElement, JSONSchemaForWebTypes } from '../types/schema.js';
 import { extractElementsFromDescriptions, loadDescriptions } from './descriptions.js';
 import { generatedDir, nodeModulesDir, utilsDir, packageDir } from './utils/config.js';
 import { ElementNameMissingError } from './utils/errors.js';
-import fromAsync from './utils/fromAsync.js';
-import { fswalk } from './utils/fswalk.js';
-import {
-  camelCase,
-  createImportPath,
-  createSourceFile,
-  type NamedGenericJsContribution,
-  pickNamedEvents,
-  search,
-  template,
-  transform,
-  convertElementNameToClassName,
-} from './utils/misc.js';
-import { eventSettings, genericElements, NonGenericInterface } from './utils/settings.js';
-
-// Placeholders
-const CALL_EXPRESSION = '$CALL_EXPRESSION$';
-const COMPONENT_NAME = '$COMPONENT_NAME$';
-const COMPONENT_TAG = '$COMPONENT_TAG$';
-const CREATE_COMPONENT_PATH = '$CREATE_COMPONENT_PATH$';
-const EVENT_MAP = '$EVENT_MAP$';
-const EVENT_MAP_REF_IN_EVENTS = '$EVENT_MAP_REF_IN_EVENTS$';
-const EVENTS_DECLARATION = '$EVENTS_DECLARATION$';
-const LIT_REACT_PATH = '@lit/react';
-const MODULE_PATH = '$MODULE_PATH$';
+import { camelCase, createImportPath, pickNamedEvents, search, convertElementNameToClassName } from './utils/misc.js';
+import { eventSettings, type GenericElementInfo, genericElements, NonGenericInterface } from './utils/settings.js';
 
 type ElementData = Readonly<{
   packageName: string;
@@ -44,7 +14,9 @@ type ElementData = Readonly<{
 }>;
 
 // Remove all existing files
-await fromAsync(fswalk(generatedDir), ([path]) => unlink(path));
+for await (const path of glob('**/*', { cwd: generatedDir })) {
+  await unlink(path);
+}
 
 const packagePath = resolve(packageDir, './package.json');
 const packageJson = JSON.parse(await readFile(packagePath, 'utf8'));
@@ -76,226 +48,40 @@ async function prepareElementFiles(
 }
 
 const descriptions = await loadDescriptions();
-const printer = ts.createPrinter({
-  newLine: ts.NewLineKind.LineFeed,
+
+const printer = createPrinter({
+  newLine: NewLineKind.LineFeed,
   removeComments: false,
 });
 
-function createGenericTypeNames(numberOfGenerics: number) {
-  return Array.from({ length: numberOfGenerics }, (_, i) => ts.factory.createIdentifier(`T${i + 1}`));
+function createIfElse(condition: boolean) {
+  return (positive = '', negative = '') => (condition ? positive : negative);
 }
 
-function isEventMapDeclaration(node: Node): node is TypeAliasDeclaration {
-  return ts.isTypeAliasDeclaration(node) && node.name.text === EVENT_MAP;
-}
+function createGenerics({ numberOfGenerics, typeConstraints, nonGenericInterfaces }: GenericElementInfo) {
+  const typeArguments = Array.from({ length: numberOfGenerics }, (_, i) => `T${i + 1}`);
+  const typeParameters = typeArguments
+    .map((generic, index) => [generic, typeConstraints?.[index]] as const)
+    .map(([generic, constraint]) => (constraint ? `${generic} extends ${constraint}` : generic));
 
-function isEventListDeclaration(node: Node): node is Identifier {
-  return ts.isIdentifier(node) && node.text === EVENTS_DECLARATION;
-}
+  let eventMapTypeArguments: typeof typeArguments = [];
+  let eventMapTypeParameters: typeof typeParameters = [];
 
-function isEventMapReferenceInEventsDeclaration(node: Node): node is Identifier {
-  return ts.isIdentifier(node) && node.text === EVENT_MAP_REF_IN_EVENTS;
-}
-
-function isComponentPropsDeclaration(node: Node): node is TypeAliasDeclaration {
-  return ts.isTypeAliasDeclaration(node) && node.name.text === `${COMPONENT_NAME}Props`;
-}
-
-function isComponentDeclaration(node: Node): node is VariableDeclaration {
-  return ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.name.text === COMPONENT_NAME;
-}
-
-function createEventMapDeclaration(
-  originalNode: TypeAliasDeclaration,
-  elementName: string,
-  events: readonly NamedGenericJsContribution[] | undefined,
-): Node {
-  const { remove: eventsToRemove, makeUnknown: eventsToBeUnknown } = eventSettings.get(elementName) ?? {};
-  const eventNameTypeId = ts.factory.createIdentifier('EventName');
-  const eventMapId = ts.factory.createIdentifier(EVENT_MAP);
-
-  return ts.factory.createTypeAliasDeclaration(
-    originalNode.modifiers,
-    eventMapId,
-    undefined,
-    ts.factory.createTypeReferenceNode(ts.factory.createIdentifier('Readonly'), [
-      ts.factory.createTypeLiteralNode(
-        events
-          ?.filter(({ name: eventName }) => (eventsToRemove ? !eventsToRemove.includes(eventName) : true))
-          .map(({ name: eventName }) =>
-            ts.factory.createPropertySignature(
-              undefined,
-              ts.factory.createIdentifier(`on${camelCase(eventName!)}`),
-              undefined,
-              ts.factory.createTypeReferenceNode(
-                eventNameTypeId,
-                eventsToBeUnknown?.includes(eventName!)
-                  ? [
-                      ts.factory.createTypeReferenceNode(ts.factory.createIdentifier('CustomEvent'), [
-                        ts.factory.createKeywordTypeNode(ts.SyntaxKind.UnknownKeyword),
-                      ]),
-                    ]
-                  : [
-                      ts.factory.createIndexedAccessTypeNode(
-                        ts.factory.createTypeReferenceNode(`_${elementName}EventMap`),
-                        ts.factory.createLiteralTypeNode(ts.factory.createStringLiteral(eventName!)),
-                      ),
-                    ],
-              ),
-            ),
-          ),
-      ),
-    ]),
-  );
-}
-
-function createEventList(elementName: string, events: readonly NamedGenericJsContribution[] | undefined): Node {
-  const { remove: eventsToRemove } = eventSettings.get(elementName) ?? {};
-
-  return ts.factory.createObjectLiteralExpression(
-    events
-      ?.filter(({ name: eventName }) => (eventsToRemove ? !eventsToRemove.includes(eventName) : true))
-      .map(({ name: eventName }) => {
-        const eventString = ts.factory.createStringLiteral(eventName);
-        return ts.factory.createPropertyAssignment(
-          ts.factory.createIdentifier(`on${camelCase(eventName)}`),
-          eventString,
-        );
-      }),
-  );
-}
-
-function removeAllEventRelated(node: Node, hasEvents: boolean, hasKnownEvents: boolean): Node | undefined {
-  if (hasEvents && hasKnownEvents) {
-    return node;
+  if (!nonGenericInterfaces?.includes(NonGenericInterface.EVENT_MAP)) {
+    eventMapTypeArguments = typeArguments;
+    eventMapTypeParameters = typeParameters;
   }
 
-  if (!hasEvents && ts.isImportSpecifier(node) && node.name.text === 'EventName') {
-    return undefined;
-  }
-
-  if (!hasKnownEvents && ts.isImportSpecifier(node) && node.name.text === `_${COMPONENT_NAME}EventMap`) {
-    return undefined;
-  }
-
-  return node;
+  return {
+    typeParameters: toGenericsString(typeParameters),
+    typeArguments: toGenericsString(typeArguments),
+    eventMapTypeArguments: toGenericsString(eventMapTypeArguments),
+    eventMapTypeParameters: toGenericsString(eventMapTypeParameters),
+  };
 }
 
-function addGenerics(node: Node, elementName: string) {
-  const genericElementInfo = genericElements.get(elementName);
-
-  if (!genericElementInfo?.numberOfGenerics) {
-    return node;
-  }
-
-  const genericTypeNames = createGenericTypeNames(genericElementInfo.numberOfGenerics);
-
-  const typeParameters = genericTypeNames.map((id, index) => {
-    const typeConstraint = genericElementInfo.typeConstraints?.[index];
-    const typeReference = typeConstraint ? ts.factory.createTypeReferenceNode(typeConstraint) : undefined;
-    // If typeConstraint is provided, use it as constraint and default type for the type parameter.
-    return ts.factory.createTypeParameterDeclaration(undefined, id, typeReference, typeReference);
-  });
-  const typeArguments = genericTypeNames.map((id) => ts.factory.createTypeReferenceNode(id));
-
-  const isEventMapGeneric = !genericElementInfo.nonGenericInterfaces?.includes(NonGenericInterface.EVENT_MAP);
-
-  if (isEventMapDeclaration(node) && isEventMapGeneric) {
-    // export type GridEventMap<T1> = Readonly<{
-    //                          ^ adding this type argument
-    //   onActiveItemChanged: EventName<_GridEventMap<T1>["active-item-changed"]>;
-    //   ...
-    // }>
-    const declaration = ts.factory.createTypeAliasDeclaration(node.modifiers, node.name, typeParameters, node.type);
-
-    return ts.transform(declaration, [
-      // export type GridEventMap<T1> = Readonly<{
-      //   onActiveItemChanged: EventName<_GridEventMap<T1>["active-item-changed"]>;
-      //                                                ^ adding these type arguments
-      //   ...
-      // }>
-      transform((node) =>
-        ts.isTypeReferenceNode(node) && ts.isIdentifier(node.typeName) && node.typeName.text.endsWith('EventMap')
-          ? ts.factory.createTypeReferenceNode(node.typeName, typeArguments)
-          : node,
-      ),
-    ]).transformed[0];
-  }
-
-  if (isEventMapReferenceInEventsDeclaration(node)) {
-    // const events = {
-    //   onActiveItemChanged: "active-item-changed",
-    //   ...
-    // } as GridEventMap<any>;
-    //                     ^ adding this type argument
-    return ts.factory.createTypeReferenceNode(
-      ts.factory.createIdentifier(EVENT_MAP),
-      isEventMapGeneric
-        ? genericTypeNames.map(() => ts.factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword))
-        : undefined,
-    );
-  }
-
-  if (isComponentPropsDeclaration(node)) {
-    // export type GridProps<T1> = WebComponentProps<GridElement<T1>, GridEventMap<T1>>;
-    //                       ^ adding this type parameter
-    const declaration = ts.factory.createTypeAliasDeclaration(node.modifiers, node.name, typeParameters, node.type);
-
-    return ts.transform(declaration, [
-      // export type GridProps<T1> = WebComponentProps<GridElement<T1>, GridEventMap<T1>>;
-      //                                                           ^ adding this type argument
-      transform<Node>((node) =>
-        ts.isTypeReferenceNode(node) &&
-        ts.isIdentifier(node.typeName) &&
-        node.typeName.text === `${COMPONENT_NAME}Element`
-          ? ts.factory.createTypeReferenceNode(node.typeName, typeArguments)
-          : node,
-      ),
-      ...(isEventMapGeneric
-        ? [
-            // export type GridProps<T1> = WebComponentProps<GridElement<T1>, GridEventMap<T1>>;
-            //                                                                             ^ adding this type argument
-            transform((node) =>
-              ts.isTypeReferenceNode(node) && ts.isIdentifier(node.typeName) && node.typeName.text === EVENT_MAP
-                ? ts.factory.createTypeReferenceNode(node.typeName, typeArguments)
-                : node,
-            ),
-          ]
-        : []),
-    ]).transformed[0];
-  }
-
-  if (isComponentDeclaration(node)) {
-    const { initializer: originalInitializer } = node;
-
-    const asExpression = template(
-      `
-${CALL_EXPRESSION} as (
-  props: ${COMPONENT_NAME}Props & React.RefAttributes<${COMPONENT_NAME}Element>,
-) => React.ReactElement | null
-  `,
-      (statements) => (statements[0] as ExpressionStatement).expression,
-      [
-        transform((node) =>
-          ts.isTypeReferenceNode(node) &&
-          ts.isIdentifier(node.typeName) &&
-          (node.typeName.text === `${COMPONENT_NAME}Props` || node.typeName.text === `${COMPONENT_NAME}Element`)
-            ? ts.factory.createTypeReferenceNode(node.typeName, typeArguments)
-            : node,
-        ),
-        transform((node) =>
-          ts.isFunctionTypeNode(node)
-            ? ts.factory.createFunctionTypeNode(typeParameters, node.parameters, node.type)
-            : node,
-        ),
-        transform((node) => (ts.isIdentifier(node) && node.text === CALL_EXPRESSION ? originalInitializer : node)),
-      ],
-    );
-
-    return ts.factory.createVariableDeclaration(node.name, undefined, undefined, asExpression);
-  }
-
-  return node;
+function toGenericsString(generics: readonly string[]) {
+  return generics.length > 0 ? `<${generics.join(', ')}>` : '';
 }
 
 function generateReactComponent({ name, js }: SchemaHTMLElement, { packageName, path }: ElementData): SourceFile {
@@ -305,105 +91,77 @@ function generateReactComponent({ name, js }: SchemaHTMLElement, { packageName, 
 
   const elementName = convertElementNameToClassName(name);
   const elementModulePath = createImportPath(relative(nodeModulesDir, path), false);
-  const eventMapId = ts.factory.createIdentifier(`${elementName}EventMap`);
-  const elementClassNameId = ts.factory.createIdentifier(`${elementName}Element`);
-  const componentTagLiteral = ts.factory.createStringLiteral(name);
   const createComponentPath = createImportPath(relative(generatedDir, resolve(utilsDir, './createComponent.js')), true);
 
-  const hasEvents = !!js?.events && js.events.length > 0;
+  const hasEvents = createIfElse(!!js?.events && js.events.length > 0);
   const events = js?.events;
   const eventNameMissingLogger = () => console.error(`[${packageName}]: event name is missing`);
   const namedEvents = pickNamedEvents(events, eventNameMissingLogger);
   const { remove: eventsToRemove, makeUnknown: eventsToBeUnknown } = eventSettings.get(elementName) ?? {};
-  const hasKnownEvents =
-    namedEvents?.some(({ name }) => !eventsToRemove?.includes(name) && !eventsToBeUnknown?.includes(name)) || false;
+  const existingEvents = namedEvents?.filter(({ name: eventName }) =>
+    eventsToRemove ? !eventsToRemove.includes(eventName) : true,
+  );
+  const hasKnownEvents = createIfElse(
+    !!namedEvents?.some(({ name }) => !eventsToRemove?.includes(name) && !eventsToBeUnknown?.includes(name)),
+  );
   const genericElementInfo = genericElements.get(elementName);
+  const {
+    typeArguments = '',
+    typeParameters = '',
+    eventMapTypeArguments = '',
+    eventMapTypeParameters = '',
+  } = genericElementInfo ? createGenerics(genericElementInfo) : {};
 
-  const ast = template(
-    `
-import type { EventName } from "${LIT_REACT_PATH}";
+  const code = `${hasEvents(`import type { EventName } from '@lit/react';`)}
 import {
-  ${COMPONENT_NAME} as ${COMPONENT_NAME}Element
-  type ${COMPONENT_NAME}EventMap as _${COMPONENT_NAME}EventMap,
-  ${[...new Set(genericElementInfo?.typeConstraints || [])].map((constraint) => `type ${constraint}`)}
-} from "${MODULE_PATH}";
-import * as React from "react";
-import { createComponent, type WebComponentProps } from "${CREATE_COMPONENT_PATH}";
+  ${elementName} as ${elementName}Element,
+  ${hasKnownEvents(`type ${elementName}EventMap as _${elementName}EventMap,`)}
+  ${Array.from(new Set(genericElementInfo?.typeConstraints || []), (constraint) => `type ${constraint}`).join(',\n')},
+} from '${elementModulePath}';
+import * as React from 'react';
+import { createComponent, type WebComponentProps } from '${createComponentPath}';
 
-export * from "${MODULE_PATH}";
+export * from '${elementModulePath}';
 
 export {
-  ${COMPONENT_NAME}Element,
+  ${elementName}Element,
 };
 
-export type ${EVENT_MAP};
-const events = ${EVENTS_DECLARATION} as ${EVENT_MAP_REF_IN_EVENTS};
-export type ${COMPONENT_NAME}Props = WebComponentProps<${COMPONENT_NAME}Element, ${EVENT_MAP}>;
-export const ${COMPONENT_NAME} = createComponent({
-  elementClass: ${COMPONENT_NAME}Element,
-  events,
+${hasEvents(`export type ${elementName}EventMap${eventMapTypeParameters} = Readonly<{
+  ${existingEvents
+    ?.map(
+      ({ name: eventName }) =>
+        `on${camelCase(eventName!)}: EventName<${
+          eventsToBeUnknown?.includes(eventName!)
+            ? 'CustomEvent<unknown>'
+            : `_${elementName}EventMap${eventMapTypeArguments}['${eventName!}']`
+        }>`,
+    )
+    .join(',\n')}
+}>;
+
+const events = {
+  ${existingEvents?.map(({ name: eventName }) => `'on${camelCase(eventName!)}': '${eventName}'`).join(',\n')}
+} as ${elementName}EventMap${eventMapTypeArguments ? '<any>' : ''};`)}
+
+export type ${elementName}Props${typeParameters} = WebComponentProps<${elementName}Element${typeArguments}${hasKnownEvents(`, ${elementName}EventMap${eventMapTypeArguments}`)}>;
+export const ${elementName} = createComponent({
+  elementClass: ${elementName}Element,
+  events${hasEvents(undefined, ': {}')},
   react: React,
-  tagName: ${COMPONENT_TAG}
-});
-`,
-    (statements) => statements,
-    [
-      transform((node) => removeAllEventRelated(node, hasEvents, hasKnownEvents)),
-      transform((node) =>
-        isEventMapDeclaration(node) ? createEventMapDeclaration(node, elementName, namedEvents) : node,
-      ),
-      transform((node) => (isEventListDeclaration(node) ? createEventList(elementName, namedEvents) : node)),
-      transform((node) => addGenerics(node, elementName)),
-      transform((node) => {
-        if (!ts.isStringLiteral(node)) {
-          return node;
-        }
+  tagName: '${name}'
+}) as ${typeParameters}(
+  props: ${elementName}Props${typeArguments} & React.RefAttributes<${elementName}Element${typeArguments}>,
+) => React.ReactElement | null;
+`;
 
-        switch (node.text) {
-          case CREATE_COMPONENT_PATH:
-            return ts.factory.createStringLiteral(createComponentPath);
-          case MODULE_PATH:
-            return ts.factory.createStringLiteral(elementModulePath);
-          default:
-            // When createSourceFile hass setParentNodes flag, original string
-            // literals are not emitted for some reason. Copy as a workaroud.
-            return ts.factory.createStringLiteral(node.text);
-        }
-      }),
-      transform((node) =>
-        isEventMapReferenceInEventsDeclaration(node) ? ts.factory.createIdentifier(EVENT_MAP) : node,
-      ),
-      transform((node) =>
-        ts.isIdentifier(node) && node.text === `${COMPONENT_NAME}Element` ? elementClassNameId : node,
-      ),
-      transform((node) => (ts.isIdentifier(node) && node.text === COMPONENT_TAG ? componentTagLiteral : node)),
-      transform((node) => (ts.isIdentifier(node) && node.text === EVENT_MAP ? eventMapId : node)),
-      transform((node) =>
-        ts.isIdentifier(node) && node.text.includes(COMPONENT_NAME)
-          ? ts.factory.createIdentifier(node.text.replaceAll(COMPONENT_NAME, elementName))
-          : node,
-      ),
-      // TODO: remove the workaround for printing `@deprecated` JSDoc tags.
-      // TypeScript compiler API does not support .jsDoc attached to nodes,
-      // and on top of it, emitting @deprecated JSDocDeprecatedTag is skipped,
-      // see https://github.com/microsoft/TypeScript/issues/17146.
-      transform((node) => {
-        if (!('jsDoc' in node)) {
-          return node;
-        }
-
-        const tag = (node.jsDoc as ts.JSDoc[] | undefined)?.[0]?.tags?.[0];
-        if (!tag || !ts.isJSDocDeprecatedTag(tag)) {
-          return node;
-        }
-
-        ts.addSyntheticLeadingComment(node, ts.SyntaxKind.MultiLineCommentTrivia, '* @deprecated ', false);
-        return node;
-      }),
-    ],
+  return createSourceFile(
+    resolve(generatedDir, `${elementName}.ts`),
+    code,
+    ScriptTarget.ES2019,
+    undefined,
+    ScriptKind.TS,
   );
-
-  return createSourceFile(ast, resolve(generatedDir, `${elementName}.ts`));
 }
 
 const elementFilesMap = await prepareElementFiles(descriptions);
@@ -415,12 +173,12 @@ const elementNames = sourceFiles.map(({ fileName }) => basename(fileName, '.ts')
 function generateIndexFile(elementNames: readonly string[], extension: string): SourceFile {
   const sourceLines = [...elementNames.map((elementName) => `export * from './${elementName}.js';`)];
 
-  return ts.createSourceFile(
+  return createSourceFile(
     resolve(packageDir, `index.${extension}`),
     sourceLines.join('\n'),
-    ts.ScriptTarget.ES2019,
+    ScriptTarget.ES2019,
     undefined,
-    ts.ScriptKind.TS,
+    ScriptKind.TS,
   );
 }
 

@@ -3,6 +3,9 @@
   "type": "module",
   "version": "24.7.0-alpha9",
   "private": true,
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "build": "npm run build:load-schema && npm run build -w packages/react-components && npm run build -w packages/react-components-pro",
     "build:load-schema": "tsx scripts/schema-loader.ts",
