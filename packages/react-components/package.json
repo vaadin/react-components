@@ -17,7 +17,7 @@
     "build": "npm run build:dev && npm run build:code && npm run build:update-packagejson",
     "build:dev": "npm run build:generate && npm run build:generate-css",
     "build:generate": "tsx ../../scripts/generator.ts",
-    "build:generate-css": "tsx ../../scripts/css-generator.ts",
+    "build:generate-css": "tsx --experimental-vm-modules ../../scripts/css-generator.ts",
     "build:update-packagejson": "tsx ../../scripts/package-json-update.ts",
     "build:code": "concurrently npm:build:code:*",
     "build:code:ts": "tsx ../../scripts/build.ts",

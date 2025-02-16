@@ -14,7 +14,7 @@ type ElementData = Readonly<{
 }>;
 
 // Remove all existing files
-for await (const path of glob('**/*', { cwd: generatedDir })) {
+for await (const path of glob(resolve(generatedDir, '**/*'))) {
   await unlink(path);
 }
 
