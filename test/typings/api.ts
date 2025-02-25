@@ -230,6 +230,17 @@ const contextMenuOnItemSelected: typeof contextMenuProps.onItemSelected = (event
 };
 assertType<typeof contextMenuProps.onItemSelected>(contextMenuOnItemSelected);
 
+type CustomContextMenuItem = ContextMenuItem<{ value: string }>;
+
+const narrowedContextMenuProps = React.createElement(ContextMenu<CustomContextMenuItem>, {}).props;
+assertType<CustomContextMenuItem[] | undefined>(narrowedContextMenuProps.items);
+assertType<CustomContextMenuItem[] | undefined>(narrowedContextMenuProps.items![0].children);
+
+const narrowedContextMenuOnItemSelected: typeof narrowedContextMenuProps.onItemSelected = (event) => {
+  assertType<CustomContextMenuItem>(event.detail.value);
+};
+assertType<typeof narrowedContextMenuProps.onItemSelected>(narrowedContextMenuOnItemSelected);
+
 const menuBarProps = React.createElement(MenuBar, {}).props;
 assertType<ReactElement | string | undefined>(menuBarProps.items![0].component);
 assertType<MenuBarItem[] | undefined>(menuBarProps.items);
