@@ -1,5 +1,5 @@
 if (!('fromAsync' in Array)) {
-  const { fromAsync } = await import('array-from-async');
+  const { default: fromAsync } = await import('array-from-async');
   Object.defineProperty(Array, 'fromAsync', {
     value: fromAsync,
   });
