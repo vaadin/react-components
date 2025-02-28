@@ -1,13 +1,13 @@
+import './polyfills.js';
+import { globIterate as glob } from 'glob';
 import { readFile, writeFile } from 'node:fs/promises';
-import { basename, extname, relative, resolve, sep } from 'node:path';
+import { basename, extname, resolve } from 'node:path';
 import { existsSync } from 'node:fs';
 import type { PackageJson } from 'type-fest';
 import { packageDir, srcDir } from './utils/config.js';
-import fromAsync from './utils/fromAsync.js';
-import { fswalk } from './utils/fswalk.js';
 
 const packageJsonPath = resolve(packageDir, 'package.json');
-const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));
+const packageJson: PackageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));
 
 const exports: Record<string, PackageJson.Exports> = {
   '.': {
@@ -26,9 +26,9 @@ function compareExportsPaths([entrypointA]: ExportsEntry, [entrypointB]: Exports
   return collator.compare(entrypointA, entrypointB);
 }
 
-const moduleNames = await fromAsync(fswalk(srcDir), async ([path]) => {
-  return basename(path, extname(path));
-});
+const moduleNames = await Array.fromAsync(glob('*', { cwd: srcDir, nodir: true }), async (path) =>
+  basename(path, extname(path)),
+);
 
 Object.assign(
   exports,
@@ -36,10 +36,7 @@ Object.assign(
     moduleNames
       .map(
         (moduleName) =>
-          [
-            `./${moduleName}.js`,
-            { types: `./${moduleName}.d.ts`, default: `./${moduleName}.js` },
-          ] as ConditionalExportsEntry,
+          [`./${moduleName}.js`, { types: `./${moduleName}.d.ts`, default: `./${moduleName}.js` }] as const,
       )
       .sort(compareExportsPaths),
   ),
@@ -51,9 +48,7 @@ Object.assign(
 Object.assign(
   exports,
   Object.fromEntries(
-    moduleNames
-      .map((moduleName) => [`./${moduleName}`, `./${moduleName}.js`] as PlainExportsEntry)
-      .sort(compareExportsPaths),
+    moduleNames.map((moduleName) => [`./${moduleName}`, `./${moduleName}.js`] as const).sort(compareExportsPaths),
   ),
 );
 
@@ -65,11 +60,10 @@ if (existsSync(outCssDir)) {
     exports,
     Object.fromEntries(
       (
-        await fromAsync(fswalk(outCssDir, { recursive: true }), async ([path]) => {
-          const cssPath = relative(outCssDir, path).replaceAll(sep, '/');
-
-          return [`./css/${cssPath}`, `./css/${cssPath}`] as PlainExportsEntry;
-        })
+        await Array.fromAsync(
+          glob('**/*', { cwd: outCssDir, posix: true, nodir: true }),
+          async (path) => [`./css/${path}`, `./css/${path}`] as const,
+        )
       ).sort(compareExportsPaths),
     ),
   );
@@ -82,11 +76,10 @@ if (existsSync(outUtilsDir)) {
     exports,
     Object.fromEntries(
       (
-        await fromAsync(fswalk(outUtilsDir, { recursive: true }), async ([path]) => {
-          const utilsPath = relative(outUtilsDir, path).replaceAll(sep, '/');
-
-          return [`./utils/${utilsPath}`, `./utils/${utilsPath}`] as PlainExportsEntry;
-        })
+        await Array.fromAsync(
+          glob('**/*', { cwd: outUtilsDir, posix: true, nodir: true }),
+          async (path) => [`./utils/${path}`, `./utils/${path}`] as const,
+        )
       ).sort(compareExportsPaths),
     ),
   );
@@ -99,16 +92,15 @@ if (existsSync(outRenderersDir)) {
     exports,
     Object.fromEntries(
       (
-        await fromAsync(fswalk(outRenderersDir, { recursive: true }), async ([path]) => {
-          const renderersPath = relative(outRenderersDir, path).replaceAll(sep, '/');
-
-          return [`./renderers/${renderersPath}`, `./renderers/${renderersPath}`] as PlainExportsEntry;
-        })
+        await Array.fromAsync(
+          glob('**/*', { cwd: outRenderersDir, posix: true, nodir: true }),
+          async (path) => [`./renderers/${path}`, `./renderers/${path}`] as const,
+        )
       ).sort(compareExportsPaths),
     ),
   );
 }
 
-packageJson['exports'] = exports;
+packageJson.exports = exports;
 
 await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2), 'utf8');

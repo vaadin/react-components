@@ -1,6 +1,7 @@
 import { constants } from 'node:fs';
 import { access } from 'node:fs/promises';
 import { join } from 'node:path';
+import { globIterate as glob } from 'glob';
 import type { SetRequired } from 'type-fest';
 import ts, {
   type Node,
@@ -10,7 +11,6 @@ import ts, {
   type TransformerFactory,
 } from 'typescript';
 import type { GenericJsContribution } from '../../types/schema.js';
-import { fswalk, type WalkOptions } from './fswalk.js';
 import { elementsWithMissingEntrypoint, elementToClassNamingConventionViolations } from './settings.js';
 
 export function camelCase(str: string) {
@@ -58,19 +58,13 @@ export async function exists(file: string): Promise<boolean> {
   }
 }
 
-export type SearchOptions = WalkOptions;
-
-export async function search(elementName: string, dir: string, options?: SearchOptions): Promise<string | undefined> {
+export async function search(elementName: string, dir: string): Promise<string | undefined> {
   if (elementsWithMissingEntrypoint.has(elementName)) {
     dir = join(dir, 'src');
   }
 
-  const fileName = `${elementName}.js`;
-  for await (const [path, entry] of fswalk(dir, options)) {
-    if (entry.name === fileName) {
-      return path;
-    }
-  }
+  const { value } = await glob(`**/${elementName}.js`, { cwd: dir, absolute: true }).next();
+  return value as string | undefined;
 }
 
 export function hasOverrideKey([overrideKey]: readonly string[]) {

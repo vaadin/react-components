@@ -1,5 +1,6 @@
-import { unlink, writeFile, readFile, glob } from 'node:fs/promises';
+import { unlink, writeFile, readFile } from 'node:fs/promises';
 import { relative, resolve, basename } from 'node:path';
+import { globIterate as glob } from 'glob';
 import { createPrinter, createSourceFile, NewLineKind, ScriptKind, ScriptTarget, type SourceFile } from 'typescript';
 import type { HtmlElement as SchemaHTMLElement, JSONSchemaForWebTypes } from '../types/schema.js';
 import { extractElementsFromDescriptions, loadDescriptions } from './descriptions.js';
