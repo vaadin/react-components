@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": ".",
     "module": "NodeNext",
@@ -7,6 +7,5 @@
     "noEmit": false,
     "emitDeclarationOnly": true
   },
-  "include": ["./src"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src"]
 }
