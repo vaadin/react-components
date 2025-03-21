@@ -6,10 +6,10 @@
     "declarationMap": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "target": "es2021",
+    "target": "esnext",
     "module": "esnext",
     "moduleResolution": "bundler",
-    "lib": ["es2021", "dom"],
+    "lib": ["esnext", "dom"],
     "noEmit": true,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
@@ -21,6 +21,6 @@
     "useUnknownInCatchVariables": true,
     "verbatimModuleSyntax": true
   },
-  "include": ["src", "scripts", "test", "dev", "types", "karma.config.cjs", "vite.config.ts"],
+  "include": ["scripts", "test", "dev", "types", "karma.config.cjs", "vite.config.ts"],
   "exclude": ["node_modules", "dist"]
 }
