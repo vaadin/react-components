@@ -59,6 +59,7 @@
     "@vaadin/list-box": "24.8.0-alpha4",
     "@vaadin/lit-renderer": "24.8.0-alpha4",
     "@vaadin/login": "24.8.0-alpha4",
+    "@vaadin/master-detail-layout": "^24.8.0-alpha4",
     "@vaadin/menu-bar": "24.8.0-alpha4",
     "@vaadin/message-input": "24.8.0-alpha4",
     "@vaadin/message-list": "24.8.0-alpha4",
