@@ -65,7 +65,6 @@ function Detail({ children }: DetailProps) {
       currentDetailsRef.current!.setAttribute('slot', hasChildren ? 'detail' : 'detail-hidden');
     } else if (state === 'starting') {
       // Transition is starting and old and (invisible) new details are rendered
-      setState('started');
       // Determine the transition type based on old and new detail contents
       const hasCurrentDetails = currentDetailsRef.current!.childElementCount > 0;
       const hasNextDetails = nextDetailsRef.current!.childElementCount > 0;
@@ -79,7 +78,6 @@ function Detail({ children }: DetailProps) {
       });
     } else if (state === 'ready') {
       // Transition is ready and new details are rendered
-      setState('transitioning');
       // Update slot name to either show or hide the new details
       const hasChildren = currentDetailsRef.current!.childElementCount > 0;
       currentDetailsRef.current!.setAttribute('slot', hasChildren ? 'detail' : 'detail-hidden');
