@@ -3,7 +3,7 @@ import { MasterDetailLayout } from '../../packages/react-components/src/MasterDe
 import { Checkbox } from '../../packages/react-components/src/Checkbox.js';
 import './master-detail-layout-styles.css';
 
-export function MasterContent() {
+function MasterContent() {
   const masterContentStyle = {
     height: '100%',
     overflow: 'auto',
@@ -58,10 +58,11 @@ export function MasterContent() {
 }
 
 interface DetailContentProps {
+  value?: string;
   style?: React.CSSProperties;
 }
 
-export function DetailContent({ style }: DetailContentProps) {
+function DetailContent({ style, value }: DetailContentProps) {
   const formStyle = {
     display: 'flex',
     flexWrap: 'wrap' as any,
@@ -81,12 +82,16 @@ export function DetailContent({ style }: DetailContentProps) {
       <div style={formStyle}>
         {fields.map((_, index) => (
           <div className="field" key={index}>
-            <input type="text" style={inputStyle} />
+            <input type="text" style={inputStyle} value={value} />
           </div>
         ))}
       </div>
     </div>
   );
+}
+
+function EmptyDetail() {
+  return null;
 }
 
 export default function () {
@@ -102,6 +107,7 @@ export default function () {
   const [forceOverlay, setForceOverlay] = useState(false);
   const [stack, setStack] = useState(false);
   const [detailContent, setDetailContent] = useState<React.ReactNode>(<DetailContent />);
+  const [updateCount, setUpdateCount] = useState(0);
 
   const layoutStyle: React.CSSProperties = {
     ...(maxWidth ? { maxWidth: '800px' } : {}),
@@ -109,20 +115,24 @@ export default function () {
   };
 
   const setSmallDetail = () => {
-    setDetailContent(<DetailContent style={{ width: '200px' }} />);
+    setUpdateCount(updateCount + 1);
+    setDetailContent(<DetailContent style={{ width: '200px' }} key="small" value={updateCount.toString()} />);
     setShowDetail(true);
   };
 
   const setLargeDetail = () => {
-    setDetailContent(
-      <div>
-        <DetailContent style={{ width: '600px' }} />
-      </div>,
-    );
+    setUpdateCount(updateCount + 1);
+    setDetailContent(<DetailContent style={{ width: '600px' }} key="large" value={updateCount.toString()} />);
     setShowDetail(true);
   };
 
+  const setEmptyDetail = () => {
+    setDetailContent(<EmptyDetail />);
+    setShowDetail(false);
+  };
+
   const clearDetail = () => {
+    setDetailContent(null);
     setShowDetail(false);
   };
 
@@ -154,6 +164,7 @@ export default function () {
         <Checkbox label="Set stack threshold" checked={stack} onChange={() => setStack(!stack)} />
         <button onClick={setSmallDetail}>Set small detail</button>
         <button onClick={setLargeDetail}>Set large detail</button>
+        <button onClick={setEmptyDetail}>Set empty detail</button>
         <button onClick={clearDetail}>Clear detail</button>
       </p>
       <MasterDetailLayout
@@ -170,7 +181,7 @@ export default function () {
         <MasterDetailLayout.Master>
           <MasterContent />
         </MasterDetailLayout.Master>
-        <MasterDetailLayout.Detail> {showDetail ? detailContent : null}</MasterDetailLayout.Detail>
+        <MasterDetailLayout.Detail> {detailContent}</MasterDetailLayout.Detail>
       </MasterDetailLayout>
     </>
   );
