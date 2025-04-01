@@ -95,7 +95,6 @@ function EmptyDetail() {
 }
 
 export default function () {
-  const [showDetail, setShowDetail] = useState(false);
   const [detailSize, setDetailSize] = useState(false);
   const [detailMinSize, setDetailMinSize] = useState(false);
   const [masterSize, setMasterSize] = useState(false);
@@ -117,29 +116,24 @@ export default function () {
   const setSmallDetail = () => {
     setUpdateCount(updateCount + 1);
     setDetailContent(<DetailContent style={{ width: '200px' }} key="small" value={updateCount.toString()} />);
-    setShowDetail(true);
   };
 
   const setLargeDetail = () => {
     setUpdateCount(updateCount + 1);
     setDetailContent(<DetailContent style={{ width: '600px' }} key="large" value={updateCount.toString()} />);
-    setShowDetail(true);
   };
 
   const setEmptyDetail = () => {
     setDetailContent(<EmptyDetail />);
-    setShowDetail(false);
   };
 
   const clearDetail = () => {
     setDetailContent(null);
-    setShowDetail(false);
   };
 
   return (
     <>
       <p>
-        <Checkbox label="Show detail" checked={showDetail} onChange={() => setShowDetail(!showDetail)} />
         <Checkbox label="Set detail size" checked={detailSize} onChange={() => setDetailSize(!detailSize)} />
         <Checkbox
           label="Set detail min-size"
