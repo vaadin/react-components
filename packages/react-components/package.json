@@ -297,6 +297,10 @@
       "types": "./LoginOverlay.d.ts",
       "default": "./LoginOverlay.js"
     },
+    "./MasterDetailLayout.js": {
+      "types": "./MasterDetailLayout.d.ts",
+      "default": "./MasterDetailLayout.js"
+    },
     "./MenuBar.js": {
       "types": "./MenuBar.d.ts",
       "default": "./MenuBar.js"
@@ -449,6 +453,7 @@
     "./ListBox": "./ListBox.js",
     "./LoginForm": "./LoginForm.js",
     "./LoginOverlay": "./LoginOverlay.js",
+    "./MasterDetailLayout": "./MasterDetailLayout.js",
     "./MenuBar": "./MenuBar.js",
     "./Message": "./Message.js",
     "./MessageInput": "./MessageInput.js",
