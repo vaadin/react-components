@@ -1,4 +1,7 @@
-import { MasterDetailLayout as _MasterDetailLayout, MasterDetailLayoutElement } from './generated/MasterDetailLayout.js';
+import {
+  MasterDetailLayout as _MasterDetailLayout,
+  MasterDetailLayoutElement,
+} from './generated/MasterDetailLayout.js';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 export * from './generated/MasterDetailLayout.js';
@@ -9,7 +12,7 @@ type DetailProps = React.PropsWithChildren<{}>;
 type MasterDetailLayoutElementWithInternalAPI = MasterDetailLayoutElement & {
   _startTransition: (transitionType: 'add' | 'remove' | 'replace', callback: () => void) => void;
   _finishTransition: () => Promise<void>;
-}
+};
 
 function Master({ children }: MasterProps) {
   return children;
@@ -61,9 +64,14 @@ function Detail({ children }: DetailProps) {
   const [currentChildren, setCurrentChildren] = useState(children);
 
   useLayoutEffect(() => {
-    const layout = currentDetailsRef.current?.closest('vaadin-master-detail-layout') as MasterDetailLayoutElementWithInternalAPI;
+    const layout = currentDetailsRef.current?.closest(
+      'vaadin-master-detail-layout',
+    ) as MasterDetailLayoutElementWithInternalAPI;
+    if (!layout) {
+      return;
+    }
 
-    if (state === 'idle' || !layout) {
+    if (state === 'idle') {
       // No transition in progress
       // Just update slot name
       const hasChildren = currentDetailsRef.current!.childElementCount > 0;
