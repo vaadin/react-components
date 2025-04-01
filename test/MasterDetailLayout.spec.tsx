@@ -9,7 +9,7 @@ import { MasterDetailLayout, MasterDetailLayoutElement } from '../packages/react
 useChaiPlugin(chaiDom);
 useChaiPlugin(chaiAsPromised);
 
-describe.only('MasterDetailLayout', () => {
+describe('MasterDetailLayout', () => {
   let startTransitionSpy: sinon.SinonSpy;
   let finishTransitionSpy: sinon.SinonSpy;
   let result: RenderResult;
