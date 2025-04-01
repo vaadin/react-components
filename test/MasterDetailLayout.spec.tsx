@@ -31,9 +31,7 @@ describe('MasterDetailLayout', () => {
   }
 
   beforeEach(() => {
-    result = render(
-      <MasterDetailLayout></MasterDetailLayout>,
-    );
+    result = render(<MasterDetailLayout></MasterDetailLayout>);
     startTransitionSpy = sinon.spy();
     finishTransitionSpy = sinon.spy();
 
@@ -61,7 +59,7 @@ describe('MasterDetailLayout', () => {
           <div>Detail content</div>
         </MasterDetailLayout.Detail>
       </MasterDetailLayout>,
-    )
+    );
     const master = layout!.querySelector('div:not([slot])');
     expect(master).to.exist;
     expect(master).to.have.text('Master content');
@@ -110,9 +108,7 @@ describe('MasterDetailLayout', () => {
     // Render with text node
     result.rerender(
       <MasterDetailLayout>
-        <MasterDetailLayout.Detail>
-          Just a text node
-        </MasterDetailLayout.Detail>
+        <MasterDetailLayout.Detail>Just a text node</MasterDetailLayout.Detail>
       </MasterDetailLayout>,
     );
 
@@ -192,10 +188,8 @@ describe('MasterDetailLayout', () => {
     // Render with text node - no transition
     result.rerender(
       <MasterDetailLayout>
-        <MasterDetailLayout.Detail>
-          Just a text node
-        </MasterDetailLayout.Detail>
-      </MasterDetailLayout>
+        <MasterDetailLayout.Detail>Just a text node</MasterDetailLayout.Detail>
+      </MasterDetailLayout>,
     );
 
     expect(startTransitionSpy.called).to.be.false;
@@ -215,7 +209,7 @@ describe('MasterDetailLayout', () => {
     result.rerender(
       <MasterDetailLayout>
         <MasterDetailLayout.Detail />
-      </MasterDetailLayout>
+      </MasterDetailLayout>,
     );
 
     // Add detail
@@ -224,7 +218,7 @@ describe('MasterDetailLayout', () => {
         <MasterDetailLayout.Detail>
           <ViewA />
         </MasterDetailLayout.Detail>
-      </MasterDetailLayout>
+      </MasterDetailLayout>,
     );
 
     await assertDetailsVisible('View A');
@@ -238,7 +232,7 @@ describe('MasterDetailLayout', () => {
         <MasterDetailLayout.Detail>
           <ViewB />
         </MasterDetailLayout.Detail>
-      </MasterDetailLayout>
+      </MasterDetailLayout>,
     );
 
     await assertDetailsVisible('View B');
@@ -250,7 +244,7 @@ describe('MasterDetailLayout', () => {
     result.rerender(
       <MasterDetailLayout>
         <MasterDetailLayout.Detail />
-      </MasterDetailLayout>
+      </MasterDetailLayout>,
     );
 
     await assertDetailsHidden();
@@ -263,7 +257,7 @@ describe('MasterDetailLayout', () => {
     result.rerender(
       <MasterDetailLayout>
         <MasterDetailLayout.Detail />
-      </MasterDetailLayout>
+      </MasterDetailLayout>,
     );
 
     // Change detail content to trigger transition
@@ -272,7 +266,7 @@ describe('MasterDetailLayout', () => {
         <MasterDetailLayout.Detail>
           <div>New Content</div>
         </MasterDetailLayout.Detail>
-      </MasterDetailLayout>
+      </MasterDetailLayout>,
     );
 
     await assertDetailsVisible('New Content');
