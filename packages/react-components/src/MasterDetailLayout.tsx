@@ -70,7 +70,7 @@ function Detail({ children }: DetailProps) {
       const hasNextDetails = nextDetailsRef.current!.childElementCount > 0;
       const transitionType = hasCurrentDetails && hasNextDetails ? 'replace' : hasCurrentDetails ? 'remove' : 'add';
       // Start transition to capture old DOM state
-      layout.__startTransition(transitionType, () => {
+      layout._startTransition(transitionType, () => {
         // Once old DOM state is captured, render with new details only
         setState('ready');
         setCurrentChildren(children);
@@ -82,7 +82,7 @@ function Detail({ children }: DetailProps) {
       const hasChildren = currentDetailsRef.current!.childElementCount > 0;
       currentDetailsRef.current!.setAttribute('slot', hasChildren ? 'detail' : 'detail-hidden');
       // Finish transition to animate to new DOM state
-      layout.__finishTransition().then(() => {
+      layout._finishTransition().then(() => {
         // Transition is finished, reset state
         setState('idle');
       });
