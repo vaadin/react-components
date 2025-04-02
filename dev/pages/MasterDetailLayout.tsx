@@ -74,7 +74,6 @@ function DetailContent({ style, value }: DetailContentProps) {
     width: '8rem',
   };
 
-  // Create an array of 12 fields to match the original
   const fields = Array(12).fill(null);
 
   return (
@@ -82,7 +81,7 @@ function DetailContent({ style, value }: DetailContentProps) {
       <div style={formStyle}>
         {fields.map((_, index) => (
           <div className="field" key={index}>
-            <input type="text" style={inputStyle} value={value} />
+            <input type="text" style={inputStyle} value={value} readOnly />
           </div>
         ))}
       </div>
