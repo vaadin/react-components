@@ -124,7 +124,7 @@ describe('MasterDetailLayout', () => {
     result.rerender(
       <MasterDetailLayout>
         <MasterDetailLayout.Detail>
-          <Wrapper/>
+          <Wrapper />
         </MasterDetailLayout.Detail>
       </MasterDetailLayout>,
     );
@@ -135,7 +135,9 @@ describe('MasterDetailLayout', () => {
     result.rerender(
       <MasterDetailLayout>
         <MasterDetailLayout.Detail>
-          <Wrapper><div>Wrapper content</div></Wrapper>
+          <Wrapper>
+            <div>Wrapper content</div>
+          </Wrapper>
         </MasterDetailLayout.Detail>
       </MasterDetailLayout>,
     );
