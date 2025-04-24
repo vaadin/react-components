@@ -1,0 +1,24 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+#chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+vaadin-message-list {
+  flex: 1;
+  scroll-snap-type: y proximity;
+}
+
+vaadin-message-list::after {
+  display: block;
+  content: '';
+  scroll-snap-align: end;
+  min-height: 1px;
+}
