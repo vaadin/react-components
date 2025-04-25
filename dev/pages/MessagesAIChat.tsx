@@ -1,7 +1,12 @@
 import { useCallback, useState } from 'react';
 import './MessagesAIChat.css';
 import { MessageInput, type MessageInputSubmitEvent } from '../../packages/react-components/src/MessageInput.js';
-import { MessageList, type MessageListItem } from '../../packages/react-components/src/MessageList.js';
+import {
+  MessageList,
+  type MessageListItem,
+  type MessageListRendererProps,
+} from '../../packages/react-components/src/MessageList.js';
+import { Markdown } from '../../packages/react-components/src/Markdown.js';
 
 function simulateMessageStream() {
   const answerMarkdown = `## Hello! I’m your AI assistant 🤖
@@ -114,9 +119,11 @@ export default function MessagesAIChat() {
       });
   }, []);
 
+  const renderer = useCallback(({ item }: MessageListRendererProps) => <Markdown>{item.text}</Markdown>, []);
+
   return (
     <div id="chat">
-      <MessageList items={items} markdown />
+      <MessageList items={items}>{renderer}</MessageList>
       <MessageInput disabled={inputDisabled} onSubmit={handleSubmit} />
     </div>
   );
