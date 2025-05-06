@@ -131,10 +131,7 @@ function validateChildren(children: React.ReactNode) {
   React.Children.forEach(children, (child) => {
     // Ignore non-React elements
     // We especially want to ignore text nodes to allow for whitespace resulting from formatting
-    if (!React.isValidElement(child)) {
-      return;
-    }
-    if (child.type !== Master && child.type !== Detail) {
+    if (React.isValidElement(child) && child.type !== Master && child.type !== Detail) {
       throw new Error(
         'Invalid child in MasterDetailLayout. Only <MasterDetailLayout.Master> and <MasterDetailLayout.Detail> components are allowed. Check the component docs for proper usage.',
       );
