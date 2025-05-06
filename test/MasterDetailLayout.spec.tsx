@@ -35,7 +35,7 @@ describe('MasterDetailLayout', () => {
   }
 
   beforeEach(() => {
-    result = render(<MasterDetailLayout>{null}</MasterDetailLayout>);
+    result = render(<MasterDetailLayout></MasterDetailLayout>);
     startTransitionSpy = sinon.spy();
     finishTransitionSpy = sinon.spy();
 
