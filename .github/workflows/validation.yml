@@ -19,8 +19,6 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - name: Install Chrome
-        uses: browser-actions/setup-chrome@v1
       - name: Checkout Project Code
         uses: actions/checkout@v3
       - name: Setup Node.js
@@ -32,9 +30,4 @@ jobs:
       - name: Validate
         run: npm run validate
       - name: Test
-        run: npm run test:coverage
-      - name: Collect coverage
-        uses: codecov/codecov-action@v3
-        with:
-          files: .coverage/lcov.info
-          flags: unittests
+        run: npm run test
