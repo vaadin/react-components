@@ -1,6 +1,6 @@
 import { constants } from 'node:fs';
 import { access } from 'node:fs/promises';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
 import type { SetRequired } from 'type-fest';
 import ts, {
   type Node,
@@ -68,6 +68,14 @@ export async function search(elementName: string, dir: string, options?: SearchO
   const fileName = `${elementName}.js`;
   for await (const [path, entry] of fswalk(dir, options)) {
     if (entry.name === fileName) {
+      // Try to resolve the Lit version of the element if it exists
+      // TODO: Can be removed once entrypoints have been updated to use Lit elements
+      const litFileName = fileName.replace('vaadin-', 'vaadin-lit-');
+      const litFilePath = join(dirname(path), litFileName);
+
+      if (await exists(litFilePath)) {
+        return litFilePath;
+      }
       return path;
     }
   }
