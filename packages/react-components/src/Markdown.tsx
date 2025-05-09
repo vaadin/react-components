@@ -7,7 +7,7 @@ import {
 
 export * from './generated/Markdown.js';
 
-export type MarkdownProps = Partial<Omit<_MarkdownProps, 'children' | 'markdown'>> &
+export type MarkdownProps = Partial<Omit<_MarkdownProps, 'children' | 'content'>> &
   Readonly<{
     children?: string | null;
   }>;

@@ -293,4 +293,4 @@ assertOmitted<TabElement, TabSheetTabProps>('selected');
 const markdownProps = React.createElement(Markdown, {}).props;
 type MarkdownProps = typeof markdownProps;
 assertType<string | null | undefined>(markdownProps.children);
-assertOmitted<MarkdownElement, MarkdownProps>('markdown');
+assertOmitted<MarkdownElement, MarkdownProps>('content');
