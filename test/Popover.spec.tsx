@@ -14,11 +14,7 @@ describe('Popover', () => {
   }
 
   it('should use children if no renderer property set', async () => {
-    render(
-      <Popover opened>
-        FooBar
-      </Popover>,
-    );
+    render(<Popover opened>FooBar</Popover>);
 
     await assert(document.querySelector('vaadin-popover') as PopoverElement);
   });
@@ -30,11 +26,7 @@ describe('Popover', () => {
   });
 
   it('should use children as renderer prop', async () => {
-    render(
-      <Popover opened>
-        {() => <>FooBar</>}
-      </Popover>,
-    );
+    render(<Popover opened>{() => <>FooBar</>}</Popover>);
 
     await assert(document.querySelector('vaadin-popover') as PopoverElement);
   });
