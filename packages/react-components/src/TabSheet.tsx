@@ -86,7 +86,7 @@ function TabSheet(props: TabSheetProps, ref: ForwardedRef<TabSheetElement>) {
       ) : null}
 
       {tabs.map((child) => (
-        <div style={{ width: '100%', height: '100%' }} {...{ tab: getTabId(child) }} key={getTabId(child)}>
+        <div style={{ display: 'contents' }} {...{ tab: getTabId(child) }} key={getTabId(child)}>
           {child.props.children}
         </div>
       ))}
