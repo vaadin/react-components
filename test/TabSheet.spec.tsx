@@ -164,7 +164,7 @@ describe('TabSheet', () => {
       </TabSheet>,
     );
 
-    const content = getTabSheet().querySelectorAll('#content-div');
+    const content = getTabSheet().querySelector('#content-div');
     const width = content.offsetWidth;
     const height = content.offsetHeight;
 
