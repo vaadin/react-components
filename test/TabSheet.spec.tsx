@@ -149,4 +149,26 @@ describe('TabSheet', () => {
     expect(stub.calledOnce).to.be.true;
     stub.restore();
   });
+
+  it('content should have correct size', async () => {
+    render(
+      <TabSheet style={{ height: '500px', width: '600px' }}
+        ref={(element) => {
+          element?.style.setProperty('--lumo-space-m', '0px');
+          element?.style.setProperty('--lumo-space-s', '0px');
+        }}
+      >
+        <TabSheetTab style={{ height: '50px' }} label="Tab">
+          <div style={{ height: '100%' }} id="content-div"></div>
+        </TabSheetTab>
+      </TabSheet>,
+    );
+
+    const content = getTabSheet().querySelectorAll('#content-div');
+    const width = content.offsetWidth;
+    const height = content.offsetHeight;
+
+    expect(width).to.be.text("600px");
+    expect(height).to.be.text("450px");
+  });
 });
