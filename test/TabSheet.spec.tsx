@@ -152,10 +152,7 @@ describe('TabSheet', () => {
 
   it('should expand content element to full size', async () => {
     render(
-      <TabSheet
-        style={{ height: '500px', width: '600px' }}
-        theme="no-padding"
-      >
+      <TabSheet style={{ height: '500px', width: '600px' }} theme="no-padding">
         <TabSheetTab style={{ height: '50px' }} label="Tab">
           <div style={{ height: '100%' }} id="content-div"></div>
         </TabSheetTab>
