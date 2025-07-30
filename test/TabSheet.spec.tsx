@@ -168,7 +168,7 @@ describe('TabSheet', () => {
     const content = getTabSheet().querySelector('#content-div');
     const rect = content?.getBoundingClientRect();
 
-    expect(rect?.width).toBe('600px');
-    expect(rect?.height).toBe('450px');
+    expect(rect?.width).toBe(600);
+    expect(rect?.height).toBe(450);
   });
 });
