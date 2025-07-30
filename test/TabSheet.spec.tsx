@@ -150,14 +150,11 @@ describe('TabSheet', () => {
     stub.restore();
   });
 
-  it('content should have correct size', async () => {
+  it('should expand content element to full size', async () => {
     render(
       <TabSheet
         style={{ height: '500px', width: '600px' }}
-        ref={(element) => {
-          element?.style.setProperty('--lumo-space-m', '0px');
-          element?.style.setProperty('--lumo-space-s', '0px');
-        }}
+        theme="no-padding"
       >
         <TabSheetTab style={{ height: '50px' }} label="Tab">
           <div style={{ height: '100%' }} id="content-div"></div>
@@ -166,9 +163,8 @@ describe('TabSheet', () => {
     );
 
     const content = getTabSheet().querySelector('#content-div');
-    const rect = content?.getBoundingClientRect();
 
-    expect(rect?.width).toBe(600);
-    expect(rect?.height).toBe(450);
+    expect(content?.clientWidth).toBe(600);
+    expect(content?.clientHeight).toBe(450);
   });
 });
