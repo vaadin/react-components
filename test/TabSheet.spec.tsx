@@ -162,7 +162,7 @@ describe('TabSheet', () => {
         <TabSheetTab style={{ height: '50px' }} label="Tab">
           <div style={{ height: '100%' }} id="content-div"></div>
         </TabSheetTab>
-      </TabSheet>
+      </TabSheet>,
     );
 
     const content = getTabSheet().querySelector('#content-div');
