@@ -159,16 +159,16 @@ describe('TabSheet', () => {
         }}
       >
         <TabSheetTab style={{ height: '50px' }} label="Tab">
-          <div style={{ height: '100%' }} id="content-div"></div>
+          <div style={{ height: '100%' }} id='content-div'></div>
         </TabSheetTab>
       </TabSheet>,
     );
 
     const content = getTabSheet().querySelector('#content-div');
-    const width = content.offsetWidth;
-    const height = content.offsetHeight;
+    const width = content?.offsetWidth;
+    const height = content?.offsetHeight;
 
-    expect(width).toBe("600px");
-    expect(height).toBe("450px");
+    expect(width).toBe('600px');
+    expect(height).toBe('450px');
   });
 });
