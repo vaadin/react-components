@@ -168,7 +168,7 @@ describe('TabSheet', () => {
     const width = content.offsetWidth;
     const height = content.offsetHeight;
 
-    expect(width).to.be.text("600px");
-    expect(height).to.be.text("450px");
+    expect(width).toBe("600px");
+    expect(height).toBe("450px");
   });
 });
