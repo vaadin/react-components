@@ -165,10 +165,9 @@ describe('TabSheet', () => {
     );
 
     const content = getTabSheet().querySelector('#content-div');
-    const width = content?.offsetWidth;
-    const height = content?.offsetHeight;
+    const rect = content?..getBoundingClientRect();
 
-    expect(width).toBe('600px');
-    expect(height).toBe('450px');
+    expect(rect.width).toBe('600px');
+    expect(rect.height).toBe('450px');
   });
 });
