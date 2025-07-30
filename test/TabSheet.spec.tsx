@@ -152,16 +152,17 @@ describe('TabSheet', () => {
 
   it('content should have correct size', async () => {
     render(
-      <TabSheet style={{ height: '500px', width: '600px' }}
+      <TabSheet
+        style={{ height: '500px', width: '600px' }}
         ref={(element) => {
           element?.style.setProperty('--lumo-space-m', '0px');
           element?.style.setProperty('--lumo-space-s', '0px');
         }}
       >
         <TabSheetTab style={{ height: '50px' }} label="Tab">
-          <div style={{ height: '100%' }} id='content-div'></div>
+          <div style={{ height: '100%' }} id="content-div"></div>
         </TabSheetTab>
-      </TabSheet>,
+      </TabSheet>
     );
 
     const content = getTabSheet().querySelector('#content-div');
