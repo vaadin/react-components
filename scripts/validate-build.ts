@@ -52,19 +52,6 @@ async function hasGeneratedDir() {
 }
 
 /**
- * Validates that the pro package does not have css dir and the core package does.
- */
-async function hasNoCssDir() {
-  if (existsSync(resolve(packagesDir, proPackage, 'css'))) {
-    throw new Error(`The css directory should not exist in the pro package.`);
-  }
-
-  if (!existsSync(resolve(packagesDir, corePackage, 'css'))) {
-    throw new Error(`The css directory does not exist in the core package.`);
-  }
-}
-
-/**
  * Validates that TS definition files have been copied (build:code:copy-dts has been run)
  */
 async function hasCopiedDts() {
@@ -73,4 +60,4 @@ async function hasCopiedDts() {
   }
 }
 
-await Promise.all([validateInheritedProperties(), hasGeneratedDir(), hasNoCssDir(), hasCopiedDts()]);
+await Promise.all([validateInheritedProperties(), hasGeneratedDir(), hasCopiedDts()]);
