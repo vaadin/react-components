@@ -9,7 +9,7 @@ import {
 import { Popover as _Popover, type PopoverElement, type PopoverProps as _PopoverProps } from './generated/Popover.js';
 import { useSimpleOrChildrenRenderer } from './renderers/useSimpleOrChildrenRenderer.js';
 import type { ReactSimpleRendererProps } from './renderers/useSimpleRenderer.js';
-import { issueWarning } from './utils/warnings';
+import { issueWarning } from './utils/warnings.js';
 
 export * from './generated/Popover.js';
 
