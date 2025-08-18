@@ -24,6 +24,9 @@ type OmittedCookieConsentHTMLAttributes = Omit<
 
 export type CookieConsentProps = Partial<Omit<_CookieConsentProps, keyof OmittedCookieConsentHTMLAttributes>>;
 
+/**
+ * @deprecated CookieConsent is deprecated and will be removed without a replacement in Vaadin 25.
+ */
 export const CookieConsent = _CookieConsent as (
   props: CookieConsentProps & RefAttributes<CookieConsentElement>,
 ) => ReactElement | null;
