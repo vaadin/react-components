@@ -8,9 +8,7 @@
  * See https://vaadin.com/commercial-license-and-service-terms for the full
  * license.
  */
-import {
-  BoardRow as _BoardRow,
-} from './generated/BoardRow.js';
+import { BoardRow as _BoardRow } from './generated/BoardRow.js';
 
 export * from './generated/BoardRow.js';
 
