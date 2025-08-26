@@ -76,6 +76,7 @@
     "@vaadin/select": "25.0.0-alpha16",
     "@vaadin/side-nav": "25.0.0-alpha16",
     "@vaadin/split-layout": "25.0.0-alpha16",
+    "@vaadin/stepper": "25.0.0-dev",
     "@vaadin/tabs": "25.0.0-alpha16",
     "@vaadin/tabsheet": "25.0.0-alpha16",
     "@vaadin/text-area": "25.0.0-alpha16",
