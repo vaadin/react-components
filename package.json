@@ -61,5 +61,8 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@vaadin/aura": "^25.1.0-alpha1"
+  }
 }
