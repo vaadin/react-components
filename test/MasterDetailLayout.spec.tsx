@@ -5,6 +5,14 @@ import sinon from 'sinon';
 import { LitElement, html } from 'lit';
 import { MasterDetailLayout, MasterDetailLayoutElement } from '../packages/react-components/src/MasterDetailLayout.js';
 
+declare module 'react' {
+  namespace JSX {
+    interface IntrinsicElements {
+      'test-lit-element': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+    }
+  }
+}
+
 class TestLitElement extends LitElement {
   override render() {
     return html`<div style="width: 200px">Lit Content</div>`;
