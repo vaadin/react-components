@@ -2,7 +2,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, type RenderResult } from 'vitest-browser-react';
 import type { ReactNode } from 'react';
 import sinon from 'sinon';
+import { LitElement, html } from 'lit';
 import { MasterDetailLayout, MasterDetailLayoutElement } from '../packages/react-components/src/MasterDetailLayout.js';
+
+class TestLitElement extends LitElement {
+  override render() {
+    return html`<div style="width: 200px">Lit Content</div>`;
+  }
+}
+
+customElements.define('test-lit-element', TestLitElement);
 
 window.Vaadin ||= {};
 window.Vaadin.featureFlags ||= {};
@@ -10,7 +19,6 @@ window.Vaadin.featureFlags.masterDetailLayoutComponent = true;
 
 describe('MasterDetailLayout', () => {
   let startTransitionSpy: sinon.SinonSpy;
-  let recalculateLayoutSpy: sinon.SinonSpy;
   let result: RenderResult;
   let layout: MasterDetailLayoutElement;
 
@@ -32,7 +40,6 @@ describe('MasterDetailLayout', () => {
   beforeEach(async () => {
     result = await render(<MasterDetailLayout></MasterDetailLayout>);
     startTransitionSpy = sinon.spy();
-    recalculateLayoutSpy = sinon.spy();
 
     layout = document.querySelector('vaadin-master-detail-layout')!;
     expect(layout).to.exist;
@@ -41,9 +48,6 @@ describe('MasterDetailLayout', () => {
       startTransitionSpy(transitionType);
       callback();
       return Promise.resolve();
-    };
-    (layout as any).recalculateLayout = () => {
-      recalculateLayoutSpy();
     };
   });
 
@@ -280,7 +284,12 @@ describe('MasterDetailLayout', () => {
     expect(startTransitionSpy.firstCall.args[0]).to.equal('remove');
   });
 
-  it('should properly start and finish transitions', async () => {
+  it('should call recalculateLayout after Lit elements have rendered', async () => {
+    // Use the real _startTransition
+    delete (layout as any)._startTransition;
+
+    layout.style.width = '800px';
+
     // Start without content
     await result.rerender(
       <MasterDetailLayout>
@@ -288,19 +297,22 @@ describe('MasterDetailLayout', () => {
       </MasterDetailLayout>,
     );
 
-    // Change detail content to trigger transition
+    // Add a Lit element as detail content. Its intrinsic width should be measured
+    // correctly only if recalculateLayout is called after the Lit element renders.
     await result.rerender(
       <MasterDetailLayout>
         <MasterDetailLayout.Detail>
-          <div>New Content</div>
+          <test-lit-element />
         </MasterDetailLayout.Detail>
       </MasterDetailLayout>,
     );
 
-    await assertDetailsVisible('New Content');
-    expect(startTransitionSpy.calledOnce).to.be.true;
-    expect(recalculateLayoutSpy.calledOnce).to.be.true;
-    expect(startTransitionSpy.calledBefore(recalculateLayoutSpy)).to.be.true;
+    const litElement = layout.querySelector('test-lit-element') as TestLitElement;
+    await vi.waitFor(() => {
+      expect(litElement.shadowRoot!.querySelector('div')).to.exist;
+    });
+
+    expect(getComputedStyle(layout).getPropertyValue('--_detail-cached-size')).to.equal('201px'); // 1px border
   });
 
   describe('Child validation', () => {
