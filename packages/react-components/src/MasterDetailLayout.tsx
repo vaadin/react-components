@@ -105,9 +105,10 @@ function Detail({ children }: DetailProps) {
           const hasNext = nextDetailsRef.current.childElementCount > 0;
           nextDetailsRef.current.setAttribute('slot', hasNext ? 'detail' : 'detail-hidden');
         }
-        // Recompute layout state synchronously with the new DOM
-        layout._finishTransition();
       }).then(() => {
+        // Recompute layout state with the new DOM
+        layout.recalculateLayout();
+
         // Animation finished — sync React state to match DOM reality
         setCurrentChildren(children);
         currentDetailsKey.current = nextDetailsKey;
