@@ -10,7 +10,7 @@ window.Vaadin.featureFlags.masterDetailLayoutComponent = true;
 
 describe('MasterDetailLayout', () => {
   let startTransitionSpy: sinon.SinonSpy;
-  let finishTransitionSpy: sinon.SinonSpy;
+  let recalculateLayoutSpy: sinon.SinonSpy;
   let result: RenderResult;
   let layout: MasterDetailLayoutElement;
 
@@ -32,7 +32,7 @@ describe('MasterDetailLayout', () => {
   beforeEach(async () => {
     result = await render(<MasterDetailLayout></MasterDetailLayout>);
     startTransitionSpy = sinon.spy();
-    finishTransitionSpy = sinon.spy();
+    recalculateLayoutSpy = sinon.spy();
 
     layout = document.querySelector('vaadin-master-detail-layout')!;
     expect(layout).to.exist;
@@ -42,9 +42,8 @@ describe('MasterDetailLayout', () => {
       callback();
       return Promise.resolve();
     };
-    (layout as any)._finishTransition = () => {
-      finishTransitionSpy();
-      return Promise.resolve();
+    (layout as any).recalculateLayout = () => {
+      recalculateLayoutSpy();
     };
   });
 
@@ -300,8 +299,8 @@ describe('MasterDetailLayout', () => {
 
     await assertDetailsVisible('New Content');
     expect(startTransitionSpy.calledOnce).to.be.true;
-    expect(finishTransitionSpy.calledOnce).to.be.true;
-    expect(startTransitionSpy.calledBefore(finishTransitionSpy)).to.be.true;
+    expect(recalculateLayoutSpy.calledOnce).to.be.true;
+    expect(startTransitionSpy.calledBefore(recalculateLayoutSpy)).to.be.true;
   });
 
   describe('Child validation', () => {
