@@ -37,3 +37,6 @@ node_modules
 # Claude Code
 .claude/*.local.*
 CLAUDE.local.md
+
+# compare-cem-wrappers.mjs workdir
+.cem-comparison

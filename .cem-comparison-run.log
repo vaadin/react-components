@@ -1,0 +1,278 @@
+
+── Pre-flight ──
+✓ sibling on branch chore/cem-web-types
+✓ 69 @vaadin deps will be overridden to sibling file: paths
+
+── Skipping sibling build (--skip-sibling-build) ──
+
+── Capturing BASELINE (registry @vaadin packages) ──
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+
+> react-components-workspace@25.2.0-alpha9 prepare
+> npm run build
+
+
+> react-components-workspace@25.2.0-alpha9 build
+> npm run build:load-schema && npm run build -w packages/react-components && npm run build -w packages/react-components-pro
+
+
+> react-components-workspace@25.2.0-alpha9 build:load-schema
+> tsx scripts/schema-loader.ts
+
+[WARNING]: /Users/serhii/vaadin/react-components/types/schema.d.ts already exists. If you want to override it, add "--override" key to the command
+
+> @vaadin/react-components@25.2.0-alpha9 build
+> npm run build:dev && npm run build:code && npm run build:update-packagejson
+
+
+> @vaadin/react-components@25.2.0-alpha9 build:dev
+> npm run build:generate && npm run build:generate-css
+
+
+> @vaadin/react-components@25.2.0-alpha9 build:generate
+> tsx ../../scripts/generator.ts
+
+
+> @vaadin/react-components@25.2.0-alpha9 build:generate-css
+> tsx --experimental-vm-modules ../../scripts/css-generator.ts
+
+
+> @vaadin/react-components@25.2.0-alpha9 build:code
+> concurrently npm:build:code:*
+
+[ts] 
+[ts] > @vaadin/react-components@25.2.0-alpha9 build:code:ts
+[ts] > tsx ../../scripts/build.ts
+[ts] 
+[copy-dts] 
+[copy-dts] > @vaadin/react-components@25.2.0-alpha9 build:code:copy-dts
+[copy-dts] > tsx ../../scripts/copy-dts.ts
+[copy-dts] 
+[dts] 
+[dts] > @vaadin/react-components@25.2.0-alpha9 build:code:dts
+[dts] > tsc -p tsconfig.build.json
+[dts] 
+[copy-dts] npm run build:code:copy-dts exited with code 0
+[ts] npm run build:code:ts exited with code 0
+[dts] npm run build:code:dts exited with code 0
+
+> @vaadin/react-components@25.2.0-alpha9 build:update-packagejson
+> tsx ../../scripts/package-json-update.ts
+
+
+> @vaadin/react-components-pro@25.2.0-alpha9 build
+> npm run build:dev && npm run build:code && npm run build:update-packagejson
+
+
+> @vaadin/react-components-pro@25.2.0-alpha9 build:dev
+> npm run build:generate
+
+
+> @vaadin/react-components-pro@25.2.0-alpha9 build:generate
+> tsx ../../scripts/generator.ts
+
+
+> @vaadin/react-components-pro@25.2.0-alpha9 build:code
+> concurrently npm:build:code:*
+
+[ts] 
+[ts] > @vaadin/react-components-pro@25.2.0-alpha9 build:code:ts
+[ts] > tsx ../../scripts/build.ts
+[ts] 
+[copy-dts] 
+[copy-dts] > @vaadin/react-components-pro@25.2.0-alpha9 build:code:copy-dts
+[copy-dts] > tsx ../../scripts/copy-dts.ts
+[copy-dts] 
+[dts] 
+[dts] > @vaadin/react-components-pro@25.2.0-alpha9 build:code:dts
+[dts] > tsc -p tsconfig.build.json
+[dts] 
+[copy-dts] npm run build:code:copy-dts exited with code 0
+[ts] npm run build:code:ts exited with code 0
+[dts] npm run build:code:dts exited with code 0
+
+> @vaadin/react-components-pro@25.2.0-alpha9 build:update-packagejson
+> tsx ../../scripts/package-json-update.ts
+
+
+added 366 packages, and audited 369 packages in 11s
+
+81 packages are looking for funding
+  run `npm fund` for details
+
+2 low severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> react-components-workspace@25.2.0-alpha9 build:load-schema
+> tsx scripts/schema-loader.ts
+
+[WARNING]: /Users/serhii/vaadin/react-components/types/schema.d.ts already exists. If you want to override it, add "--override" key to the command
+
+> @vaadin/react-components@25.2.0-alpha9 build:generate
+> tsx ../../scripts/generator.ts
+
+
+> @vaadin/react-components-pro@25.2.0-alpha9 build:generate
+> tsx ../../scripts/generator.ts
+
+
+── Switching node_modules to sibling packages ──
+✓ rewrote 69 workspace deps to file: specifiers
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+
+added 337 packages, and audited 409 packages in 3s
+
+79 packages are looking for funding
+  run `npm fund` for details
+
+2 low severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+✓ confirmed @vaadin/accordion now resolves from sibling
+
+── Capturing CANDIDATE (sibling @vaadin packages) ──
+
+> react-components-workspace@25.2.0-alpha9 build:load-schema
+> tsx scripts/schema-loader.ts
+
+[WARNING]: /Users/serhii/vaadin/react-components/types/schema.d.ts already exists. If you want to override it, add "--override" key to the command
+
+> @vaadin/react-components@25.2.0-alpha9 build:generate
+> tsx ../../scripts/generator.ts
+
+
+> @vaadin/react-components-pro@25.2.0-alpha9 build:generate
+> tsx ../../scripts/generator.ts
+
+
+── Running validate:types and validate:build against candidate ──
+
+── Cleanup: restoring registry @vaadin packages ──
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+
+> react-components-workspace@25.2.0-alpha9 prepare
+> npm run build
+
+
+> react-components-workspace@25.2.0-alpha9 build
+> npm run build:load-schema && npm run build -w packages/react-components && npm run build -w packages/react-components-pro
+
+
+> react-components-workspace@25.2.0-alpha9 build:load-schema
+> tsx scripts/schema-loader.ts
+
+[WARNING]: /Users/serhii/vaadin/react-components/types/schema.d.ts already exists. If you want to override it, add "--override" key to the command
+
+> @vaadin/react-components@25.2.0-alpha9 build
+> npm run build:dev && npm run build:code && npm run build:update-packagejson
+
+
+> @vaadin/react-components@25.2.0-alpha9 build:dev
+> npm run build:generate && npm run build:generate-css
+
+
+> @vaadin/react-components@25.2.0-alpha9 build:generate
+> tsx ../../scripts/generator.ts
+
+
+> @vaadin/react-components@25.2.0-alpha9 build:generate-css
+> tsx --experimental-vm-modules ../../scripts/css-generator.ts
+
+
+> @vaadin/react-components@25.2.0-alpha9 build:code
+> concurrently npm:build:code:*
+
+[dts] 
+[dts] > @vaadin/react-components@25.2.0-alpha9 build:code:dts
+[dts] > tsc -p tsconfig.build.json
+[dts] 
+[ts] 
+[ts] > @vaadin/react-components@25.2.0-alpha9 build:code:ts
+[ts] > tsx ../../scripts/build.ts
+[ts] 
+[copy-dts] 
+[copy-dts] > @vaadin/react-components@25.2.0-alpha9 build:code:copy-dts
+[copy-dts] > tsx ../../scripts/copy-dts.ts
+[copy-dts] 
+[copy-dts] npm run build:code:copy-dts exited with code 0
+[ts] npm run build:code:ts exited with code 0
+[dts] npm run build:code:dts exited with code 0
+
+> @vaadin/react-components@25.2.0-alpha9 build:update-packagejson
+> tsx ../../scripts/package-json-update.ts
+
+
+> @vaadin/react-components-pro@25.2.0-alpha9 build
+> npm run build:dev && npm run build:code && npm run build:update-packagejson
+
+
+> @vaadin/react-components-pro@25.2.0-alpha9 build:dev
+> npm run build:generate
+
+
+> @vaadin/react-components-pro@25.2.0-alpha9 build:generate
+> tsx ../../scripts/generator.ts
+
+
+> @vaadin/react-components-pro@25.2.0-alpha9 build:code
+> concurrently npm:build:code:*
+
+[dts] 
+[dts] > @vaadin/react-components-pro@25.2.0-alpha9 build:code:dts
+[dts] > tsc -p tsconfig.build.json
+[dts] 
+[ts] 
+[ts] > @vaadin/react-components-pro@25.2.0-alpha9 build:code:ts
+[ts] > tsx ../../scripts/build.ts
+[ts] 
+[copy-dts] 
+[copy-dts] > @vaadin/react-components-pro@25.2.0-alpha9 build:code:copy-dts
+[copy-dts] > tsx ../../scripts/copy-dts.ts
+[copy-dts] 
+[copy-dts] npm run build:code:copy-dts exited with code 0
+[ts] npm run build:code:ts exited with code 0
+[dts] npm run build:code:dts exited with code 0
+
+> @vaadin/react-components-pro@25.2.0-alpha9 build:update-packagejson
+> tsx ../../scripts/package-json-update.ts
+
+
+added 366 packages, and audited 369 packages in 11s
+
+81 packages are looking for funding
+  run `npm fund` for details
+
+2 low severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> react-components-workspace@25.2.0-alpha9 build:load-schema
+> tsx scripts/schema-loader.ts
+
+[WARNING]: /Users/serhii/vaadin/react-components/types/schema.d.ts already exists. If you want to override it, add "--override" key to the command
+
+> @vaadin/react-components@25.2.0-alpha9 build:generate
+> tsx ../../scripts/generator.ts
+
+
+> @vaadin/react-components-pro@25.2.0-alpha9 build:generate
+> tsx ../../scripts/generator.ts
+
+
+── Generating diff report ──
+
+✔ Done.
+Report: .cem-comparison/REPORT.md
