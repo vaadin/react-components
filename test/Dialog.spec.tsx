@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 import sinon from 'sinon';
-import { Dialog } from '../packages/react-components/src/Dialog.js';
+import { Dialog, type DialogReactRendererProps } from '../packages/react-components/src/Dialog.js';
 import { nextRender } from './utils/nextRender.js';
 import { useState } from 'react';
 
@@ -34,7 +34,7 @@ describe('Dialog', () => {
   it('should use children if no renderer property set', async () => {
     await render(
       <Dialog opened header={<>Title</>} footer={<>Footer</>}>
-        FooBar
+        <span>FooBar</span>
       </Dialog>,
     );
     await nextRender();
@@ -47,7 +47,7 @@ describe('Dialog', () => {
         opened
         headerRenderer={() => <>Title</>}
         footerRenderer={() => <>Footer</>}
-        renderer={() => <>FooBar</>}
+        renderer={() => <span>FooBar</span>}
       ></Dialog>,
     );
     await nextRender();
@@ -57,11 +57,62 @@ describe('Dialog', () => {
   it('should use children as renderer prop', async () => {
     await render(
       <Dialog opened headerRenderer={() => <>Title</>} footerRenderer={() => <>Footer</>}>
-        {() => <>FooBar</>}
+        {() => <span>FooBar</span>}
       </Dialog>,
     );
     await nextRender();
     assert();
+  });
+
+  it('should pass the dialog element as `original` to a renderer', async () => {
+    let received: DialogReactRendererProps['original'] | undefined;
+    await render(
+      <Dialog
+        opened
+        renderer={({ original }) => {
+          // `original` must never be null/undefined when the renderer runs.
+          received = original;
+          return <span>{original ? original.localName : 'no-element'}</span>;
+        }}
+      ></Dialog>,
+    );
+    await nextRender();
+
+    expect(received).to.exist;
+    expect(received!.localName).to.equal(dialogTag);
+
+    const body = Array.from(document.querySelector(dialogTag)!.childNodes).find(
+      (node) => node.nodeType === Node.ELEMENT_NODE && !(node as Element).hasAttribute('slot'),
+    );
+    expect(body).to.have.text(dialogTag);
+  });
+
+  it('should not render header / footer wrappers when only content is provided', async () => {
+    await render(
+      <Dialog opened>
+        <span>FooBar</span>
+      </Dialog>,
+    );
+    await nextRender();
+
+    const dialog = document.querySelector(dialogTag)!;
+    expect(dialog.querySelector('[slot="header-content"]')).to.not.exist;
+    expect(dialog.querySelector('[slot="footer"]')).to.not.exist;
+  });
+
+  it('should not render header / footer wrappers for falsy content', async () => {
+    const showHeader = false;
+    const showFooter = false;
+    await render(
+      <Dialog opened header={showHeader && <>Title</>} footer={showFooter && <>Footer</>}>
+        <span>FooBar</span>
+      </Dialog>,
+    );
+    await nextRender();
+
+    const dialog = document.querySelector(dialogTag)!;
+    expect(dialog.querySelector('[slot="header-content"]')).to.not.exist;
+    expect(dialog.querySelector('[slot="footer"]')).to.not.exist;
   });
 
   it('should not warn on open', async () => {
