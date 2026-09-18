@@ -1,6 +1,6 @@
 {
   "name": "@vaadin/react-components-pro",
-  "version": "25.2.11",
+  "version": "25.2.12",
   "publishConfig": {
     "access": "public"
   },
@@ -26,14 +26,14 @@
   },
   "dependencies": {
     "@lit/react": "^1.0.7",
-    "@vaadin/board": "25.2.11",
-    "@vaadin/charts": "25.2.11",
-    "@vaadin/crud": "25.2.11",
-    "@vaadin/dashboard": "25.2.11",
-    "@vaadin/grid-pro": "25.2.11",
-    "@vaadin/map": "25.2.11",
-    "@vaadin/react-components": "25.2.11",
-    "@vaadin/rich-text-editor": "25.2.11"
+    "@vaadin/board": "25.2.12",
+    "@vaadin/charts": "25.2.12",
+    "@vaadin/crud": "25.2.12",
+    "@vaadin/dashboard": "25.2.12",
+    "@vaadin/grid-pro": "25.2.12",
+    "@vaadin/map": "25.2.12",
+    "@vaadin/react-components": "25.2.12",
+    "@vaadin/rich-text-editor": "25.2.12"
   },
   "author": "Vaadin Ltd.",
   "license": "SEE LICENSE IN LICENSE",
