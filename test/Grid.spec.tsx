@@ -3,7 +3,10 @@ import { render } from 'vitest-browser-react';
 import { Grid, type GridDataProvider } from '../packages/react-components/src/Grid.js';
 import { GridColumn, GridColumnElement } from '../packages/react-components/src/GridColumn.js';
 import { GridFilterColumn } from '../packages/react-components/src/GridFilterColumn.js';
-import { GridProEditColumn } from '../packages/react-components-pro/src/GridProEditColumn.js';
+import {
+  GridProEditColumn,
+  type GridProEditColumnElement,
+} from '../packages/react-components-pro/src/GridProEditColumn.js';
 import { GridSelectionColumn } from '../packages/react-components/src/GridSelectionColumn.js';
 import { GridSortColumn } from '../packages/react-components/src/GridSortColumn.js';
 import { GridTreeColumn } from '../packages/react-components/src/GridTreeColumn.js';
@@ -346,6 +349,42 @@ describe('Grid', () => {
   });
 
   describe('GridProEditColumn', () => {
+    it('should consider custom renderer content with column auto-width', async () => {
+      function GridProWithAutoWidthColumns() {
+        const [gridItems, setGridItems] = useState<Item[] | undefined>();
+
+        useEffect(() => {
+          setTimeout(() => setGridItems(items));
+        }, []);
+
+        return (
+          <GridPro<Item> items={gridItems}>
+            <GridProEditColumn header={<button style={{ width: '300px' }}>header</button>} autoWidth flexGrow={0} />
+            <GridProEditColumn autoWidth flexGrow={0}>
+              {({ item }) => <button style={{ width: '300px' }}>{item.name}</button>}
+            </GridProEditColumn>
+            <GridProEditColumn footer={<button style={{ width: '300px' }}>footer</button>} autoWidth flexGrow={0} />
+          </GridPro>
+        );
+      }
+
+      const error = sinon.stub(console, 'error');
+      try {
+        await render(<GridProWithAutoWidthColumns />);
+
+        const grid = await findByQuerySelector('vaadin-grid-pro');
+        const columns = Array.from(grid.querySelectorAll<GridProEditColumnElement>('vaadin-grid-pro-edit-column'));
+        expect(columns).to.have.length(3);
+
+        for (const column of columns) {
+          await until(() => parseFloat(String(column.width)) > 300);
+        }
+      } finally {
+        error.restore();
+      }
+      expect(error.called).to.be.false;
+    });
+
     it('should render correctly', async () => {
       await render(
         <GridPro<Item> items={items}>
